@@ -14,9 +14,9 @@ const Footer = () => {
 };
 
 const footerStyle = {
-  marginTop: "50px",
+  marginbottom: "50px",
   padding: "20px",
-  backgroundColor: "#333",
+  background: "linear-gradient(to right, #1D8AD8 , #1CB995 , #1D8AD8)",
   color: "#fff",
   textAlign: "center",
 };

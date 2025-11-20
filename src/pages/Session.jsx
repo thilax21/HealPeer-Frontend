@@ -9,7 +9,7 @@ const Sessions = ({ user }) => {
   useEffect(() => {
     const fetchSessions = async () => {
       try {
-        let url = "/sessions/my-sessions";
+        let url = "/session/my-sessions";
         if (user.role === "admin") url = "/sessions/all";
 
         const { data } = await API.get(url);
@@ -29,7 +29,7 @@ const Sessions = ({ user }) => {
 
   const handleBookSession = async () => {
     try {
-      const { data } = await API.post("/sessions/book", newSession);
+      const { data } = await API.post("/session/book", newSession);
       setSessions([data.data, ...sessions]);
       setNewSession({ counselorId: "", date: "" });
       alert("Session booked!");
@@ -41,7 +41,7 @@ const Sessions = ({ user }) => {
 
   const handleUpdateStatus = async (id, status) => {
     try {
-      const { data } = await API.put(`/sessions/update-status/${id}`, { status });
+      const { data } = await API.put(`/session/update-status/${id}`, { status });
       setSessions(sessions.map((s) => (s._id === id ? data.data : s)));
       alert("Status updated!");
     } catch (err) {

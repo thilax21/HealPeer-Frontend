@@ -1,4 +1,4 @@
-// import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import API from "../api/api";
 
@@ -41,7 +41,7 @@ const BookSession = ({ user }) => {
   
     try {
       // 1️⃣ Create session in backend
-      const sessionRes = await API.post("/sessions/book", {
+      const sessionRes = await API.post("/session/book", {
         counselorId: id,
         dateTime,
         amount,

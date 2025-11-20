@@ -1,143 +1,82 @@
+
 import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import API from "../api/api";
+import "../styles/Blog.css";
 
-const Blog = ({ user }) => {
+const Blogs = ({ user }) => {
   const [blogs, setBlogs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [newBlog, setNewBlog] = useState({ title: "", content: "" });
-  const [editBlogId, setEditBlogId] = useState(null);
+  const navigate = useNavigate();
 
-  // Fetch blogs
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const { data } = await API.get("/blogs"); // Public approved blogs
+        const { data } = await API.get("/blogs/");
         setBlogs(data.data);
-        setLoading(false);
       } catch (err) {
         console.error(err);
-        setLoading(false);
       }
     };
     fetchBlogs();
   }, []);
 
-  // Handle input change
-  const handleChange = (e) => {
-    setNewBlog({ ...newBlog, [e.target.name]: e.target.value });
+  const getFirstParagraph = (content) => {
+    const paragraphs = content.split("\n").filter(p => p.trim() !== "");
+    return paragraphs.length > 0 ? paragraphs[0] : content.slice(0, 100);
   };
-
-  // Create blog
-  const handleCreate = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("title", newBlog.title);
-      formData.append("content", newBlog.content);
-      if (newBlog.image) formData.append("image", newBlog.image);
-  
-      const { data } = await API.post("/blogs", formData, {
-        headers: { "Content-Type": "multipart/form-data" }
-      });
-      setBlogs([data.data, ...blogs]);
-      setNewBlog({ title: "", content: "" });
-    } catch (err) {
-      console.error(err);
-      alert("Creation failed");
-    }
-  }
-  // Set blog for edit
-  const handleEditInit = (blog) => {
-    setEditBlogId(blog._id);
-    setNewBlog({ title: blog.title, content: blog.content });
-  };
-
-  // Update blog
-  const handleUpdate = async () => {
-    try {
-      const { data } = await API.put(`/blogs/${editBlogId}`, newBlog);
-      setBlogs(
-        blogs.map((b) => (b._id === editBlogId ? data.data : b))
-      );
-      setEditBlogId(null);
-      setNewBlog({ title: "", content: "" });
-      alert("Blog updated!");
-    } catch (err) {
-      console.error(err);
-      alert("Update failed");
-    }
-  };
-
-  // Delete blog
-  const handleDelete = async (id) => {
-    try {
-      await API.delete(`/blogs/${id}`);
-      setBlogs(blogs.filter((b) => b._id !== id));
-      alert("Blog deleted!");
-    } catch (err) {
-      console.error(err);
-      alert("Delete failed");
-    }
-  };
-
-  if (loading) return <p>Loading blogs...</p>;
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>All Blogs</h2>
+    <div className="blogs-list-page max-w-6xl mx-auto px-4 py-8">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-indigo-700">All Blogs</h1>
+        
+        {/* Write Blog Button */}
+        {user && (
+          <button
+            onClick={() => navigate("/blogs/write")}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-full flex items-center gap-2 shadow-lg transition"
+          >
+            ✍️ Write Blog
+          </button>
+        )}
+      </div>
 
-      {/* Create / Edit Form */}
-      {user && (
-        <div style={{ marginBottom: "20px" }}>
-          <input
-            placeholder="Title"
-            name="title"
-            value={newBlog.title}
-            onChange={handleChange}
-          />
-          <textarea
-            placeholder="Content"
-            name="content"
-            value={newBlog.content}
-            onChange={handleChange}
-          />
-          {editBlogId ? (
-            <button onClick={handleUpdate}>Update Blog</button>
-          ) : (
-            <button onClick={handleCreate}>Create Blog</button>
-          )}
+      {/* Search & Categories */}
+      <div className="flex flex-col md:flex-row md:justify-between mb-6 gap-4">
+        <input
+          type="text"
+          placeholder="Search blogs..."
+          className="border p-2 rounded w-full md:w-1/2 focus:outline-indigo-400"
+        />
+        <div className="flex flex-wrap gap-2">
+          {["All", "Trending", "Tech", "Love", "Health", "Life"].map(cat => (
+            <span key={cat} className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm cursor-pointer hover:bg-indigo-200">
+              {cat}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Blogs List */}
+      {blogs.length === 0 ? (
+        <p className="text-gray-500 text-center py-20">No blogs available.</p>
+      ) : (
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {blogs.map(blog => (
+            <Link to={`/blogs/${blog._id}`} key={blog._id} className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition overflow-hidden">
+              {blog.imageUrl && <img src={blog.imageUrl} alt={blog.title} className="w-full h-48 object-cover" />}
+              <div className="p-4">
+                <h3 className="text-xl font-semibold text-indigo-700 mb-2">{blog.title}</h3>
+                <p className="text-gray-700 text-sm mb-3">{getFirstParagraph(blog.content)}...</p>
+                <p className="text-gray-500 text-xs">✍️ {blog.author?.name} ({blog.author?.role})</p>
+              </div>
+            </Link>
+          ))}
         </div>
       )}
-
-      {/* Blog List */}
-      <ul>
-        {blogs.map((blog) => (
-          <li key={blog._id} style={{ marginBottom: "20px" }}>
-            <h3>{blog.title}</h3>
-            <p>{blog.content}</p>
-            <input
-  type="file"
-  name="image"
-  onChange={(e) => setNewBlog({ ...newBlog, image: e.target.files[0] })}
-/>
-            <p>
-              <strong>Author:</strong> {blog.author.name} ({blog.author.role})
-            </p>
-
-
-            {/* Edit/Delete buttons only for owner or admin */}
-            {user &&
-              (user.role === "admin" || user._id === blog.author._id) && (
-                <div>
-                  <button onClick={() => handleEditInit(blog)}>Edit</button>
-                  <button onClick={() => handleDelete(blog._id)}>Delete</button>
-                </div>
-              )}
-          </li>
-        ))}
-      </ul>
     </div>
   );
 };
 
-export default Blog;
-
+export default Blogs;

@@ -1,124 +1,253 @@
+// // import React from "react";
+// // import { Link, useNavigate } from "react-router-dom";
+// // import "../styles/Navbar.css"; // ✅ Import CSS
+
+// // const Navbar = ({ user, setUser }) => {
+// //   const navigate = useNavigate();
+
+// //   // const handleLogout = () => {
+// //   //   localStorage.removeItem("token");
+// //   //   setUser(null);
+// //   //   navigate("/login");
+// //   // };
+// //   const handleLogout = () => {
+// //     localStorage.removeItem("token");
+// //     localStorage.removeItem("userId"); // ✅ clear this too
+// //     setUser(null);
+// //     navigate("/login");
+// //   };
+// //   return (
+// //     <nav className="navbar">
+// //       <div className="navbar-left">
+// //       <h1 className="brand-highlight">HealPeer</h1>
+// //       </div>
+
+// //       <div className="navbar-center">
+// //         <Link to="/" className="navbar-link">Home</Link>
+// //         <Link to="/blogs" className="navbar-link">Blogs</Link>
+// //         <Link to="/counselors" className="navbar-link">Counselors</Link>
+// //       </div>
+
+// //       <div className="navbar-right">
+// //         {!user && (
+// //           <>
+// //             <Link to="/login" className="navbar-link">Login</Link>
+// //             <Link to="/register" className="navbar-link">Register</Link>
+// //           </>
+// //         )}
+
+// //         {user && (user.role === "client" || user.role === "counselor") && (
+// //           <>
+// //             <Link to="/profile" className="navbar-link">My Profile</Link>
+// //             <Link to="/sessions" className="navbar-link">My Sessions</Link>
+// //             <button className="logout-btn" onClick={handleLogout}>Logout</button>
+// //           </>
+// //         )}
+
+// //         {user && user.role === "admin" && (
+// //           <>
+// //             <Link to="/admin/dashboard" className="navbar-link">Dashboard</Link>
+            
+// //             <button className="logout-btn" onClick={handleLogout}>Logout</button>
+// //           </>
+// //         )}
+// //       </div>
+// //     </nav>
+// //   );
+// // };
+
+// // export default Navbar;
+
+// // import React from "react";
+// // import { Link, useNavigate } from "react-router-dom";
+// // import "../styles/Navbar.css";
+
+// // const Navbar = ({ user, setUser }) => {
+// //   const navigate = useNavigate();
+
+// //   const handleLogout = () => {
+// //     localStorage.removeItem("token");
+// //     localStorage.removeItem("userId");
+// //     setUser(null);
+// //     navigate("/login");
+// //   };
+
+// //   // Determine profile link
+// //   const profileLink = () => {
+// //     if (!user) return "/login";
+// //     if (user.role === "counselor") return `/counselor/${user._id}`;
+// //     if (user.role === "client") return "/profile";
+// //     return "/login";
+// //   };
+
+// //   return (
+// //     <nav className="navbar">
+// //       <div className="navbar-left">
+// //         <h1 className="brand-highlight">HealPeer</h1>
+// //       </div>
+
+// //       <div className="navbar-center">
+// //         <Link to="/" className="navbar-link">Home</Link>
+// //         <Link to="/blogs" className="navbar-link">Blogs</Link>
+// //         <Link to="/counselors" className="navbar-link">Counselors</Link>
+// //       </div>
+
+// //       <div className="navbar-right">
+// //         {!user && (
+// //           <>
+// //             <Link to="/login" className="navbar-link">Login</Link>
+// //             <Link to="/register" className="navbar-link">Register</Link>
+// //           </>
+// //         )}
+
+// //         {user && (user.role === "client" || user.role === "counselor") && (
+// //           <>
+// //             <Link to={profileLink()} className="navbar-link">My Profile</Link>
+// //             <button className="logout-btn" onClick={handleLogout}>Logout</button>
+// //           </>
+// //         )}
+
+// //         {user && user.role === "admin" && (
+// //           <>
+// //             <Link to="/admin/dashboard" className="navbar-link">Dashboard</Link>
+// //             <button className="logout-btn" onClick={handleLogout}>Logout</button>
+// //           </>
+// //         )}
+// //       </div>
+// //     </nav>
+// //   );
+// // };
+
+// // export default Navbar;
 // import React from "react";
 // import { Link, useNavigate } from "react-router-dom";
-
-// const Navbar = () => {
-//   const navigate = useNavigate();
-//   const token = localStorage.getItem("token");
-//   const role = localStorage.getItem("role");
-
-//   const handleLogout = () => {
-//     localStorage.removeItem("token");
-//     localStorage.removeItem("role");
-//     navigate("/login");
-//   };
-
-//   return (
-//     <nav style={{ padding: "10px", background: "#3a3a8a", color: "#fff" }}>
-//       <Link to="/">Home</Link> | 
-//       <Link to="/about">About</Link> | 
-//       <Link to="/blogs">Blogs</Link> | 
-//       <Link to="/counselors">Counselors</Link> | 
-//       {!token ? (
-//         <>
-//           <Link to="/login">Login</Link> | 
-//           <Link to="/register">Register</Link>
-//         </>
-//       ) : (
-//         <>
-//           <Link to="/profile">Profile</Link> | 
-//           {role === "admin" && <Link to="/admin">Admin Dashboard</Link>} | 
-//           <button onClick={handleLogout}>Logout</button>
-//         </>
-//       )}
-//     </nav>
-//   );
-// };
-
-// export default Navbar;
-// import React from "react";
-// import { Link, useNavigate } from "react-router-dom";
-
+// import "../styles/Navbar.css";
+// import logo from "../assets/healpeer.logo'.png"
 // const Navbar = ({ user, setUser }) => {
 //   const navigate = useNavigate();
 
 //   const handleLogout = () => {
 //     localStorage.removeItem("token");
+//     localStorage.removeItem("userId");
 //     setUser(null);
 //     navigate("/login");
 //   };
 
+//   // Profile link routing logic
+//   const profileLink = () => {
+//     if (!user) return "/login";
+  
+//     switch (user.role) {
+//       case "counselor":
+//         return `/counselor/${user._id}`;
+//       case "client":
+//         return "/profile";
+//       case "admin":
+//         return "/admin/dashboard";
+//       default:
+//         return "/login";
+//     }
+//   };
+  
+
+//   // Get first letter of name
+//   const getInitial = () => {
+//     if (!user || !user.name) return "U";
+//     return user.name.charAt(0).toUpperCase();
+//   };
+
 //   return (
-//     <nav style={{ padding: "10px", background: "#333", color: "#fff" }}>
-//       <Link to="/" style={{ marginRight: "10px" }}>Home</Link>
-//       <Link to="/profile-edit">Edit Profile</Link>
-//       <Link to="/blogs" style={{ marginRight: "10px" }}>Blogs</Link>
-//       <Link to="/counselors" style={{ marginRight: "10px" }}>Counselors</Link>
+//     <nav className="navbar">
+//       <div className="navbar-left">
+//        <h1 className="brand-highlight">HealPeer</h1>
+//       </div>
 
-//       {!user && (
-//         <>
-//           <Link to="/login" style={{ marginRight: "10px" }}>Login</Link>
-//           <Link to="/register">Register</Link>
-//         </>
-//       )}
+//       <div className="navbar-center">
+//         <Link to="/" className="navbar-link">Home</Link>
+//         <Link to="/blogs" className="navbar-link">Blogs</Link>
+//         <Link to="/counselors" className="navbar-link">Counselors</Link>
+//       </div>
 
-//       {user && user.role === "client" && (
-//         <>
-//           <Link to="/profile" style={{ marginRight: "10px" }}>My Profile</Link>
-//           <Link to="/sessions">My Sessions</Link>
-//           <button onClick={handleLogout} style={{ marginLeft: "10px" }}>Logout</button>
-//         </>
-//       )}
+//       <div className="navbar-right">
+//         {/* If no user */}
+//         {!user && (
+//           <>
+//             <Link to="/login" className="navbar-link">Login</Link>
+//             <Link to="/register" className="navbar-link">Register</Link>
+//           </>
+//         )}
 
-//       {user && user.role === "counselor" && (
-//         <>
-//           <Link to="/profile" style={{ marginRight: "10px" }}>My Profile</Link>
-//           <Link to="/sessions">My Sessions</Link>
-//           <button onClick={handleLogout} style={{ marginLeft: "10px" }}>Logout</button>
-//         </>
-//       )}
+//         {/* If logged in */}
+//         {user && (
+//           <>
+//             {/* Profile avatar bubble */}
+//             <div
+//               className="profile-avatar"
+//               onClick={() => navigate(profileLink())}
+//               title="My Profile"
+//             >
+//               {getInitial()}
+//             </div>
 
-//       {user && user.role === "admin" && (
-//         <>
-//           <Link to="/admin/dashboard" style={{ marginRight: "10px" }}>Dashboard</Link>
-//           <Link to="/admin/payout" style={{ marginRight: "10px" }}>Payouts</Link>
-//           <button onClick={handleLogout} style={{ marginLeft: "10px" }}>Logout</button>
-//         </>
-//       )}
+//             <button className="logout-btn" onClick={handleLogout}>
+//               Logout
+//             </button>
+//           </>
+//         )}
+//       </div>
 //     </nav>
 //   );
 // };
 
 // export default Navbar;
 
-
-
-
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "../styles/Navbar.css"; // ✅ Import CSS
+import "../styles/Navbar.css";
+import logo from "../assets/healpeer.logo.png";
 
 const Navbar = ({ user, setUser }) => {
   const navigate = useNavigate();
 
-  // const handleLogout = () => {
-  //   localStorage.removeItem("token");
-  //   setUser(null);
-  //   navigate("/login");
-  // };
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId"); // ✅ clear this too
-    setUser(null);
-    navigate("/login");
+    const confirmLogout = window.confirm("Are you sure you want to logout?");
+    if (confirmLogout) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("userId");
+      setUser(null);
+      navigate("/home");
+    }
   };
+  
+
+  const profileLink = () => {
+    if (!user) return "/login";
+    switch (user.role) {
+      case "counselor":
+        return `/counselor/${user._id}`;
+      case "client":
+        return "/profile";
+      case "admin":
+        return "/admin/dashboard";
+      default:
+        return "/login";
+    }
+  };
+
+  const getInitial = () => {
+    if (!user || !user.name) return "U";
+    return user.name.charAt(0).toUpperCase();
+  };
+
   return (
     <nav className="navbar">
       <div className="navbar-left">
-        <Link to="/" className="navbar-logo">HealPeer</Link>
+        <img src={logo} alt="HealPeer Logo" className="navbar-logo" />
+        <h1 className="brand-highlight">HealPeer</h1>
       </div>
 
       <div className="navbar-center">
-        <Link to="/" className="navbar-link">Home</Link>
+        <Link to="/home" className="navbar-link">Home</Link>
         <Link to="/blogs" className="navbar-link">Blogs</Link>
         <Link to="/counselors" className="navbar-link">Counselors</Link>
       </div>
@@ -131,19 +260,18 @@ const Navbar = ({ user, setUser }) => {
           </>
         )}
 
-        {user && (user.role === "client" || user.role === "counselor") && (
+        {user && (
           <>
-            <Link to="/profile" className="navbar-link">My Profile</Link>
-            <Link to="/sessions" className="navbar-link">My Sessions</Link>
-            <button className="logout-btn" onClick={handleLogout}>Logout</button>
-          </>
-        )}
-
-        {user && user.role === "admin" && (
-          <>
-            <Link to="/admin/dashboard" className="navbar-link">Dashboard</Link>
-            <Link to="/admin/payout" className="navbar-link">Payouts</Link>
-            <button className="logout-btn" onClick={handleLogout}>Logout</button>
+            <div
+              className="profile-avatar"
+              onClick={() => navigate(profileLink())}
+              title="My Profile"
+            >
+              {getInitial()}
+            </div>
+            <button className="logout-btn" onClick={handleLogout}>
+              Logout
+            </button>
           </>
         )}
       </div>

@@ -1,102 +1,61 @@
-// import React, { useState } from "react";
-// import API from "../api/api";
-// import { useNavigate } from "react-router-dom";
-
-// function Login() {
-//   const [email, setEmail] = useState("");
-//   const [password, setPassword] = useState("");
-//   const navigate = useNavigate();
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     try {
-//       const { data } = await API.post("/auth/login", { email, password });
-//       localStorage.setItem("token", data.token);
-//       localStorage.setItem("role", data.user.role);
-//       navigate("/profile");
-//     } catch (error) {
-//       alert(error.response.data.message);
-//     }
-//   };
-
-//   return (
-//     <form onSubmit={handleSubmit}>
-//       <h2>Login</h2>
-//       <input placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
-//       <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
-//       <button type="submit">Login</button>
-//     </form>
-//   );
-// }
-
-// export default Login;
-
 
 import React, { useState } from "react";
 import API from "../api/api";
 import { useNavigate } from "react-router-dom";
+import "../styles/Login.css"; // 👈 Import the CSS file
 
 function Login({ setUser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const { data } = await API.post("/auth/login", { email, password });
-
-  //     // ✅ Save all user info
-  //     localStorage.setItem("token", data.token);
-  //     localStorage.setItem("userId", data.user._id); // 👈 ADD THIS LINE
-  //     localStorage.setItem("role", data.user.role);
-
-  //     setUser?.(data.user); // optional - directly set in app state
-  //     navigate("/profile");
-  //   } catch (error) {
-  //     alert(error.response?.data?.message || "Login failed");
-  //   }
-  // };
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const { data } = await API.post("/auth/login", { email, password });
       localStorage.setItem("token", data.token);
-      setUser(data.user); // ✅ set user directly here
+      localStorage.setItem("userId", data.user._id);
+      localStorage.setItem("role", data.user.role);
+      setUser(data.user);
       navigate("/profile");
     } catch (error) {
-      alert(error.response.data.message);
+      alert(error.response?.data?.message || "Login failed");
     }
   };
-  
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Login</h2>
-      <input
-        placeholder="Email"
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button type="submit">Login</button>
-      <p>
-          Forgot Password?{" "}
-          <span className="link" onClick={() => navigate("/forgot")}>
-            Reset here
-          </span>
-        </p>
-        <p>
-          Don’t have an account?{" "}
-          <span className="link" onClick={() => navigate("/register")}>
-            Register
-          </span>
-        </p>
+    <div className="login-container">
+      <div className="login-card">
+        <h2>Welcome Back 👋</h2>
+        <p className="subtitle">Login to your account</p>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="email"
+            placeholder="Enter your Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Enter your Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button type="submit">Login</button>
+        </form>
 
-    </form>
+        <p className="link-text">
+          Forgot Password?{" "}
+          <span onClick={() => navigate("/forgot")}>Reset here</span>
+        </p>
+        <p className="link-text">
+          Don’t have an account?{" "}
+          <span onClick={() => navigate("/register")}>Register</span>
+        </p>
+      </div>
+    </div>
   );
 }
 

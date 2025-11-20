@@ -1,0 +1,110 @@
+.popup-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .popup-box {
+    background: #fff;
+    width: 80%;
+    max-width: 800px;
+    border-radius: 12px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    animation: popupAppear 0.3s ease-out;
+  }
+  
+  @keyframes popupAppear {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+  }
+  
+  .blog-title-input {
+    font-size: 1.8rem;
+    font-weight: bold;
+    border: none;
+    border-bottom: 2px solid #ddd;
+    padding: 10px 0;
+    outline: none;
+  }
+  
+  .blog-title-input:focus {
+    border-bottom-color: #0077ff;
+  }
+  
+  .blog-content-textarea {
+    font-size: 1.1rem;
+    min-height: 200px;
+    border: none;
+    border-bottom: 2px solid #ddd;
+    padding: 10px 0;
+    outline: none;
+    resize: vertical;
+  }
+  
+  .blog-content-textarea:focus {
+    border-bottom-color: #0077ff;
+  }
+  
+  .upload-btn {
+    cursor: pointer;
+    color: #0077ff;
+    font-weight: 500;
+  }
+  
+  .image-preview img {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .popup-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  
+  .cancel-btn {
+    background: #ddd;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .cancel-btn:hover { background: #ccc; }
+  
+  .publish-btn {
+    background: #0077ff;
+    color: #fff;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  
+  .publish-btn:hover { background: #005fcc; }
+  
