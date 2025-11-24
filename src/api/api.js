@@ -11,4 +11,11 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
+// Fetch all bookings for a client
+export const getClientBookings = (clientId) => API.get(`/bookings/client/${clientId}`);
+
+// Create Stripe checkout session
+export const createCheckoutSession = (bookingId) => API.post("/payment/session", { bookingId });
+
+
 export default API;

@@ -14,7 +14,7 @@ function Login({ setUser }) {
     try {
       const { data } = await API.post("/auth/login", { email, password });
       localStorage.setItem("token", data.token);
-      localStorage.setItem("userId", data.user._id);
+      localStorage.setItem("userId", data.user?.id);
       localStorage.setItem("role", data.user.role);
       setUser(data.user);
       navigate("/profile");

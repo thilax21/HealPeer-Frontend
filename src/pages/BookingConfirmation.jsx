@@ -69,3 +69,102 @@
 // };
 
 // export default BookingConfirmation;
+
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+
+const BookingPage = ({ clientId }) => {
+  const [counselors, setCounselors] = useState([]);
+  const [selectedCounselor, setSelectedCounselor] = useState(null);
+  const [sessionDate, setSessionDate] = useState("");
+  const [sessionTime, setSessionTime] = useState("");
+  const [amount, setAmount] = useState(20); // USD
+
+  // Fetch all counselors
+  useEffect(() => {
+    const fetchCounselors = async () => {
+      const { data } = await axios.get("http://localhost:3000/api/counselors");
+      setCounselors(data);
+    };
+    fetchCounselors();
+  }, []);
+
+  const handlePayment = async () => {
+    if (!selectedCounselor || !sessionDate || !sessionTime) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    try {
+      // 1️⃣ Create Stripe session
+      const { data } = await axios.post("http://localhost:3000/api/booking/create-session", {
+        clientId,
+        counselorId: selectedCounselor._id,
+        sessionDate,
+        sessionTime,
+        amount,
+      });
+
+      // Redirect to Stripe checkout
+      window.location.href = data.url;
+    } catch (error) {
+      console.error(error.response?.data || error);
+    }
+  };
+
+  return (
+    <div style={{ padding: "20px" }}>
+      <h1>Book a Counselor</h1>
+
+      <div>
+        <label>Select Counselor:</label>
+        <select
+          value={selectedCounselor?._id || ""}
+          onChange={(e) =>
+            setSelectedCounselor(counselors.find(c => c._id === e.target.value))
+          }
+        >
+          <option value="">--Select--</option>
+          {counselors.map(c => (
+            <option key={c._id} value={c._id}>
+              {c.name} ({c.expertise})
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label>Session Date:</label>
+        <input
+          type="date"
+          value={sessionDate}
+          onChange={(e) => setSessionDate(e.target.value)}
+        />
+      </div>
+
+      <div>
+        <label>Session Time:</label>
+        <input
+          type="time"
+          value={sessionTime}
+          onChange={(e) => setSessionTime(e.target.value)}
+        />
+      </div>
+
+      <div>
+        <label>Amount (USD):</label>
+        <input
+          type="number"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+        />
+      </div>
+
+      <button onClick={handlePayment} style={{ marginTop: "20px" }}>
+        Pay & Book Session
+      </button>
+    </div>
+  );
+};
+
+export default BookingPage;

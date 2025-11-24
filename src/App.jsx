@@ -18,19 +18,26 @@ import ResetPassword from "./pages/ResetPassword";
 import ForgetPassword from "./pages/ForgotPassword";
 import ProfileEdit from "./pages/ProfileEdit";
 import AdminRoute from "./components/AdminRoute";
-import BookSession from "./pages/BookSession";
 import RegisterRoleSelection from "./pages/RegisterRoleSelection";
 import SingleBlog from "./pages/SingleBlog";
 import CounselorProfile from "./pages/CounselorProfile";
 import CounselorEditProfile from "./pages/CounselorEditProfile";
 import BlogPopup from "./components/BlogPopup";
 import BookingPage from "./pages/BookingPage";
-import PaymentSuccess from "./pages/PaymentSuccess";
+
 import PaymentCancel from "./pages/PaymentCancel";
+import ClientBookings from "./pages/ClientBookings";
+import BokingSuccess from "./pages/BookingSuccess";
 function App() {
   const [user, setUser] = useState(null);
   const [counselors, setCounselors] = useState([]);
- 
+  const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    const savedToken = localStorage.getItem("token");
+    if (savedToken) setToken(savedToken);
+  }, []);
+  
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -55,7 +62,7 @@ function App() {
       <Toaster position="top-right" reverseOrder={false} />
       <Navbar user={user} setUser={setUser} />
       <Routes>
-        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login setUser={setUser} />} />
         <Route path="/register/:role" element={<Register />} />
         <Route path="/register" element={<RegisterRoleSelection />}/>
@@ -78,10 +85,14 @@ function App() {
           <Route path="/counselor/edit" element={<CounselorEditProfile user={user} setUser={setUser} setCounselors={setCounselors} />} />
         <Route path="/sessions" element={user ? <Sessions user={user} /> : <Login setUser={setUser} />} />
         <Route path="/profile-edit" element={<ProfileEdit />} />
-        <Route path="/book-session" element={user ? <BookSession user={user} /> : <Login setUser={setUser} />} />
+        <Route path="/book/:counselorId" element={<BookingPage token={token} />} />
+        <Route path="/payment-success" element={<BokingSuccess/>} />
+        <Route path="/booking/cancel" element={<PaymentCancel />} />
+        <Route path="/dashboard/bookings" element={<ClientBookings />} />
+
         <Route path="/counselor/:id/book" element={<BookingPage user={user} />} />
-        <Route path="/payment-success" element={<PaymentSuccess />} />
-        <Route path="/payment-cancel" element={<PaymentCancel />} />
+
+
 
 
         {/* Admin only routes */}

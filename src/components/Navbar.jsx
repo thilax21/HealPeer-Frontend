@@ -215,7 +215,7 @@ const Navbar = ({ user, setUser }) => {
       localStorage.removeItem("token");
       localStorage.removeItem("userId");
       setUser(null);
-      navigate("/home");
+      navigate("/");
     }
   };
   
@@ -247,7 +247,7 @@ const Navbar = ({ user, setUser }) => {
       </div>
 
       <div className="navbar-center">
-        <Link to="/home" className="navbar-link">Home</Link>
+        <Link to="/" className="navbar-link">Home</Link>
         <Link to="/blogs" className="navbar-link">Blogs</Link>
         <Link to="/counselors" className="navbar-link">Counselors</Link>
       </div>
