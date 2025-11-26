@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
 import API from "./api/api";
@@ -24,10 +23,14 @@ import CounselorProfile from "./pages/CounselorProfile";
 import CounselorEditProfile from "./pages/CounselorEditProfile";
 import BlogPopup from "./components/BlogPopup";
 import BookingPage from "./pages/BookingPage";
-
 import PaymentCancel from "./pages/PaymentCancel";
 import ClientBookings from "./pages/ClientBookings";
 import BokingSuccess from "./pages/BookingSuccess";
+import Chat from "./components/Chat";
+import Chatmessage from "./pages/Chatmessage";
+import ChatPage from "./pages/ChatPage";
+import ChatRooms from "./pages/ChatRooms";
+
 function App() {
   const [user, setUser] = useState(null);
   const [counselors, setCounselors] = useState([]);
@@ -71,7 +74,9 @@ function App() {
         <Route path="/profile" element={user ? <Profile user={user} /> : <Login setUser={setUser} />} />
         <Route path="/blogs" element={<Blogs user={user} />} />
         <Route path="/blogs/:id" element={<SingleBlog user={user} />} />
-        
+        <Route path="/chat" element={<Chat />} />
+        <Route path="/chat-rooms" element={<ChatRooms />} />
+
         {/* Dedicated route for blog write popup */}
         <Route 
           path="/blogs/write" 
@@ -89,8 +94,18 @@ function App() {
         <Route path="/payment-success" element={<BokingSuccess/>} />
         <Route path="/booking/cancel" element={<PaymentCancel />} />
         <Route path="/dashboard/bookings" element={<ClientBookings />} />
-
+    
         <Route path="/counselor/:id/book" element={<BookingPage user={user} />} />
+        <Route
+  path="/chat/:otherId"
+  element={
+    user ? (
+      <ChatPage currentUserId={user._id} currentUserRole={user.role} />
+    ) : (
+      <div>Loading...</div>
+    )
+  }
+/>
 
 
 

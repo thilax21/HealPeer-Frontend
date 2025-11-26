@@ -85,21 +85,16 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import API from "../api/api";
 
-const Blogs = ({ user }) => {
+export default function BlogsWebsiteUI({ user }) {
   const [blogs, setBlogs] = useState([]);
-  const [filteredBlogs, setFilteredBlogs] = useState([]);
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("All");
   const navigate = useNavigate();
-
-  const categories = ["All", "Trending", "Tech", "Love", "Health", "Life"];
 
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
         const { data } = await API.get("/blogs/all");
-        setBlogs(data.data);
-        setFilteredBlogs(data.data);
+        setBlogs(data.data || []);
       } catch (err) {
         console.error(err);
       }
@@ -107,116 +102,78 @@ const Blogs = ({ user }) => {
     fetchBlogs();
   }, []);
 
-  // Handle Search + Filtering
-  useEffect(() => {
-    let filtered = blogs;
-
-    if (category !== "All") {
-      filtered = filtered.filter((b) =>
-        b.category?.toLowerCase() === category.toLowerCase()
-      );
-    }
-
-    if (search.trim()) {
-      filtered = filtered.filter((b) =>
-        b.title.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-
-    setFilteredBlogs(filtered);
-  }, [search, category, blogs]);
+  const filteredBlogs = blogs.filter(b =>
+    (b.title || "").toLowerCase().includes(search.toLowerCase())
+  );
 
   const getFirstParagraph = (content) => {
-    const paragraphs = content.split("\n").filter((p) => p.trim() !== "");
+    const paragraphs = content.split("\n").filter(p => p.trim() !== "");
     return paragraphs.length > 0 ? paragraphs[0] : content.slice(0, 120);
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10">
+    <div className="max-w-7xl mx-auto px-4 py-12">
       {/* Header */}
-      <div className="flex justify-between items-center mb-10">
-        <h1 className="text-4xl font-extrabold text-indigo-700 tracking-tight">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
+        <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
           📝 Explore Blogs
         </h1>
-
         {user && (
           <button
-            onClick={() => navigate("/blogs/write")}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-full flex items-center gap-2 shadow-md transition-transform duration-300 hover:scale-105"
+            onClick={() => navigate('/blogs/write')}
+            className="px-5 py-2.5 rounded-full bg-indigo-600 text-white font-medium shadow-md hover:bg-indigo-700 transition"
           >
             ✍️ Write Blog
           </button>
         )}
       </div>
 
-      {/* Search + Category */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+      {/* Search Bar */}
+      <div className="mb-8">
         <input
           type="text"
           placeholder="Search blogs by title..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="border border-gray-300 p-3 rounded-lg w-full md:w-1/2 shadow-sm focus:ring-2 focus:ring-indigo-400 outline-none"
+          className="w-full md:w-1/2 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
         />
-
-        <div className="flex flex-wrap gap-2">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setCategory(cat)}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition ${
-                category === cat
-                  ? "bg-indigo-600 text-white shadow-md"
-                  : "bg-indigo-100 text-indigo-700 hover:bg-indigo-200"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
       </div>
 
       {/* Blogs Grid */}
       {filteredBlogs.length === 0 ? (
-        <p className="text-gray-500 text-center py-20 text-lg">
-          No blogs found.
-        </p>
+        <p className="text-gray-500 text-center py-20 text-lg">No blogs found.</p>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredBlogs.map((blog) => (
+          {filteredBlogs.map(blog => (
             <Link
               to={`/blogs/${blog._id}`}
               key={blog._id}
-              className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-1"
+              className="bg-white rounded-2xl shadow-md hover:shadow-xl transition overflow-hidden"
             >
               {/* Image */}
               {blog.imageUrl ? (
                 <img
                   src={blog.imageUrl}
                   alt={blog.title}
-                  className="w-full h-52 object-cover"
+                  className="w-full h-48 object-cover"
                 />
               ) : (
-                <div className="w-full h-52 bg-gray-200 flex items-center justify-center text-gray-500">
+                <div className="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">
                   No Image
                 </div>
               )}
 
               {/* Content */}
               <div className="p-5">
-                <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2">
+                <h3 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">
                   {blog.title}
                 </h3>
-
                 <p className="text-gray-600 text-sm mb-4 line-clamp-3">
                   {getFirstParagraph(blog.content)}...
                 </p>
-
                 <div className="text-xs text-gray-500">
-                  ✍️ {blog.author?.name}{" "}
-                  <span className="text-indigo-600">
-                    ({blog.author?.role})
-                  </span>
+                  ✍️ {blog.author?.name || 'Unknown'}
+                  <span className="text-indigo-600"> ({blog.author?.role || 'Author'})</span>
                 </div>
               </div>
             </Link>
@@ -225,6 +182,4 @@ const Blogs = ({ user }) => {
       )}
     </div>
   );
-};
-
-export default Blogs;
+}

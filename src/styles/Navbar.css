@@ -1,5 +1,5 @@
 /* =============== NAVBAR WRAPPER =============== */
-/* .navbar {
+.navbar {
   width: 100%;
   height: 70px;
   background: rgba(255, 255, 255, 0.25);
@@ -12,10 +12,10 @@
   position: sticky;
   top: 0;
   z-index: 100;
-} */
+}
 
 /* =============== LEFT SECTION =============== */
-/* .navbar-left {
+.navbar-left {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -34,10 +34,10 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   letter-spacing: 0.5px;
-} */
+}
 
 /* =============== CENTER LINKS =============== */
-/* .navbar-center {
+.navbar-center {
   display: flex;
   gap: 22px;
 }
@@ -53,10 +53,10 @@
 
 .navbar-link:hover {
   color: #6b4bff;
-} */
+}
 
 /* Cool underline animation */
-/* .navbar-link::after {
+.navbar-link::after {
   content: "";
   position: absolute;
   bottom: -4px;
@@ -70,17 +70,17 @@
 
 .navbar-link:hover::after {
   width: 100%;
-} */
+}
 
 /* =============== RIGHT SIDE =============== */
-/* .navbar-right {
+.navbar-right {
   display: flex;
   align-items: center;
   gap: 18px;
-} */
+}
 
 /* Profile avatar bubble */
-/* .profile-avatar {
+.profile-avatar {
   width: 38px;
   height: 38px;
   border-radius: 50%;
@@ -98,10 +98,10 @@
 
 .profile-avatar:hover {
   transform: scale(1.1);
-} */
+}
 
 /* Logout button */
-/* .logout-btn {
+.logout-btn {
   background: linear-gradient(90deg, #ff6b6b, #ff4949);
   border: none;
   color: white;
@@ -117,10 +117,10 @@
 .logout-btn:hover {
   transform: translateY(-2px);
   background: linear-gradient(90deg, #ff4949, #ff2e2e);
-} */
+}
 
 /* =============== RESPONSIVE =============== */
-/* @media (max-width: 768px) {
+@media (max-width: 768px) {
   .navbar {
     height: 75px;
     padding: 0 20px;
@@ -133,146 +133,5 @@
   .brand-highlight {
     font-size: 22px;
   }
-} */
-
-/* ===== Navbar wrapper ===== */
-.navbar-futuristic {
-  width: 100%;
-  height: 75px;
-  background: linear-gradient(90deg, #4b82a1, #c5d4da, #4b8add);
-  background-size: 300% 300%;
-  animation: gradientMove 8s ease infinite;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 50px;
-  border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-  position: sticky;
-  top: 10px;
-  z-index: 100;
 }
 
-@keyframes gradientMove {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* ===== Left ===== */
-.navbar-left-futuristic {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-}
-
-.logo-futuristic {
-  width: 42px;
-  height: 42px;
-}
-
-.brand-futuristic {
-  font-size: 26px;
-  font-weight: 700;
-  color: linear-gradient(90deg, #7b5bff, #5ad4ff);
-  /* background: linear-gradient(90deg, #7b5bff, #5ad4ff); */
-
-  text-shadow: linear-gradient(90deg, #7b5bff, #5ad4ff);
-
-}
-
-/* ===== Center ===== */
-.navbar-center-futuristic {
-  display: flex;
-  gap: 22px;
-}
-
-.nav-link-futuristic {
-  position: relative;
-  color: linear-gradient(90deg, #6b4bff, #4beaff);
-  font-weight: 600;
-  text-decoration: none;
-  font-size: 16px;
-  padding: 6px 12px;
-  transition: 0.3s;
-}
-
-.nav-link-futuristic::after {
-  content: '';
-  position: absolute;
-  bottom: -6px;
-  left: 0;
-  width: 0%;
-  height: 3px;
-  background: linear-gradient(90deg, #6b4bff, #4beaff);
-  border-radius: 3px;
-  transition: 0.4s ease;
-}
-
-.nav-link-futuristic:hover::after {
-  width: 100%;
-}
-
-/* ===== Right ===== */
-.navbar-right-futuristic {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.nav-button-futuristic {
-  padding: 6px 18px;
-  border-radius: 25px;
-  border: 2px solid #fff;
-  background: rgba(255,255,255,0.15);
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.nav-button-futuristic:hover {
-  background: #fff;
-  color: #ff4b6b;
-  box-shadow: 0 0 12px #fff, 0 0 24px rgba(255,255,255,0.3);
-}
-
-/* Logout button */
-.logout-button-futuristic {
-  padding: 6px 18px;
-  border-radius: 25px;
-  border: none;
-  background: rgba(255,91,91,0.3);
-  color: #ff5b5b;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.logout-button-futuristic:hover {
-  background: #ff5b5b;
-  color: #fff;
-  box-shadow: 0 0 12px #ff5b5b, 0 0 20px rgba(255,91,91,0.4);
-}
-
-/* Profile Avatar */
-.profile-avatar-futuristic {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: linear-gradient(135deg,#ff4b6b,#5ad4ff);
-  color: #fff;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: 0.3s;
-  box-shadow: 0 0 8px #fff, 0 0 15px #5ad4ff;
-}
-
-.profile-avatar-futuristic:hover {
-  transform: scale(1.2);
-  box-shadow: 0 0 12px #fff, 0 0 25px #ff4b6b;
-}

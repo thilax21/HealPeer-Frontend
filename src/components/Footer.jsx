@@ -19,6 +19,7 @@ const footerStyle = {
   background: "linear-gradient(to right, #1D8AD8 , #1CB995 , #1D8AD8)",
   color: "#fff",
   textAlign: "center",
+  
 };
 
 const linkStyle = {
