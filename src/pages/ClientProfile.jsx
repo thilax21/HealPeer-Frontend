@@ -2214,6 +2214,7 @@ const ClientProfile = () => {
   const [blogs, setBlogs] = useState([]);
   const [sessions, setSessions] = useState([]);
   const [bookings, setBookings] = useState([]);
+  const [activeBookings, setActiveBookings] = useState([]);
   const [editingProfile, setEditingProfile] = useState(false);
   const [profileData, setProfileData] = useState({});
   const [selectedFile, setSelectedFile] = useState(null);
@@ -2306,6 +2307,25 @@ const ClientProfile = () => {
     fetchBookings();
   }, [clientId, token]);
 
+  // Fetch active bookings for chat
+  useEffect(() => {
+    const fetchActiveBookings = async () => {
+      if (!clientId || !token) return;
+      try {
+        const { data } = await API.get(`/booking/active/${clientId}`, {
+          headers: authHeaders,
+        });
+        setActiveBookings(data.bookings || []);
+      } catch (err) {
+        console.error("Fetch active bookings error:", err);
+      }
+    };
+    fetchActiveBookings();
+    // Refresh every 5 minutes to check for new active sessions
+    const interval = setInterval(fetchActiveBookings, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [clientId, token]);
+
   const handleProfileChange = (e) =>
     setProfileData({ ...profileData, [e.target.name]: e.target.value });
 
@@ -2369,6 +2389,14 @@ const ClientProfile = () => {
     }
   };
 
+  const handleStartChat = (booking) => {
+    if (booking.sessionType === 'chat') {
+      navigate(`/chat/${booking.chatRoom}`);
+    } else if (booking.sessionType === 'video') {
+      window.open(booking.meetLink, '_blank');
+    }
+  };
+
   if (!client)
     return <div className="text-center py-20">Loading profile...</div>;
 
@@ -2403,13 +2431,40 @@ const ClientProfile = () => {
         </div>
       </div>
 
+      {/* Active Sessions */}
+      {activeBookings.length > 0 && (
+        <div className="bg-green-50 border border-green-200 rounded-xl p-6">
+          <h3 className="text-lg font-semibold text-green-800 mb-4">🟢 Active Sessions</h3>
+          <div className="space-y-3">
+            {activeBookings.map((booking) => (
+              <div key={booking._id} className="flex items-center justify-between bg-white p-4 rounded-lg shadow">
+                <div>
+                  <p className="font-medium text-gray-800">
+                    {booking.sessionType === 'chat' ? '💬 Chat Session' : '📹 Video Session'} with {booking.counselorId?.name}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    {new Date(`${booking.date}T${booking.time}`).toLocaleString()}
+                  </p>
+                </div>
+                <button
+                  onClick={() => handleStartChat(booking)}
+                  className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+                >
+                  {booking.sessionType === 'chat' ? 'Join Chat' : 'Join Video Call'}
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
         <div className="bg-indigo-50 p-6 rounded-xl shadow hover:shadow-md transition">
           <h3 className="text-2xl font-bold text-indigo-600">{blogs.length}</h3>
           <p className="text-gray-600 mt-1">Blogs</p>
         </div>
-        <div className="bg-green-50 p-6 rounded-xl shadow hover:shadow-md transition">
+        {/* <div className="bg-green-50 p-6 rounded-xl shadow hover:shadow-md transition">
           <h3 className="text-2xl font-bold text-green-600">
             {bookedSessions.length}
           </h3>
@@ -2420,7 +2475,7 @@ const ClientProfile = () => {
             {completedSessions.length}
           </h3>
           <p className="text-gray-600 mt-1">Completed Sessions</p>
-        </div>
+        </div> */}
         <div className="bg-purple-50 p-6 rounded-xl shadow hover:shadow-md transition">
           <h3 className="text-2xl font-bold text-purple-600">{bookings.length}</h3>
           <p className="text-gray-600 mt-1">Bookings</p>
@@ -2429,7 +2484,7 @@ const ClientProfile = () => {
 
       {/* Tabs */}
       <div className="flex justify-center gap-4 border-b pb-2">
-        {["profile", "blogs", "sessions", "bookings"].map((tab) => (
+        {["profile", "blogs", "bookings"].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -2561,7 +2616,7 @@ const ClientProfile = () => {
         )}
 
         {/* Sessions & Bookings Tabs */}
-        {activeTab === "sessions" && (
+        {/* {activeTab === "sessions" && (
           <div className="space-y-6">
             <h3 className="text-lg font-semibold text-gray-700">
               Booked Sessions
@@ -2596,7 +2651,7 @@ const ClientProfile = () => {
               ))
             )}
           </div>
-        )}
+        )} */}
 
         {activeTab === "bookings" && (
           <div className="space-y-6">
@@ -2623,22 +2678,22 @@ const ClientProfile = () => {
                     <p className="text-gray-600 mt-1">
                       Amount: {(b.amount / 100).toFixed(2)} USD
                     </p>
-                    <p className="text-gray-600 mt-1">
+                    {/* <p className="text-gray-600 mt-1">
                       Payment: {b.paymentStatus || "Pending"}
-                    </p>
+                    </p> */}
                     <p className="text-gray-600 mt-1">Notes: {b.notes}</p>
                   </div>
-                  <span
+                  {/* <span
                     className={`mt-2 md:mt-0 font-medium ${
                       b.status === "completed"
                         ? "text-green-600"
-                        : b.status === "booked"
+                        : b.status === "booked" 
                         ? "text-yellow-600"
                         : "text-gray-500"
                     }`}
                   >
                     {b.status.charAt(0).toUpperCase() + b.status.slice(1)}
-                  </span>
+                  </span> */}
                 </div>
               ))
             )}

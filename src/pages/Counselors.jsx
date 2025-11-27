@@ -60,9 +60,9 @@ const Counselor = ({ user, counselors, setCounselors }) => {
     }
 
     if (sortFee === "low-high") {
-      result.sort((a, b) => (a.sessionFee || 0) - (b.sessionFee || 0));
+      result.sort((a, b) => (a.pricePerSession || 0) - (b.pricePerSession || 0));
     } else if (sortFee === "high-low") {
-      result.sort((a, b) => (b.sessionFee || 0) - (a.sessionFee || 0));
+      result.sort((a, b) => (b.pricePerSession || 0) - (a.pricePerSession || 0));
     }
 
     setFilteredCounselors(result);
@@ -180,7 +180,7 @@ const Counselor = ({ user, counselors, setCounselors }) => {
             <div className="mt-3 text-gray-700 space-y-1">
               <p><strong>Experience:</strong> {c.experience} Years</p>
               <p><strong>Bio:</strong> {c.bio}</p>
-              <p><strong>Fee:</strong> ${c.sessionFee || 50}</p>
+              <p><strong>Fee:</strong> ${c.pricePerSession || 50}</p>
             </div>
 
             <div className="mt-4 flex flex-col gap-2">
@@ -254,7 +254,7 @@ const Counselor = ({ user, counselors, setCounselors }) => {
 
               {bookingData.duration && bookingData.date && bookingData.time ? (
                 <PaymentButton
-                  amount={selectedCounselor.sessionFee || 50}
+                  amount={selectedCounselor.pricePerSession || 50}
                   counselorId={selectedCounselor._id}
                   booking={bookingData}
                 />

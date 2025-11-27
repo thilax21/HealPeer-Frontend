@@ -31,7 +31,7 @@ const Navbar = ({ user, setUser }) => {
     if (!user) return "/login";
     switch (user.role) {
       case "counselor":
-        return `/counselor/${user._id}`;
+        return `/profile`;
       case "client":
         return "/profile";
       case "admin":
@@ -57,6 +57,8 @@ const Navbar = ({ user, setUser }) => {
         <Link to="/" className="navbar-link">Home</Link>
         <Link to="/blogs" className="navbar-link">Blogs</Link>
         <Link to="/counselors" className="navbar-link">Counselors</Link>
+        <Link to="/about" className="navbar-link">About</Link>
+
           {user && <Link to="/chat-rooms" className="navbar-link">Chat Rooms 💬</Link>}
 
       </div>

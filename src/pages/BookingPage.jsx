@@ -10,7 +10,7 @@ const BookingPage = ({ user }) => {
   const [counselor, setCounselor] = useState(null);
   const [loading, setLoading] = useState(true);
   const [bookingData, setBookingData] = useState({
-    sessionType: "video",
+    sessionType: "chat",
     date: "",
     time: "",
     durationMin: 60,
@@ -19,13 +19,23 @@ const BookingPage = ({ user }) => {
   const [bookingCreated, setBookingCreated] = useState(null);
   const [error, setError] = useState("");
 
+  // Debug: Log user and localStorage info
+  useEffect(() => {
+    console.log("BookingPage - User object:", user);
+    console.log("BookingPage - localStorage userId:", localStorage.getItem("userId"));
+    console.log("BookingPage - localStorage token:", localStorage.getItem("token"));
+  }, [user]);
+
   useEffect(() => {
     const fetchCounselor = async () => {
       try {
+        console.log("Fetching counselor with ID:", id);
         const { data } = await API.get(`/counselors/${id}`);
+        console.log("Counselor response:", data);
         setCounselor(data.data);
       } catch (err) {
         console.error("Error fetching counselor:", err);
+        console.error("Error response:", err.response?.data);
         setError("Failed to load counselor information");
       } finally {
         setLoading(false);
@@ -62,22 +72,42 @@ const BookingPage = ({ user }) => {
     }
 
     try {
+      // Handle both _id and id for user ID, with fallback to localStorage
+      let clientId = user._id || user.id;
+      
+      if (!clientId) {
+        // Fallback to localStorage
+        clientId = localStorage.getItem("userId");
+      }
+      
+      if (!clientId) {
+        setError("User ID not found. Please login again.");
+        return;
+      }
+
       const bookingPayload = {
-        clientId: user._id,
+        clientId: clientId,
         counselorId: id,
         date: bookingData.date,
         time: bookingData.time,
         durationMin: bookingData.durationMin,
         notes: bookingData.notes,
         sessionType: bookingData.sessionType,
-        amount: counselor.sessionFee || 50
+        amount: counselor.pricePerSession || 50
       };
 
+      console.log("Creating booking with payload:", bookingPayload);
+      console.log("User:", user);
+      console.log("Client ID:", clientId);
+      console.log("Counselor ID:", id);
+
       const { data } = await API.post("/booking", bookingPayload);
+      console.log("Booking response:", data);
       setBookingCreated(data.booking);
       setError("");
     } catch (err) {
       console.error("Booking error:", err);
+      console.error("Error response:", err.response?.data);
       setError(err.response?.data?.message || "Failed to create booking");
     }
   };
@@ -141,7 +171,7 @@ const BookingPage = ({ user }) => {
             <div className="space-y-2 text-gray-700">
               <p><strong>Experience:</strong> {counselor.experience} Years</p>
               <p><strong>Bio:</strong> {counselor.bio || "No bio available"}</p>
-              <p><strong>Session Fee:</strong> ${counselor.sessionFee || 50}</p>
+              <p><strong>Session Fee:</strong> ${counselor.pricePerSession || 50}</p>
             </div>
           </div>
 
@@ -292,7 +322,8 @@ const BookingPage = ({ user }) => {
                   
                   <PaymentButton
                     bookingId={bookingCreated._id}
-                    amount={bookingCreated.amount}
+                    amount={bookingCreated.amount} // amount in dollars
+
                   />
                 </div>
 

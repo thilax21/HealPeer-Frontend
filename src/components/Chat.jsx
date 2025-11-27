@@ -225,7 +225,7 @@ function Chat() {
     setLoading(true);
 
     try {
-      const res = await API.post("/chat", { messages: newMessages, sessionStart });
+      const res = await API.post("/chat/chat", { messages: newMessages, sessionStart });
       const botMsg = { role: "bot", text: res.data.reply };
       setMessages([...newMessages, botMsg]);
       if (res.data.reply === "DAILY_LIMIT_REACHED") {

@@ -15,6 +15,8 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("blogs"); // sidebar state
   const token = localStorage.getItem("token");
+  const [clients, setClients] = useState([]);
+
 
   // ---------------- FETCH DATA ----------------
   const fetchBlogs = async () => {
@@ -64,6 +66,7 @@ const AdminDashboard = () => {
     fetchCounselors();
     fetchPendingRequests();
     fetchMonthlyReport();
+    fetchClients();
   }, [token]);
 
   // ---------------- ACTIONS ----------------
@@ -76,6 +79,21 @@ const AdminDashboard = () => {
       console.error("Approve error:", err);
     }
   };
+
+  //............get cilents..................
+
+  const fetchClients = async () => {
+    try {
+      const { data } = await API.get("/users/clients", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setClients(data.data);
+    } catch (err) {
+      console.error("Error fetching clients:", err);
+    }
+  };
+
+
 
   const handleReject = async (id) => {
     try {
@@ -104,6 +122,7 @@ const AdminDashboard = () => {
     { key: "blogs", label: "Blogs" },
     { key: "pending", label: "Pending Requests" },
     { key: "counselors", label: "All Counselors" },
+    { key: "clients", label: "Clients" },
     { key: "report", label: "Monthly Report" },
   ];
 
@@ -222,6 +241,33 @@ const AdminDashboard = () => {
             )}
           </section>
         )}
+
+        {activeTab === "clients" && (
+          <section>
+            <h2>🧑‍🤝‍🧑 All Clients</h2>
+            {clients.length === 0 ? (
+              <p>No clients found</p>
+            ) : (
+              <table border="1" cellPadding="8" style={{ borderCollapse: "collapse", width: "100%" }}>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {clients.map((c) => (
+                    <tr key={c._id}>
+                      <td>{c.name}</td>
+                      <td>{c.email}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </section>
+        )}
+
 
         {activeTab === "report" && (
           <section>

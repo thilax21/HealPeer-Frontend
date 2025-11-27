@@ -27,9 +27,9 @@ import PaymentCancel from "./pages/PaymentCancel";
 import ClientBookings from "./pages/ClientBookings";
 import BokingSuccess from "./pages/BookingSuccess";
 import Chat from "./components/Chat";
-import Chatmessage from "./pages/Chatmessage";
 import ChatPage from "./pages/ChatPage";
 import ChatRooms from "./pages/ChatRooms";
+import AboutPage from "./components/About";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -66,6 +66,7 @@ function App() {
       <Navbar user={user} setUser={setUser} />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/about" element={<AboutPage />} />
         <Route path="/login" element={<Login setUser={setUser} />} />
         <Route path="/register/:role" element={<Register />} />
         <Route path="/register" element={<RegisterRoleSelection />}/>
@@ -90,7 +91,6 @@ function App() {
           <Route path="/counselor/edit" element={<CounselorEditProfile user={user} setUser={setUser} setCounselors={setCounselors} />} />
         <Route path="/sessions" element={user ? <Sessions user={user} /> : <Login setUser={setUser} />} />
         <Route path="/profile-edit" element={<ProfileEdit />} />
-        <Route path="/book/:counselorId" element={<BookingPage token={token} />} />
         <Route path="/payment-success" element={<BokingSuccess/>} />
         <Route path="/booking/cancel" element={<PaymentCancel />} />
         <Route path="/dashboard/bookings" element={<ClientBookings />} />

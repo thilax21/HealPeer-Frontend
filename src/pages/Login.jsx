@@ -17,7 +17,7 @@ function Login({ setUser }) {
       localStorage.setItem("userId", data.user?.id);
       localStorage.setItem("role", data.user.role);
       setUser(data.user);
-      navigate("/profile");
+      navigate("/");
     } catch (error) {
       alert(error.response?.data?.message || "Login failed");
     }

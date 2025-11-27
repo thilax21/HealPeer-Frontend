@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE || "http://localhost:3000/api",
+  baseURL: import.meta.env.VITE_API_BASE || "http://localhost:3002/api",
 });
 
 // attach token automatically
@@ -21,6 +21,6 @@ export const createBooking = (bookingData) => API.post("/bookings", bookingData)
 export const getBookingBySession = (sessionId) => API.get(`/bookings/session/${sessionId}`);
 
 // Create Stripe checkout session
-export const createCheckoutSession = (bookingId) => API.post("/payments/create-checkout-session", { bookingId });
+export const createCheckoutSession = (bookingId) => API.post("/api/payment/session", { bookingId });
 
 export default API;

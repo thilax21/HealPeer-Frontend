@@ -438,252 +438,525 @@
 //   );
 // };
 
+// // export default Home;
+
+
+// import React, { useRef } from "react";
+// import { Link } from "react-router-dom";
+// import { motion, useScroll, useTransform } from "framer-motion";
+// import { 
+//   MessageCircle, 
+//   Zap, 
+//   User, 
+//   ArrowRight, 
+//   PenTool,
+//   ArrowUpRight,
+//   Play
+// } from "lucide-react";
+
+// // --- 1. TEXTURE COMPONENT (The "Paper" Look) ---
+// const NoiseBackground = () => (
+//   <div className="fixed inset-0 opacity-[0.03] pointer-events-none z-0 mix-blend-overlay" 
+//     style={{ backgroundImage: `url("https://grainy-gradients.vercel.app/noise.svg")` }}>
+//   </div>
+// );
+
+// // --- 2. STICKY CARD COMPONENT (The Core Animation) ---
+// const StickyCard = ({ title, sub, icon: Icon, img, index, color, link, linkText }) => {
+//   return (
+//     <div className="sticky top-24 mb-12 w-full max-w-5xl mx-auto">
+//       <motion.div 
+//         initial={{ y: 50, opacity: 0 }}
+//         whileInView={{ y: 0, opacity: 1 }}
+//         transition={{ duration: 0.7, ease: "easeOut" }}
+//         className={`relative overflow-hidden rounded-[3rem] ${color} p-8 md:p-16 shadow-2xl border border-black/5 h-[600px] flex flex-col md:flex-row items-center gap-12`}
+//       >
+//         {/* Text Side */}
+//         <div className="flex-1 z-10">
+//           <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-8 border border-black/10 shadow-sm">
+//             <Icon size={32} className="text-slate-900" />
+//           </div>
+//           <div className="text-xs font-bold uppercase tracking-widest opacity-50 mb-4">Step 0{index}</div>
+//           <h2 className="text-4xl md:text-6xl font-serif text-slate-900 mb-6 leading-tight">{title}</h2>
+//           <p className="text-xl text-slate-600 mb-8 leading-relaxed">{sub}</p>
+//           <Link to={link} className="inline-flex items-center gap-2 text-lg font-bold border-b-2 border-black pb-1 hover:gap-4 transition-all">
+//             {linkText} <ArrowRight size={20} />
+//           </Link>
+//         </div>
+
+//         {/* Image Side */}
+//         <div className="flex-1 h-full w-full relative rounded-[2rem] overflow-hidden shadow-xl group">
+//            <img src={img} alt={title} className="absolute inset-0 w-full h-full object-cover transition duration-1000 group-hover:scale-110" />
+//         </div>
+//       </motion.div>
+//     </div>
+//   );
+// };
+
+// const Home = () => {
+//   const targetRef = useRef(null);
+//   const { scrollYProgress } = useScroll({ target: targetRef });
+  
+//   const x = useTransform(scrollYProgress, [0, 1], ["1%", "-50%"]);
+
+//   return (
+//     <div className="min-h-screen bg-[#F4F2ED] text-slate-900 font-sans selection:bg-orange-200 overflow-x-hidden relative">
+//       <NoiseBackground />
+
+//       {/* --- NAVBAR (Minimal & Bottom) --- */}
+//       <nav className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
+//         <div className="bg-slate-900/90 backdrop-blur-md text-white px-2 py-2 rounded-full flex items-center gap-1 shadow-2xl border border-white/10">
+//           <Link to="/" className="px-6 py-3 rounded-full bg-white text-black font-bold text-sm">Home</Link>
+//           <Link to="/chat" className="px-6 py-3 rounded-full hover:bg-white/10 transition text-sm font-medium">AI Chat</Link>
+//           <Link to="/find-therapist" className="px-6 py-3 rounded-full hover:bg-white/10 transition text-sm font-medium">Experts</Link>
+//           <Link to="/blog" className="px-6 py-3 rounded-full hover:bg-white/10 transition text-sm font-medium">Journal</Link>
+//         </div>
+//       </nav>
+
+//       {/* --- HERO SECTION (Cinematic) --- */}
+//       <section className="relative h-screen flex flex-col justify-center items-center px-6 text-center">
+//         <motion.div 
+//           initial={{ opacity: 0, scale: 0.9 }}
+//           animate={{ opacity: 1, scale: 1 }}
+//           transition={{ duration: 1 }}
+//           className="relative z-10"
+//         >
+//           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-300 bg-white/50 backdrop-blur-sm text-xs font-bold uppercase tracking-widest mb-8">
+//              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> 
+//              The Hybrid Therapy Platform
+//           </div>
+          
+//           <h1 className="text-[12vw] leading-[0.8] font-serif mb-6 text-slate-900 mix-blend-darken">
+//             HealPeer<span className="text-orange-500">.</span>
+//           </h1>
+          
+//           <p className="text-xl md:text-2xl text-slate-500 max-w-xl mx-auto mb-12 font-light leading-relaxed">
+//             A seamless bridge between <span className="text-slate-900 font-medium">Artificial Intelligence</span> and <span className="text-slate-900 font-medium">Human Empathy</span>.
+//           </p>
+
+//           <div className="flex items-center justify-center gap-4">
+//              <Link to="/chat" className="bg-slate-900 text-white w-16 h-16 rounded-full flex items-center justify-center hover:scale-110 transition duration-300 shadow-xl">
+//                <ArrowDown size={24} className="animate-bounce" /> {/* Placeholder icon, or just arrow */}
+//                <Zap size={24} />
+//              </Link>
+//              <span className="text-sm font-bold uppercase tracking-widest opacity-50">Start Now</span>
+//           </div>
+//         </motion.div>
+
+//         {/* Hero Video/Image Background Blur */}
+//         <div className="absolute inset-0 z-0 flex items-center justify-center opacity-30">
+//            <div className="w-[600px] h-[600px] bg-gradient-to-r from-orange-200 to-purple-200 rounded-full blur-[120px] animate-pulse"></div>
+//         </div>
+//       </section>
+
+//       {/* --- THE SCROLLING CARDS (The Showstopper) --- */}
+//       <section className="py-24 px-6">
+//         <div className="max-w-3xl mx-auto text-center mb-24">
+//            <h2 className="text-4xl md:text-5xl font-serif mb-6">The 5-Minute Bridge</h2>
+//            <p className="text-xl text-slate-500">We realized that waiting for help is the hardest part. So we removed the wait.</p>
+//         </div>
+
+//         <div className="relative">
+//           {/* CARD 1: AI */}
+//           <StickyCard 
+//             index="1"
+//             color="bg-[#EFECE6]"
+//             icon={MessageCircle}
+//             title="Vent Instantly"
+//             sub="No forms. No waiting rooms. Talk to our empathetic AI immediately to de-escalate stress and organize your thoughts."
+//             link="/chat"
+//             linkText="Start AI Chat"
+//             img="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80"
+//           />
+
+//           {/* CARD 2: THE BRIDGE */}
+//           <StickyCard 
+//             index="2"
+//             color="bg-[#E3DCD2]" 
+//             icon={Zap}
+//             title="The Handover"
+//             sub="After 5 minutes, if you need deeper support, our system summarizes your context securely. We find the perfect human match instantly."
+//             link="/how-it-works"
+//             linkText="See How it Works"
+//             img="https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&w=800&q=80"
+//           />
+
+//           {/* CARD 3: HUMAN */}
+//           <StickyCard 
+//             index="3"
+//             color="bg-[#1E293B] text-white" // Dark card for contrast
+//             icon={User}
+//             title="Human Healing"
+//             sub="Connect with a licensed therapist who already knows your story. Skip the repetitive intakes and start healing immediately."
+//             link="/find-therapist"
+//             linkText="Find a Therapist"
+//             img="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=800&q=80"
+//           />
+//         </div>
+//       </section>
+
+//       {/* --- LIFESTYLE & BLOG (Horizontal Scroll Effect) --- */}
+//       <section className="py-32 overflow-hidden bg-white">
+//         <div className="px-6 mb-16 flex justify-between items-end max-w-7xl mx-auto">
+//            <h2 className="text-5xl md:text-7xl font-serif text-slate-900">Wellness <br /> Culture</h2>
+//            <Link to="/blog" className="hidden md:flex items-center gap-2 font-bold text-lg hover:text-orange-500 transition">
+//              View Magazine <ArrowUpRight />
+//            </Link>
+//         </div>
+
+//         {/* Horizontal Scroll Container */}
+//         <div ref={targetRef} className="relative h-[300vh]">
+//           <div className="sticky top-0 h-screen flex items-center overflow-hidden">
+//             <motion.div style={{ x }} className="flex gap-12 px-6 md:px-24">
+              
+//               {/* Slide 1: Journal */}
+//               <div className="w-[600px] h-[400px] md:h-[500px] flex-shrink-0 relative rounded-[2rem] overflow-hidden group cursor-pointer">
+//                 <img src="https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=800&q=80" alt="" className="w-full h-full object-cover transition duration-700 group-hover:scale-110" />
+//                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition"></div>
+//                 <div className="absolute bottom-8 left-8 text-white">
+//                   <PenTool className="mb-4" size={32} />
+//                   <h3 className="text-4xl font-serif mb-2">Private Journal</h3>
+//                   <p className="opacity-80">Write your thoughts securely.</p>
+//                 </div>
+//               </div>
+
+//               {/* Slide 2: Stories */}
+//               <div className="w-[600px] h-[400px] md:h-[500px] flex-shrink-0 relative rounded-[2rem] overflow-hidden group cursor-pointer">
+//                 <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=80" alt="" className="w-full h-full object-cover transition duration-700 group-hover:scale-110" />
+//                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition"></div>
+//                 <div className="absolute bottom-8 left-8 text-white">
+//                   <Play className="mb-4" size={32} />
+//                   <h3 className="text-4xl font-serif mb-2">Community Stories</h3>
+//                   <p className="opacity-80">Real people, real recovery.</p>
+//                 </div>
+//               </div>
+
+//               {/* Slide 3: Expert Articles */}
+//               <div className="w-[600px] h-[400px] md:h-[500px] flex-shrink-0 relative rounded-[2rem] overflow-hidden group cursor-pointer">
+//                 <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80" alt="" className="w-full h-full object-cover transition duration-700 group-hover:scale-110" />
+//                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition"></div>
+//                 <div className="absolute bottom-8 left-8 text-white">
+//                   <ArrowUpRight className="mb-4" size={32} />
+//                   <h3 className="text-4xl font-serif mb-2">Expert Insights</h3>
+//                   <p className="opacity-80">Science-backed articles.</p>
+//                 </div>
+//               </div>
+
+//             </motion.div>
+//           </div>
+//         </div>
+//       </section>
+
+//       {/* --- MINIMAL FOOTER --- */}
+//       <footer className="bg-[#1E293B] text-white py-24 px-6 rounded-t-[3rem]">
+//         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12">
+//           <div>
+//              <h2 className="text-6xl font-serif mb-8">HealPeer.</h2>
+//              <p className="text-slate-400 max-w-md text-lg">
+//                The hybrid platform connecting artificial intelligence speed with human expert depth.
+//              </p>
+//           </div>
+//           <div className="grid grid-cols-2 gap-8">
+//             <div>
+//               <h4 className="font-bold mb-6 text-slate-200">Platform</h4>
+//               <ul className="space-y-4 text-slate-400">
+//                 <li><Link to="#" className="hover:text-white">AI Chat</Link></li>
+//                 <li><Link to="#" className="hover:text-white">Therapists</Link></li>
+//                 <li><Link to="#" className="hover:text-white">Journal</Link></li>
+//               </ul>
+//             </div>
+//             <div>
+//               <h4 className="font-bold mb-6 text-slate-200">Legal</h4>
+//               <ul className="space-y-4 text-slate-400">
+//                 <li><Link to="#" className="hover:text-white">Privacy</Link></li>
+//                 <li><Link to="#" className="hover:text-white">HIPAA</Link></li>
+//                 <li><Link to="#" className="hover:text-white">Terms</Link></li>
+//               </ul>
+//             </div>
+//           </div>
+//         </div>
+//       </footer>
+
+//     </div>
+//   );
+// };
+
+// // Helper icon for hero
+// const ArrowDown = ({ size, className }) => (
+//   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+// )
+
 // export default Home;
+
+
+
+
+
+
+
+
 
 
 import React, { useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { 
+  Brain, 
   MessageCircle, 
-  Zap, 
-  User, 
-  ArrowRight, 
-  PenTool,
+  PenTool, 
+  Calendar, 
+  ChevronRight, 
+  Star, 
+  Quote, 
   ArrowUpRight,
-  Play
+  Heart,
+  Sparkles
 } from "lucide-react";
 
-// --- 1. TEXTURE COMPONENT (The "Paper" Look) ---
-const NoiseBackground = () => (
-  <div className="fixed inset-0 opacity-[0.03] pointer-events-none z-0 mix-blend-overlay" 
-    style={{ backgroundImage: `url("https://grainy-gradients.vercel.app/noise.svg")` }}>
+// --- 1. BACKGROUND (Warm & Organic) ---
+const OrganicBackground = () => (
+  <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none bg-[#FDFCF8]">
+    <motion.div 
+      animate={{ x: [0, 50, 0], y: [0, 40, 0], scale: [1, 1.1, 1] }}
+      transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+      className="absolute top-[-10%] right-[-5%] w-[50vw] h-[50vw] rounded-full bg-orange-200/40 blur-[100px] mix-blend-multiply"
+    />
+    <motion.div 
+      animate={{ x: [0, -30, 0], y: [0, 60, 0], scale: [1, 1.2, 1] }}
+      transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+      className="absolute top-[20%] left-[-10%] w-[60vw] h-[60vw] rounded-full bg-rose-200/30 blur-[100px] mix-blend-multiply"
+    />
+    <div className="absolute inset-0 opacity-[0.4] z-10 mix-blend-overlay" style={{ backgroundImage: `url("https://grainy-gradients.vercel.app/noise.svg")` }}></div>
   </div>
 );
 
-// --- 2. STICKY CARD COMPONENT (The Core Animation) ---
-const StickyCard = ({ title, sub, icon: Icon, img, index, color, link, linkText }) => {
+// --- 2. STICKY CARD (Services) ---
+const StickyCard = ({ title, description, icon: Icon, img, index, accentColor, buttonColor }) => {
   return (
-    <div className="sticky top-24 mb-12 w-full max-w-5xl mx-auto">
+    <div className="sticky top-32 mb-12 w-full max-w-6xl mx-auto px-4">
       <motion.div 
-        initial={{ y: 50, opacity: 0 }}
+        initial={{ y: 80, opacity: 0 }}
         whileInView={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.7, ease: "easeOut" }}
-        className={`relative overflow-hidden rounded-[3rem] ${color} p-8 md:p-16 shadow-2xl border border-black/5 h-[600px] flex flex-col md:flex-row items-center gap-12`}
+        viewport={{ once: true, margin: "-10%" }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="relative overflow-hidden rounded-[2.5rem] bg-white border border-stone-100 p-8 md:p-16 shadow-[0_20px_60px_-15px_rgba(60,40,30,0.08)] h-auto md:h-[580px] flex flex-col md:flex-row items-center gap-12 md:gap-20"
       >
-        {/* Text Side */}
-        <div className="flex-1 z-10">
-          <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-8 border border-black/10 shadow-sm">
-            <Icon size={32} className="text-slate-900" />
+        <div className="flex-1 z-10 flex flex-col justify-center">
+          <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-8 ${accentColor} shadow-md`}>
+            <Icon size={28} className="text-white" />
           </div>
-          <div className="text-xs font-bold uppercase tracking-widest opacity-50 mb-4">Step 0{index}</div>
-          <h2 className="text-4xl md:text-6xl font-serif text-slate-900 mb-6 leading-tight">{title}</h2>
-          <p className="text-xl text-slate-600 mb-8 leading-relaxed">{sub}</p>
-          <Link to={link} className="inline-flex items-center gap-2 text-lg font-bold border-b-2 border-black pb-1 hover:gap-4 transition-all">
-            {linkText} <ArrowRight size={20} />
+          
+          <div className="flex items-center gap-3 mb-4">
+            <span className="px-3 py-1 rounded-full bg-stone-100 text-stone-500 text-xs font-bold uppercase tracking-widest">Step 0{index}</span>
+          </div>
+
+          <h2 className="text-4xl md:text-5xl font-serif tracking-tight mb-6 text-stone-900">{title}</h2>
+          <p className="text-lg text-stone-600 mb-10 leading-relaxed max-w-md">{description}</p>
+          
+          <Link to="/register" className={`group inline-flex items-center gap-3 px-8 py-4 rounded-full text-white font-bold shadow-lg transition-transform hover:scale-105 ${buttonColor}`}>
+            Get Started
+            <ChevronRight size={20} />
           </Link>
         </div>
 
-        {/* Image Side */}
-        <div className="flex-1 h-full w-full relative rounded-[2rem] overflow-hidden shadow-xl group">
-           <img src={img} alt={title} className="absolute inset-0 w-full h-full object-cover transition duration-1000 group-hover:scale-110" />
+        <div className="flex-1 h-[300px] md:h-full w-full relative rounded-[2rem] overflow-hidden shadow-inner group">
+           <div className="absolute inset-0 bg-stone-900/5 group-hover:bg-transparent transition duration-500 z-10"></div>
+           <img src={img} alt={title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
         </div>
       </motion.div>
     </div>
   );
 };
 
+// --- 3. TESTIMONIAL CARD (Glassy & Colorful) ---
+const TestimonialCard = ({ text, author, role, accentColor }) => (
+  <div className="w-[85vw] md:w-[450px] h-[400px] flex-shrink-0 relative rounded-[2.5rem] p-10 flex flex-col justify-between bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl transition-transform hover:-translate-y-2">
+    <Quote size={40} className="text-white/30" />
+    <p className="text-2xl font-serif leading-snug text-white drop-shadow-sm">"{text}"</p>
+    
+    <div className="flex items-center gap-4 border-t border-white/10 pt-6">
+      <div className={`w-12 h-12 rounded-full ${accentColor} flex items-center justify-center text-lg font-bold shadow-lg text-white`}>
+        {author.charAt(0)}
+      </div>
+      <div>
+        <h4 className="font-bold text-white tracking-wide">{author}</h4>
+        <p className="text-xs uppercase tracking-wider opacity-70 text-white">{role}</p>
+      </div>
+    </div>
+  </div>
+);
+
 const Home = () => {
   const targetRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: targetRef });
-  
-  const x = useTransform(scrollYProgress, [0, 1], ["1%", "-50%"]);
+  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-60%"]);
 
   return (
-    <div className="min-h-screen bg-[#F4F2ED] text-slate-900 font-sans selection:bg-orange-200 overflow-x-hidden relative">
-      <NoiseBackground />
+    <div className="min-h-screen text-stone-900 font-sans selection:bg-rose-200 selection:text-rose-900 overflow-x-hidden relative">
+      <OrganicBackground />
 
-      {/* --- NAVBAR (Minimal & Bottom) --- */}
-      <nav className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
-        <div className="bg-slate-900/90 backdrop-blur-md text-white px-2 py-2 rounded-full flex items-center gap-1 shadow-2xl border border-white/10">
-          <Link to="/" className="px-6 py-3 rounded-full bg-white text-black font-bold text-sm">Home</Link>
-          <Link to="/chat" className="px-6 py-3 rounded-full hover:bg-white/10 transition text-sm font-medium">AI Chat</Link>
-          <Link to="/find-therapist" className="px-6 py-3 rounded-full hover:bg-white/10 transition text-sm font-medium">Experts</Link>
-          <Link to="/blog" className="px-6 py-3 rounded-full hover:bg-white/10 transition text-sm font-medium">Journal</Link>
+      {/* --- NAVBAR --- */}
+      <nav className="fixed top-0 left-0 w-full z-50 px-6 py-6">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+           <div className="bg-white/80 backdrop-blur-md px-6 py-3 rounded-full border border-stone-100 shadow-sm flex items-center gap-2">
+              <Sparkles size={16} className="text-rose-500 fill-rose-500" />
+              <span className="font-serif font-bold text-xl tracking-tight text-stone-800">HealPeer</span>
+           </div>
+
+           <div className="hidden md:flex bg-white/80 backdrop-blur-md px-2 py-2 rounded-full border border-stone-100 shadow-sm items-center gap-1">
+              <Link to="/login" className="px-6 py-3 rounded-full hover:bg-stone-100 transition text-sm font-bold text-stone-600">Login</Link>
+              <Link to="/register" className="px-6 py-3 rounded-full bg-gradient-to-r from-rose-500 to-orange-500 text-white font-bold text-sm shadow-lg shadow-rose-500/30 hover:shadow-rose-500/40 hover:scale-105 transition-all">
+                Get Started
+              </Link>
+           </div>
         </div>
       </nav>
 
-      {/* --- HERO SECTION (Cinematic) --- */}
-      <section className="relative h-screen flex flex-col justify-center items-center px-6 text-center">
+      {/* --- HERO SECTION --- */}
+      <section className="relative min-h-screen flex flex-col justify-center items-center px-6 text-center pt-20 pb-32">
         <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
+          initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1 }}
-          className="relative z-10"
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="relative z-10 max-w-5xl mx-auto"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-300 bg-white/50 backdrop-blur-sm text-xs font-bold uppercase tracking-widest mb-8">
-             <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> 
-             The Hybrid Therapy Platform
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-100 text-rose-800 text-xs font-bold uppercase tracking-widest mb-8">
+             <Heart size={12} className="fill-current" />
+             Your Wellness Journey
           </div>
           
-          <h1 className="text-[12vw] leading-[0.8] font-serif mb-6 text-slate-900 mix-blend-darken">
-            HealPeer<span className="text-orange-500">.</span>
+          <h1 className="text-[12vw] md:text-[7vw] leading-[0.95] font-serif tracking-tight mb-8 text-stone-900">
+            Your Safe Space for <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-orange-500 to-purple-600">
+              Healing & Growth
+            </span>
           </h1>
           
-          <p className="text-xl md:text-2xl text-slate-500 max-w-xl mx-auto mb-12 font-light leading-relaxed">
-            A seamless bridge between <span className="text-slate-900 font-medium">Artificial Intelligence</span> and <span className="text-slate-900 font-medium">Human Empathy</span>.
+          <p className="text-xl md:text-2xl text-stone-500 max-w-2xl mx-auto mb-12 font-medium leading-relaxed">
+            Connect with professional counselors and join a supportive community. 
+            Your journey to mental wellness starts here, on your terms.
           </p>
 
-          <div className="flex items-center justify-center gap-4">
-             <Link to="/chat" className="bg-slate-900 text-white w-16 h-16 rounded-full flex items-center justify-center hover:scale-110 transition duration-300 shadow-xl">
-               <ArrowDown size={24} className="animate-bounce" /> {/* Placeholder icon, or just arrow */}
-               <Zap size={24} />
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+             <Link to="/register" className="px-10 py-5 rounded-full bg-stone-900 text-white font-bold text-lg shadow-2xl hover:bg-stone-800 hover:-translate-y-1 transition-all flex items-center gap-3">
+               Start Counseling <ArrowUpRight />
              </Link>
-             <span className="text-sm font-bold uppercase tracking-widest opacity-50">Start Now</span>
+             <Link to="/about" className="text-stone-600 font-bold hover:text-rose-500 transition border-b-2 border-stone-200 hover:border-rose-500 pb-1">
+               How it works
+             </Link>
           </div>
         </motion.div>
-
-        {/* Hero Video/Image Background Blur */}
-        <div className="absolute inset-0 z-0 flex items-center justify-center opacity-30">
-           <div className="w-[600px] h-[600px] bg-gradient-to-r from-orange-200 to-purple-200 rounded-full blur-[120px] animate-pulse"></div>
-        </div>
       </section>
 
-      {/* --- THE SCROLLING CARDS (The Showstopper) --- */}
-      <section className="py-24 px-6">
+      {/* --- SERVICES --- */}
+      <section className="py-20 px-6 relative z-10">
         <div className="max-w-3xl mx-auto text-center mb-24">
-           <h2 className="text-4xl md:text-5xl font-serif mb-6">The 5-Minute Bridge</h2>
-           <p className="text-xl text-slate-500">We realized that waiting for help is the hardest part. So we removed the wait.</p>
+           <h2 className="text-4xl md:text-5xl font-serif mb-6 text-stone-900">How We Help You</h2>
+           <p className="text-lg text-stone-500">Comprehensive tools designed specifically for you.</p>
         </div>
 
-        <div className="relative">
-          {/* CARD 1: AI */}
+        <div className="relative pb-24">
           <StickyCard 
             index="1"
-            color="bg-[#EFECE6]"
-            icon={MessageCircle}
-            title="Vent Instantly"
-            sub="No forms. No waiting rooms. Talk to our empathetic AI immediately to de-escalate stress and organize your thoughts."
-            link="/chat"
-            linkText="Start AI Chat"
-            img="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80"
+            title="Personal Counseling"
+            description="Talk privately with licensed experts to find clarity and peace in a safe environment."
+            icon={Brain}
+            img="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=800&q=80"
+            accentColor="bg-rose-500"
+            buttonColor="bg-rose-500 hover:bg-rose-600"
           />
-
-          {/* CARD 2: THE BRIDGE */}
           <StickyCard 
             index="2"
-            color="bg-[#E3DCD2]" 
-            icon={Zap}
-            title="The Handover"
-            sub="After 5 minutes, if you need deeper support, our system summarizes your context securely. We find the perfect human match instantly."
-            link="/how-it-works"
-            linkText="See How it Works"
-            img="https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&w=800&q=80"
+            title="Online Chat"
+            description="Instant, anonymous chat with support counselors whenever you need someone to listen."
+            icon={MessageCircle}
+            img="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?auto=format&fit=crop&w=800&q=80"
+            accentColor="bg-orange-500"
+            buttonColor="bg-orange-500 hover:bg-orange-600"
           />
-
-          {/* CARD 3: HUMAN */}
           <StickyCard 
             index="3"
-            color="bg-[#1E293B] text-white" // Dark card for contrast
-            icon={User}
-            title="Human Healing"
-            sub="Connect with a licensed therapist who already knows your story. Skip the repetitive intakes and start healing immediately."
-            link="/find-therapist"
-            linkText="Find a Therapist"
-            img="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=800&q=80"
+            title="Journal & Share"
+            description="Express your thoughts through secure journaling and connect with community stories."
+            icon={PenTool}
+            img="https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=800&q=80"
+            accentColor="bg-indigo-500"
+            buttonColor="bg-indigo-500 hover:bg-indigo-600"
+          />
+          <StickyCard 
+            index="4"
+            title="Book a Session"
+            description="Schedule personalized video or audio counseling sessions that fit your calendar."
+            icon={Calendar}
+            img="https://images.unsplash.com/photo-1605656816944-971cd5c1407f?auto=format&fit=crop&w=800&q=80"
+            accentColor="bg-teal-600"
+            buttonColor="bg-teal-600 hover:bg-teal-700"
           />
         </div>
       </section>
 
-      {/* --- LIFESTYLE & BLOG (Horizontal Scroll Effect) --- */}
-      <section className="py-32 overflow-hidden bg-white">
-        <div className="px-6 mb-16 flex justify-between items-end max-w-7xl mx-auto">
-           <h2 className="text-5xl md:text-7xl font-serif text-slate-900">Wellness <br /> Culture</h2>
-           <Link to="/blog" className="hidden md:flex items-center gap-2 font-bold text-lg hover:text-orange-500 transition">
-             View Magazine <ArrowUpRight />
-           </Link>
+      {/* --- TESTIMONIALS (UPDATED: RICH GRADIENT BG) --- */}
+      <section className="py-24 bg-gradient-to-br from-indigo-900 via-purple-900 to-rose-900 text-white overflow-hidden rounded-t-[3rem] relative z-20">
+        {/* Floating blurred orbs for texture inside the dark area */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+             <div className="absolute top-0 left-1/4 w-96 h-96 bg-rose-500/20 rounded-full blur-[100px]"></div>
+             <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-[100px]"></div>
         </div>
 
-        {/* Horizontal Scroll Container */}
-        <div ref={targetRef} className="relative h-[300vh]">
+        <div className="px-6 mb-16 max-w-7xl mx-auto relative z-10">
+           <div className="flex items-center gap-2 text-yellow-400 mb-4">
+             {[1,2,3,4,5].map(i => <Star key={i} fill="currentColor" size={20} />)}
+             <span className="text-white/70 ml-2 text-sm">4.9/5 Rating</span>
+           </div>
+           <h2 className="text-5xl md:text-6xl font-serif text-white">Stories of Hope</h2>
+        </div>
+
+        <div ref={targetRef} className="relative h-[250vh] z-10">
           <div className="sticky top-0 h-screen flex items-center overflow-hidden">
-            <motion.div style={{ x }} className="flex gap-12 px-6 md:px-24">
+            <motion.div style={{ x }} className="flex gap-8 px-6 md:px-24">
               
-              {/* Slide 1: Journal */}
-              <div className="w-[600px] h-[400px] md:h-[500px] flex-shrink-0 relative rounded-[2rem] overflow-hidden group cursor-pointer">
-                <img src="https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=800&q=80" alt="" className="w-full h-full object-cover transition duration-700 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition"></div>
-                <div className="absolute bottom-8 left-8 text-white">
-                  <PenTool className="mb-4" size={32} />
-                  <h3 className="text-4xl font-serif mb-2">Private Journal</h3>
-                  <p className="opacity-80">Write your thoughts securely.</p>
-                </div>
-              </div>
+              <TestimonialCard 
+                accentColor="bg-rose-500"
+                text="HealPeer helped me open up when I needed it most. The counselor was kind, patient, and truly listened."
+                author="Sarah Jenkins"
+                role="Student"
+              />
 
-              {/* Slide 2: Stories */}
-              <div className="w-[600px] h-[400px] md:h-[500px] flex-shrink-0 relative rounded-[2rem] overflow-hidden group cursor-pointer">
-                <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=80" alt="" className="w-full h-full object-cover transition duration-700 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition"></div>
-                <div className="absolute bottom-8 left-8 text-white">
-                  <Play className="mb-4" size={32} />
-                  <h3 className="text-4xl font-serif mb-2">Community Stories</h3>
-                  <p className="opacity-80">Real people, real recovery.</p>
-                </div>
-              </div>
+              <TestimonialCard 
+                accentColor="bg-orange-500"
+                text="The AI chat made it easy to start. I felt safe and supported throughout my session. It's exactly what I needed."
+                author="Michael Thompson"
+                role="Software Engineer"
+              />
 
-              {/* Slide 3: Expert Articles */}
-              <div className="w-[600px] h-[400px] md:h-[500px] flex-shrink-0 relative rounded-[2rem] overflow-hidden group cursor-pointer">
-                <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80" alt="" className="w-full h-full object-cover transition duration-700 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition"></div>
-                <div className="absolute bottom-8 left-8 text-white">
-                  <ArrowUpRight className="mb-4" size={32} />
-                  <h3 className="text-4xl font-serif mb-2">Expert Insights</h3>
-                  <p className="opacity-80">Science-backed articles.</p>
-                </div>
-              </div>
+              <TestimonialCard 
+                accentColor="bg-purple-500"
+                text="I was skeptical about online therapy, but the professionals here are top-tier. The sessions have changed my life."
+                author="Elena Rodriguez"
+                role="Artist"
+              />
 
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* --- MINIMAL FOOTER --- */}
-      <footer className="bg-[#1E293B] text-white py-24 px-6 rounded-t-[3rem]">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12">
-          <div>
-             <h2 className="text-6xl font-serif mb-8">HealPeer.</h2>
-             <p className="text-slate-400 max-w-md text-lg">
-               The hybrid platform connecting artificial intelligence speed with human expert depth.
-             </p>
+      {/* --- FOOTER (Matching Gradient Bottom) --- */}
+      <footer className="bg-rose-900 text-white/60 pb-12 px-6 pt-12 relative z-20">
+        <div className="max-w-7xl mx-auto border-t border-white/10 pt-12 flex flex-col md:flex-row justify-between items-center gap-8">
+          <div className="text-center md:text-left">
+             <h2 className="text-2xl font-serif text-white mb-2">HealPeer.</h2>
+             <p className="text-sm">© 2025 HealPeer Inc. All rights reserved.</p>
           </div>
-          <div className="grid grid-cols-2 gap-8">
-            <div>
-              <h4 className="font-bold mb-6 text-slate-200">Platform</h4>
-              <ul className="space-y-4 text-slate-400">
-                <li><Link to="#" className="hover:text-white">AI Chat</Link></li>
-                <li><Link to="#" className="hover:text-white">Therapists</Link></li>
-                <li><Link to="#" className="hover:text-white">Journal</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold mb-6 text-slate-200">Legal</h4>
-              <ul className="space-y-4 text-slate-400">
-                <li><Link to="#" className="hover:text-white">Privacy</Link></li>
-                <li><Link to="#" className="hover:text-white">HIPAA</Link></li>
-                <li><Link to="#" className="hover:text-white">Terms</Link></li>
-              </ul>
-            </div>
+          <div className="flex gap-6 text-sm font-bold">
+             <Link to="#" className="hover:text-white transition">Privacy Policy</Link>
+             <Link to="#" className="hover:text-white transition">Terms</Link>
+             <Link to="#" className="hover:text-white transition">Support</Link>
           </div>
         </div>
       </footer>
-
     </div>
   );
 };
-
-// Helper icon for hero
-const ArrowDown = ({ size, className }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
-)
 
 export default Home;

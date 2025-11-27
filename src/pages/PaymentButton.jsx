@@ -40,7 +40,7 @@ const PaymentButton = ({ bookingId, amount }) => {
           Processing...
         </>
       ) : (
-        <>Pay ${amount || 50} Now</>
+        <>Pay ${(amount / 100).toFixed(2) || 1.00} Now</>
       )}
     </button>
   );
