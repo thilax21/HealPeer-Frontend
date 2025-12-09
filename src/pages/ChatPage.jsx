@@ -1,49 +1,65 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import Chatmessage from "./Chatmessage";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { StreamChat } from "stream-chat";
+import { Chat, Channel, ChannelHeader, MessageList, MessageInput } from "stream-chat-react";
+// import "stream-chat-react/dist/css/styles.css";
+import { fetchStreamTokens } from "../lib/streamClient";
+import CallButtons from "../components/CallButtons";
+import CallBox from "../components/CallBox";
 
-const ChatPage = () => {
-  const { otherId } = useParams(); // otherId = the person you chat with
-  const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useState({ id: "", role: "" });
+export default function ChatPage({ user }) {
+  const { bookingId } = useParams();
+  const [chatClient, setChatClient] = useState(null);
+  const [channel, setChannel] = useState(null);
+  const [videoToken, setVideoToken] = useState(null);
+  const [callInfo, setCallInfo] = useState(null);
 
   useEffect(() => {
-    const userId = localStorage.getItem("userId");
-    const userRole = localStorage.getItem("userRole");
-    
-    if (!userId || !userRole) {
-      navigate("/login");
-      return;
-    }
-    
-    setCurrentUser({ id: userId, role: userRole });
-  }, [navigate]);
+    if (!bookingId) return;
+    let mounted = true;
+    const init = async () => {
+      try {
+        const { chatToken, videoToken: vt, roomId } = await fetchStreamTokens(user, bookingId);
+        setVideoToken(vt);
 
-  if (!currentUser.id) {
-    return (
-      <div style={{ padding: "20px", textAlign: "center" }}>
-        <p>Loading...</p>
-      </div>
-    );
-  }
+        const client = StreamChat.getInstance(import.meta.env.VITE_STREAM_API_KEY);
+        await client.connectUser({ id: user._id, name: user.name }, chatToken);
 
-  // Determine roles
-  const counselorId = currentUser.role === "client" ? otherId : currentUser.id;
-  const clientId = currentUser.role === "client" ? currentUser.id : otherId;
+        const ch = client.channel("messaging", roomId, {
+          members: [user._id], // server should add other member (counselor)
+        });
+        await ch.watch();
+        if (!mounted) return;
+        setChannel(ch);
+        setChatClient(client);
+      } catch (err) {
+        console.error("Init error:", err);
+      }
+    };
+    init();
+    return () => {
+      mounted = false;
+      if (chatClient) chatClient.disconnectUser();
+    };
+    // eslint-disable-next-line
+  }, [bookingId]);
+
+  if (!channel) return <div>Loading chat...</div>;
 
   return (
-    <div>
-      <div style={{ padding: "20px", textAlign: "center", backgroundColor: "#7b5bff", color: "white" }}>
-        <h2>Chat Room</h2>
-        <p>You are chatting as {currentUser.role === "client" ? "Client" : "Counselor"}</p>
+    <div className="flex h-screen">
+      <div className="w-1/3 p-4 border-r">
+        <Channel channel={channel}>
+          <ChannelHeader />
+          <MessageList />
+          <MessageInput />
+        </Channel>
       </div>
-      <Chatmessage 
-        counselorId={counselorId} 
-        clientId={clientId} 
-        userId={currentUser.id} 
-      />
+
+      <div className="flex-1 p-4">
+        <CallButtons user={user} onStartCall={(c)=>setCallInfo(c)} />
+        <CallBox callInfo={callInfo} videoToken={videoToken} user={user} />
+      </div>
     </div>
   );
-};
-
-export default ChatPage;
+}

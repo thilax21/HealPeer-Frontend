@@ -26,6 +26,7 @@ import BookingPage from "./pages/BookingPage";
 import PaymentCancel from "./pages/PaymentCancel";
 import ClientBookings from "./pages/ClientBookings";
 import BokingSuccess from "./pages/BookingSuccess";
+import PaymentSuccess from "./pages/PaymentSuccess";
 import Chat from "./components/Chat";
 import ChatPage from "./pages/ChatPage";
 import ChatRooms from "./pages/ChatRooms";
@@ -51,7 +52,7 @@ function App() {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        setUser(data.data); // ✅ because your backend sends { success, data: user }
+        setUser(data.data);
       } catch (err) {
         console.error("Error fetching logged-in user:", err);
       }
@@ -83,39 +84,23 @@ function App() {
           path="/blogs/write" 
           element={<BlogPopup user={user} onClose={() => window.history.back()} />} 
         />
-        {/* <Route path="/counselors" element={<Counselors user={user} />} />
-        <Route path="/counselor/:id" element={<CounselorProfile user={user} />} />
-        <Route path="/counselor/edit" element={<CounselorEditProfile user={user} setUser={setUser} />} /> */}
+        
         <Route path="/counselors" element={<Counselors user={user} counselors={counselors} setCounselors={setCounselors} />} />
-          <Route path="/counselor/:id" element={<CounselorProfile user={user} setUser={setUser} setCounselors={setCounselors} />} />
-          <Route path="/counselor/edit" element={<CounselorEditProfile user={user} setUser={setUser} setCounselors={setCounselors} />} />
+        <Route path="/counselor/:id" element={<CounselorProfile user={user} setUser={setUser} setCounselors={setCounselors} />} />
+        <Route path="/counselor/edit" element={<CounselorEditProfile user={user} setUser={setUser} setCounselors={setCounselors} />} />
         <Route path="/sessions" element={user ? <Sessions user={user} /> : <Login setUser={setUser} />} />
         <Route path="/profile-edit" element={<ProfileEdit />} />
-        <Route path="/payment-success" element={<BokingSuccess/>} />
+        <Route path="/booking-success" element={<BokingSuccess/>} />
+        <Route path="/payment-success" element={<PaymentSuccess/>} />
         <Route path="/booking/cancel" element={<PaymentCancel />} />
         <Route path="/dashboard/bookings" element={<ClientBookings />} />
-    
         <Route path="/counselor/:id/book" element={<BookingPage user={user} />} />
-        <Route
-  path="/chat/:otherId"
-  element={
-    user ? (
-      <ChatPage currentUserId={user._id} currentUserRole={user.role} />
-    ) : (
-      <div>Loading...</div>
-    )
-  }
-/>
-
-
-
+        <Route path="/chat/:bookingId" element={<ChatPage user={user} /> }/>
 
         {/* Admin only routes */}
         {user && user.role === "admin" && (
           <>
-            <Route path="/admin/dashboard" element={<AdminRoute user={user}><AdminDashboard /> </AdminRoute>} />
-
-          
+            <Route path="/admin/dashboard" element={<AdminRoute user={user}><AdminDashboard /></AdminRoute>} />
           </>
         )}
       </Routes>

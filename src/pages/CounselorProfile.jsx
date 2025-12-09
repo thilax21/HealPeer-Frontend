@@ -1,415 +1,295 @@
+
+
+
 import React, { useEffect, useState } from "react";
 import API from "../api/api";
 import { useParams, useNavigate } from "react-router-dom";
-import { MapPin, Clock, DollarSign, Star, Calendar, MessageCircle, Video, Award, Users, BookOpen } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { 
+  MapPin, Clock, DollarSign, Star, Calendar, 
+  MessageCircle, Video, Award, Users, BookOpen, 
+  CheckCircle2, ArrowRight, Shield, Quote, 
+  Sparkles, GraduationCap, Globe, HeartHandshake
+} from "lucide-react";
+
+// --- 🎨 VISUAL COMPOSITES ---
+
+const NoiseOverlay = () => (
+  <div className="fixed inset-0 pointer-events-none z-[1] opacity-[0.03] mix-blend-overlay"
+       style={{ backgroundImage: `url("https://grainy-gradients.vercel.app/noise.svg")`, filter: 'contrast(170%) brightness(100%)' }} />
+);
+
+const GradientOrb = ({ className }) => (
+  <div className={`absolute rounded-full blur-[100px] opacity-30 pointer-events-none ${className}`} />
+);
+
+const FadeIn = ({ children, delay = 0 }) => (
+  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay }}>
+    {children}
+  </motion.div>
+);
+
+const InfoChip = ({ icon: Icon, label }) => (
+  <div className="flex items-center gap-2 px-4 py-2 bg-white/60 backdrop-blur-md border border-stone-100 rounded-full text-sm font-medium text-stone-600 shadow-sm">
+    <Icon size={14} className="text-[#3f6212]" /> {label}
+  </div>
+);
+
+// --- 🏛 MAIN COMPONENT ---
 
 const CounselorProfile = ({ user }) => {
   const { id } = useParams();
   const navigate = useNavigate();
-  
   const [counselor, setCounselor] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [reviews, setReviews] = useState([]);
-  const [averageRating, setAverageRating] = useState(0);
-  const [activeTab, setActiveTab] = useState("about");
+  const [activeTab, setActiveTab] = useState("overview");
+
+  // Mock Reviews Data
+  const reviews = [
+    { id: 1, author: "Sarah M.", rating: 5, text: "Absolutely transformative sessions. Dr. Smith listens deeply.", date: "2 days ago" },
+    { id: 2, author: "James L.", rating: 5, text: "Professional, kind, and very insightful. Highly recommended.", date: "1 week ago" },
+    { id: 3, author: "Emily R.", rating: 4, text: "Great practical advice for managing daily anxiety.", date: "2 weeks ago" },
+  ];
 
   useEffect(() => {
-    const fetchCounselorProfile = async () => {
+    const fetchData = async () => {
       try {
         const { data } = await API.get(`/counselors/${id}`);
         setCounselor(data.data);
-        
-        // Mock reviews data - in real app, this would come from API
-        const mockReviews = [
-          {
-            id: 1,
-            clientName: "Sarah Johnson",
-            rating: 5,
-            comment: "Excellent counselor! Very professional and understanding. Helped me through a difficult time.",
-            date: "2024-01-15"
-          },
-          {
-            id: 2,
-            clientName: "Mike Chen",
-            rating: 4,
-            comment: "Great experience. The sessions were very helpful and the counselor was very knowledgeable.",
-            date: "2024-01-10"
-          },
-          {
-            id: 3,
-            clientName: "Emily Davis",
-            rating: 5,
-            comment: "Very compassionate and skilled. Would definitely recommend to others seeking help.",
-            date: "2024-01-05"
-          }
-        ];
-        
-        setReviews(mockReviews);
-        
-        // Calculate average rating
-        const avgRating = mockReviews.reduce((sum, review) => sum + review.rating, 0) / mockReviews.length;
-        setAverageRating(avgRating);
-        
-      } catch (err) {
-        console.error("Error fetching counselor profile:", err);
-        setError("Failed to load counselor profile");
-      } finally {
-        setLoading(false);
-      }
+      } catch (e) { console.error(e); } 
+      finally { setLoading(false); }
     };
-    
-    fetchCounselorProfile();
+    fetchData();
   }, [id]);
 
-  const handleBookSession = () => {
-    if (!user) {
-      alert("Please login first to book a session");
-      navigate("/login");
-      return;
-    }
-    
-    if (user.role !== "client") {
-      alert("Only clients can book sessions");
-      return;
-    }
-    
-    navigate(`/counselor/${id}/book`);
-  };
-
-  const handleStartChat = () => {
-    if (!user) {
-      alert("Please login first to start a chat");
-      navigate("/login");
-      return;
-    }
-    
-    navigate(`/chat/${id}`);
-  };
-
-  const renderStars = (rating) => {
-    return Array.from({ length: 5 }, (_, i) => (
-      <Star
-        key={i}
-        className={`w-4 h-4 ${i < rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
-      />
-    ));
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading counselor profile...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!counselor) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-red-600 text-lg">Counselor not found</p>
-          <button 
-            onClick={() => navigate("/counselors")}
-            className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
-          >
-            Back to Counselors
-          </button>
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <div className="h-screen flex items-center justify-center bg-[#f4f2ed] text-[#3f6212] animate-pulse font-serif text-xl">Loading Sanctum...</div>;
+  if (!counselor) return <div className="h-screen flex items-center justify-center bg-[#f4f2ed]">Counselor not found.</div>;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header Section */}
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
-        <div className="max-w-6xl mx-auto px-4 py-12">
-          <button 
-            onClick={() => navigate("/counselors")}
-            className="text-white/80 hover:text-white mb-6 flex items-center transition-colors"
-          >
-            ← Back to Counselors
-          </button>
-          
-          <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
-            {/* Profile Image */}
-            <div className="flex-shrink-0">
-              <img
-                src={counselor.profileImage || "https://cdn-icons-png.flaticon.com/512/219/219969.png"}
-                alt={counselor.name}
-                className="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-white shadow-xl"
-              />
-            </div>
-            
-            {/* Basic Info */}
-            <div className="flex-1 text-center md:text-left">
-              <h1 className="text-3xl md:text-4xl font-bold mb-2">{counselor.name}</h1>
-              <p className="text-xl text-white/90 mb-4">{counselor.specialization || "General Counselor"}</p>
-              
-              <div className="flex flex-wrap justify-center md:justify-start gap-4 mb-6">
-                <div className="flex items-center gap-1">
-                  {renderStars(Math.round(averageRating))}
-                  <span className="ml-2 text-white/90">({averageRating.toFixed(1)})</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Users className="w-5 h-5" />
-                  <span>{counselor.totalSessions || 150}+ Sessions</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <MapPin className="w-5 h-5" />
-                  <span>{counselor.location || "Online"}</span>
-                </div>
-              </div>
-              
-              <div className="flex flex-wrap justify-center md:justify-start gap-3">
-                <button
-                  onClick={handleBookSession}
-                  className="bg-white text-indigo-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors flex items-center gap-2"
-                >
-                  <Calendar className="w-5 h-5" />
-                  Book Session
-                </button>
-                <button
-                  onClick={handleStartChat}
-                  className="bg-white/20 backdrop-blur text-white px-6 py-3 rounded-lg font-semibold hover:bg-white/30 transition-colors flex items-center gap-2"
-                >
-                  <MessageCircle className="w-5 h-5" />
-                  Start Chat
-                </button>
-              </div>
-            </div>
-            
-            {/* Quick Stats */}
-            <div className="flex flex-col gap-4 text-center">
-              <div className="bg-white/20 backdrop-blur rounded-lg p-4">
-                <DollarSign className="w-6 h-6 mx-auto mb-2" />
-                <div className="text-2xl font-bold">${counselor.pricePerSession || 50}</div>
-                <div className="text-sm text-white/80">per session</div>
-              </div>
-              <div className="bg-white/20 backdrop-blur rounded-lg p-4">
-                <Clock className="w-6 h-6 mx-auto mb-2" />
-                <div className="text-2xl font-bold">{counselor.experience || 5}</div>
-                <div className="text-sm text-white/80">years exp.</div>
-              </div>
-            </div>
-          </div>
-        </div>
+    <div className="min-h-screen bg-[#f4f2ed] text-[#1c1917] font-sans selection:bg-[#3f6212] selection:text-white overflow-x-hidden relative">
+      <NoiseOverlay />
+      
+      {/* Background Ambiance */}
+      <div className="fixed inset-0 z-0 overflow-hidden">
+        <GradientOrb className="top-[-20%] right-[-10%] w-[800px] h-[800px] bg-[#e7e5e4]" />
+        <GradientOrb className="bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-[#3f6212]/10" />
       </div>
 
-      {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        {/* Tabs */}
-        <div className="border-b border-gray-200 mb-8">
-          <nav className="flex space-x-8">
-            {["about", "expertise", "approach", "reviews"].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`py-4 px-1 border-b-2 font-medium text-sm capitalize transition-colors ${
-                  activeTab === tab
-                    ? "border-indigo-600 text-indigo-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
-          </nav>
+      {/* Navigation */}
+      <nav className="fixed top-30 left-0 right-0 z-50 px-6 py-6 flex justify-between items-center max-w-7xl mx-auto">
+        <button onClick={() => navigate(-1)} className="bg-white/80 backdrop-blur-xl p-3 rounded-full border border-stone-200 shadow-sm hover:scale-105 transition text-stone-600">
+          <ArrowRight className="rotate-180" size={20} />
+        </button>
+        <div className="hidden md:flex items-center gap-2 bg-white/80 backdrop-blur-xl px-4 py-2 rounded-full border border-stone-200 text-xs font-bold uppercase tracking-widest text-stone-500">
+          <Shield size={14} className="text-green-600" /> Verified Professional
+        </div>
+      </nav>
+
+      <main className="relative z-10 max-w-7xl mx-auto px-6 pt-32 pb-32 top-45">
+        
+        {/* --- 1. HERO SECTION --- */}
+        <div className="grid lg:grid-cols-12 gap-12 mb-20">
+          {/* Left: Image & Status */}
+          <div className="lg:col-span-4 flex flex-col items-center lg:items-start">
+            <FadeIn>
+              <div className="relative group">
+                <div className="w-64 h-64 lg:w-80 lg:h-80 rounded-[3rem] overflow-hidden border-8 border-white shadow-2xl relative z-10 rotate-[-2deg] group-hover:rotate-0 transition-transform duration-500">
+                  <img src={counselor.profileImage || "https://cdn-icons-png.flaticon.com/512/219/219969.png"} className="w-full h-full object-cover" alt="Profile" />
+                </div>
+                <div className="absolute inset-0 bg-[#3f6212] rounded-[3rem] rotate-[4deg] opacity-20 blur-xl -z-10 group-hover:rotate-2 transition-transform"></div>
+                
+                {/* Floating Status Badge */}
+                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 z-20 bg-[#1c1917] text-white px-6 py-3 rounded-2xl shadow-xl flex items-center gap-2 whitespace-nowrap">
+                   <div className="relative w-3 h-3">
+                     <span className="absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75 animate-ping"></span>
+                     <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                   </div>
+                   <span className="text-xs font-bold uppercase tracking-widest">Accepting New Clients</span>
+                </div>
+              </div>
+            </FadeIn>
+          </div>
+
+          {/* Right: Intro & Actions */}
+          <div className="lg:col-span-8 flex flex-col justify-center text-center lg:text-left">
+            <FadeIn delay={0.2}>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-stone-100 text-stone-500 text-[10px] font-bold uppercase tracking-widest mb-6">
+                <Sparkles size={12} /> Top Rated Counselor
+              </div>
+              <h1 className="text-5xl lg:text-7xl font-serif text-[#1c1917] mb-4 leading-[0.9]">
+                Dr. {counselor.name.split(' ')[0]} <span className="text-stone-400 italic">{counselor.name.split(' ')[1]}</span>
+              </h1>
+              <p className="text-xl text-stone-500 font-light mb-8 max-w-2xl mx-auto lg:mx-0">
+                {counselor.specialization || "Clinical Psychologist"} specializing in anxiety, trauma recovery, and personal growth.
+              </p>
+              
+              <div className="flex flex-wrap justify-center lg:justify-start gap-3 mb-10">
+                <InfoChip icon={MapPin} label={counselor.location || "Online / Global"} />
+                <InfoChip icon={Clock} label={`${counselor.experience || 5} Years Exp.`} />
+                <InfoChip icon={GraduationCap} label="PhD Psychology" />
+                <InfoChip icon={Globe} label="English, Spanish" />
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <button 
+                  onClick={() => user?.role === 'client' ? navigate(`/counselor/${id}/book`) : navigate('/login')}
+                  className="px-8 py-4 bg-[#1c1917] text-white rounded-full font-bold text-xs uppercase tracking-widest hover:bg-[#3f6212] transition-colors shadow-lg flex items-center justify-center gap-2"
+                >
+                  <Calendar size={16} /> Book Session
+                </button>
+                <button 
+                  onClick={() => user ? navigate(`/chat/${id}`) : navigate('/login')}
+                  className="px-8 py-4 bg-white text-[#1c1917] border border-stone-200 rounded-full font-bold text-xs uppercase tracking-widest hover:bg-stone-50 transition-colors flex items-center justify-center gap-2"
+                >
+                  <MessageCircle size={16} /> Chat Now
+                </button>
+              </div>
+            </FadeIn>
+          </div>
         </div>
 
-        {/* Tab Content */}
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Main Content Area */}
-          <div className="lg:col-span-2">
-            {activeTab === "about" && (
-              <div className="space-y-6">
-                <div className="bg-white rounded-lg shadow-md p-6">
-                  <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                    <BookOpen className="w-6 h-6 text-indigo-600" />
-                    About Me
-                  </h2>
-                  <p className="text-gray-700 leading-relaxed">
-                    {counselor.bio || "I am a dedicated mental health professional committed to helping individuals navigate life's challenges. With years of experience in counseling and therapy, I provide a safe, compassionate space for clients to explore their thoughts and feelings. My approach is client-centered, evidence-based, and tailored to meet your unique needs."}
-                  </p>
-                </div>
-
-                <div className="bg-white rounded-lg shadow-md p-6">
-                  <h3 className="text-xl font-semibold mb-4">Education & Certifications</h3>
-                  <div className="space-y-3">
-                    <div className="flex items-start gap-3">
-                      <Award className="w-5 h-5 text-indigo-600 mt-1 flex-shrink-0" />
-                      <div>
-                        <p className="font-medium">Master's in Counseling Psychology</p>
-                        <p className="text-gray-600">University of Psychology</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <Award className="w-5 h-5 text-indigo-600 mt-1 flex-shrink-0" />
-                      <div>
-                        <p className="font-medium">Licensed Professional Counselor</p>
-                        <p className="text-gray-600">State Board of Mental Health</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeTab === "expertise" && (
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-bold mb-4">Areas of Expertise</h2>
-                <div className="grid md:grid-cols-2 gap-4">
-                  {[
-                    "Anxiety & Depression",
-                    "Relationship Issues",
-                    "Stress Management",
-                    "Career Counseling",
-                    "Self-Esteem Building",
-                    "Life Transitions",
-                    "Trauma & PTSD",
-                    "Family Therapy"
-                  ].map((area, index) => (
-                    <div key={index} className="flex items-center gap-2 p-3 bg-indigo-50 rounded-lg">
-                      <div className="w-2 h-2 bg-indigo-600 rounded-full"></div>
-                      <span className="text-gray-700">{area}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {activeTab === "approach" && (
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-bold mb-4">Therapeutic Approach</h2>
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="text-lg font-semibold mb-2">Treatment Modalities</h3>
-                    <div className="grid md:grid-cols-2 gap-3">
-                      {["Cognitive Behavioral Therapy", "Mindfulness-Based", "Solution-Focused", "Person-Centered"].map((modality, index) => (
-                        <div key={index} className="flex items-center gap-2">
-                          <div className="w-2 h-2 bg-green-600 rounded-full"></div>
-                          <span className="text-gray-700">{modality}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <h3 className="text-lg font-semibold mb-2">Session Format</h3>
-                    <div className="flex flex-wrap gap-3">
-                      <div className="flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-lg">
-                        <Video className="w-4 h-4 text-blue-600" />
-                        <span className="text-gray-700">Video Sessions</span>
-                      </div>
-                      <div className="flex items-center gap-2 px-4 py-2 bg-green-50 rounded-lg">
-                        <MessageCircle className="w-4 h-4 text-green-600" />
-                        <span className="text-gray-700">Chat Sessions</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <h3 className="text-lg font-semibold mb-2">Philosophy</h3>
-                    <p className="text-gray-700 leading-relaxed">
-                      I believe in creating a warm, non-judgmental therapeutic environment where clients feel safe to explore their thoughts and emotions. My approach is collaborative, empowering clients to develop insight and skills to overcome challenges and achieve their goals.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeTab === "reviews" && (
-              <div className="space-y-4">
-                <h2 className="text-2xl font-bold mb-4">Client Reviews</h2>
-                {reviews.map((review) => (
-                  <div key={review.id} className="bg-white rounded-lg shadow-md p-6">
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <h4 className="font-semibold">{review.clientName}</h4>
-                        <div className="flex items-center gap-1 mt-1">
-                          {renderStars(review.rating)}
-                        </div>
-                      </div>
-                      <span className="text-sm text-gray-500">{review.date}</span>
-                    </div>
-                    <p className="text-gray-700">{review.comment}</p>
-                  </div>
+        {/* --- 2. CONTENT GRID --- */}
+        <div className="grid lg:grid-cols-12 gap-8">
+          
+          {/* LEFT: TABS & INFO */}
+          <div className="lg:col-span-8">
+            <div className="bg-white rounded-[2.5rem] shadow-sm border border-stone-100 p-2 mb-8 sticky top-24 z-30">
+              <div className="flex p-1 gap-1 overflow-x-auto">
+                {[
+                  { id: "overview", label: "Overview" },
+                  { id: "reviews", label: "Client Stories" },
+                  { id: "availability", label: "Schedule" }
+                ].map(tab => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`flex-1 px-6 py-3 rounded-[2rem] text-sm font-bold uppercase tracking-widest transition-all whitespace-nowrap ${
+                      activeTab === tab.id ? "bg-[#1c1917] text-white shadow-md" : "text-stone-400 hover:bg-stone-50"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
                 ))}
               </div>
-            )}
-          </div>
-
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Availability */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold mb-4">Availability</h3>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Monday - Friday</span>
-                  <span className="font-medium">9:00 AM - 8:00 PM</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Saturday</span>
-                  <span className="font-medium">10:00 AM - 6:00 PM</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Sunday</span>
-                  <span className="font-medium">11:00 AM - 4:00 PM</span>
-                </div>
-              </div>
-              <button
-                onClick={handleBookSession}
-                className="w-full mt-4 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors"
-              >
-                Check Available Slots
-              </button>
             </div>
 
-            {/* Session Info */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold mb-4">Session Information</h3>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Duration</span>
-                  <span className="font-medium">30, 60, 90 min</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Session Type</span>
-                  <span className="font-medium">Video, Chat</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Languages</span>
-                  <span className="font-medium">English</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">First Session</span>
-                  <span className="font-medium text-green-600">50% Off</span>
-                </div>
-              </div>
-            </div>
+            <div className="bg-white rounded-[3rem] p-8 md:p-12 border border-stone-100 shadow-sm min-h-[500px]">
+              <AnimatePresence mode="wait">
+                {activeTab === "overview" && (
+                  <motion.div key="overview" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-10">
+                    <section>
+                      <h3 className="text-2xl font-serif mb-4 flex items-center gap-2"><Quote className="text-[#3f6212] rotate-180" /> My Philosophy</h3>
+                      <p className="text-lg text-stone-600 leading-relaxed font-light">
+                        "{counselor.bio || "I believe that every individual possesses the innate strength to heal. My role is not to fix you, but to guide you back to your own wisdom. Through a combination of cognitive behavioral techniques and mindful compassion, we will work together to navigate your challenges."}"
+                      </p>
+                    </section>
+                    <hr className="border-stone-100" />
+                    <section>
+                      <h3 className="text-xl font-serif mb-6">Areas of Expertise</h3>
+                      <div className="flex flex-wrap gap-3">
+                        {["Anxiety", "Depression", "Relationships", "Career Stress", "Life Transitions", "Trauma", "Self-Esteem"].map((tag, i) => (
+                          <div key={i} className="px-4 py-2 bg-[#f4f2ed] text-[#1c1917] rounded-xl text-sm font-medium border border-transparent hover:border-[#3f6212] transition-colors cursor-default">
+                            {tag}
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  </motion.div>
+                )}
 
-            {/* Contact */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold mb-4">Need Help?</h3>
-              <p className="text-gray-600 mb-4">
-                Have questions about booking or services? Feel free to reach out.
-              </p>
-              <button
-                onClick={handleStartChat}
-                className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
-              >
-                <MessageCircle className="w-5 h-5" />
-                Send Message
-              </button>
+                {activeTab === "reviews" && (
+                  <motion.div key="reviews" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-6">
+                    <div className="flex items-center gap-4 mb-8 bg-[#f9f8f6] p-6 rounded-2xl">
+                      <div className="text-5xl font-serif text-[#3f6212]">4.9</div>
+                      <div>
+                        <div className="flex text-yellow-400 mb-1"><Star fill="currentColor" /><Star fill="currentColor" /><Star fill="currentColor" /><Star fill="currentColor" /><Star fill="currentColor" /></div>
+                        <div className="text-xs font-bold uppercase tracking-widest text-stone-400">Based on 124 Reviews</div>
+                      </div>
+                    </div>
+                    {reviews.map((r) => (
+                       <div key={r.id} className="border-b border-stone-100 pb-6 last:border-0">
+                         <div className="flex justify-between mb-2">
+                           <span className="font-bold text-[#1c1917]">{r.author}</span>
+                           <span className="text-xs text-stone-400">{r.date}</span>
+                         </div>
+                         <p className="text-stone-600 italic">"{r.text}"</p>
+                       </div>
+                    ))}
+                  </motion.div>
+                )}
+
+                {activeTab === "availability" && (
+                   <motion.div key="availability" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-center py-10">
+                     <Calendar size={48} className="mx-auto text-stone-300 mb-4" />
+                     <h3 className="text-xl font-serif mb-2">Real-time Availability</h3>
+                     <p className="text-stone-500 mb-6">Please click "Book Session" to see the live calendar.</p>
+                     <button onClick={() => user?.role === 'client' ? navigate(`/counselor/${id}/book`) : navigate('/login')} className="text-[#3f6212] font-bold uppercase text-xs tracking-widest border-b border-[#3f6212] pb-1">View Calendar</button>
+                   </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
+
+          {/* RIGHT: PRICING CARD */}
+          <div className="lg:col-span-4 space-y-6">
+            <div className="sticky top-24">
+              <div className="bg-[#1c1917] text-white rounded-[3rem] p-8 md:p-10 shadow-2xl relative overflow-hidden group">
+                {/* Animated Gradient Blob */}
+                <div className="absolute -top-20 -right-20 w-64 h-64 bg-[#3f6212] rounded-full blur-[80px] opacity-50 group-hover:scale-110 transition-transform duration-1000"></div>
+                
+                <div className="relative z-10">
+                  <div className="flex justify-between items-start mb-8">
+                    <div>
+                      <div className="text-xs font-bold uppercase tracking-widest text-stone-400 mb-1">Standard Session</div>
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-5xl font-serif">${counselor.pricePerSession || 1000}</span>
+                        <span className="text-stone-500">/hr</span>
+                      </div>
+                    </div>
+                    <div className="p-3 bg-white/10 rounded-2xl"><Video size={24} /></div>
+                  </div>
+
+                  <div className="space-y-4 mb-8">
+                    {[
+                      "1-on-1 Video Consultation",
+                      "Secure & Private Room",
+                      "Follow-up Chat Support",
+                      "Personalized Care Plan"
+                    ].map((feature, i) => (
+                      <div key={i} className="flex items-center gap-3 text-sm text-stone-300">
+                        <CheckCircle2 size={16} className="text-[#3f6212]" /> {feature}
+                      </div>
+                    ))}
+                  </div>
+
+                  <button 
+                    onClick={() => user?.role === 'client' ? navigate(`/counselor/${id}/book`) : navigate('/login')}
+                    className="w-full py-4 bg-white text-[#1c1917] rounded-2xl font-bold uppercase text-xs tracking-widest hover:bg-[#3f6212] hover:text-white transition-colors flex items-center justify-center gap-2 shadow-lg"
+                  >
+                    Book Appointment <ArrowRight size={14} />
+                  </button>
+                  
+                  <p className="text-[10px] text-center text-stone-500 mt-4 uppercase tracking-widest">
+                    <HeartHandshake size={10} className="inline mr-1" /> Satisfaction Guaranteed
+                  </p>
+                </div>
+              </div>
+
+              {/* Trust Badge */}
+              <div className="bg-white p-6 rounded-[2rem] border border-stone-100 flex items-center gap-4 shadow-sm">
+                <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center text-green-600 shrink-0">
+                  <Shield size={24} />
+                </div>
+                <div>
+                  <h4 className="font-bold text-sm">Verified & Vetted</h4>
+                  <p className="text-xs text-stone-500">Credentials checked by HealPeer.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
-      </div>
+      </main>
     </div>
   );
 };

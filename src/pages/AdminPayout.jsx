@@ -7,12 +7,13 @@ const AdminPayout = () => {
   const [month, setMonth] = useState("");
   const [amounts, setAmounts] = useState({});
   const [history, setHistory] = useState([]);
+  const [dashboardStats, setDashboardStats] = useState(null);
 
   // Fetch counselor earnings
   const fetchEarnings = async () => {
     try {
       const { data } = await API.get("/payout/earnings");
-      setCounselors(data.counselors);
+      setCounselors(data.counselors || []);
       setLoading(false);
     } catch (err) {
       console.error(err);
@@ -24,15 +25,27 @@ const AdminPayout = () => {
   const fetchHistory = async () => {
     try {
       const { data } = await API.get("/payout/history");
-      setHistory(data.payments);
+      setHistory(data.payments || []);
     } catch (err) {
       console.error(err);
     }
   };
 
+  // Fetch dashboard stats
+  const fetchDashboardStats = async () => {
+    try {
+      const { data } = await API.get("/payout/dashboard-stats");
+      setDashboardStats(data.stats);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // Fetch data on component mount
   useEffect(() => {
     fetchEarnings();
     fetchHistory();
+    fetchDashboardStats();
   }, []);
 
   const handleAmountChange = (id, value) => {
@@ -41,7 +54,7 @@ const AdminPayout = () => {
 
   const handlePay = async (counselorId) => {
     if (!amounts[counselorId] || !month) {
-      alert("Enter amount and month");
+      alert("Please enter amount and month");
       return;
     }
 
@@ -50,10 +63,17 @@ const AdminPayout = () => {
         amount: parseFloat(amounts[counselorId]),
         month,
       });
-      alert(data.message);
+      
+      alert(`Payment of ${amounts[counselorId]} LKR processed for ${month}`);
+      
+      // Refresh data
       fetchEarnings();
       fetchHistory();
+      fetchDashboardStats();
+      
+      // Clear input
       setAmounts({ ...amounts, [counselorId]: "" });
+      setMonth("");
     } catch (err) {
       console.error(err);
       alert("Payment failed");
@@ -66,7 +86,7 @@ const AdminPayout = () => {
     <div style={{ padding: "20px" }}>
       <h2>Admin Payout</h2>
 
-      <div style={{ marginBottom: "20px" }}>
+      <div style={{ marginBottom: "30px" }}>
         <label>
           Month:
           <input
@@ -82,7 +102,7 @@ const AdminPayout = () => {
         {counselors.map((c) => (
           <li key={c._id} style={{ marginBottom: "10px", border: "1px solid #ccc", padding: "10px" }}>
             <p>
-              <strong>{c.name}</strong> ({c.email}) - Total Earnings: ${c.totalEarnings || 0}
+              <strong>{c.name}</strong> ({c.email}) - Total Earnings: {c.totalEarnings || 0}
             </p>
             <input
               type="number"
@@ -98,9 +118,9 @@ const AdminPayout = () => {
       <h3>Payment History</h3>
       <ul>
         {history.map((h) => (
-          <li key={h._id} style={{ marginBottom: "10px" }}>
+          <li key={h._id} style={{ marginBottom: "10px", border: "1px solid #ccc", padding: "10px" }}>
             <p>
-              Counselor: {h.counselor.name} | Amount: ${h.amount} | Month: {h.month} | Paid By: {h.paidBy.name} | Status: {h.status}
+              Counselor: {h.counselor.name} | Amount: {h.amount} | Month: {h.month} | Paid By: {h.paidBy.name} | Status: {h.status}
             </p>
           </li>
         ))}

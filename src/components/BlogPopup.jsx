@@ -1,23 +1,27 @@
 
+
 // import React, { useState, useEffect } from "react";
 // import API from "../api/api";
-// import "../styles/BlogPopup.css"; // make new CSS file
 
-// const BlogPopup = ({ user, counselor, existingBlog = null, onClose }) => {
+// const BlogPopup = ({ user, existingBlog = null, onClose, onSaved }) => {
 //   const [blog, setBlog] = useState({
-//     title: existingBlog?.title || "",
-//     content: existingBlog?.content || "",
+//     title: "",
+//     content: "",
 //     image: null,
-//     preview: existingBlog?.image || null,
+//     preview: null,
 //   });
+//   const [saving, setSaving] = useState(false);
 
 //   useEffect(() => {
 //     if (existingBlog) {
-//       setBlog({ 
-//         title: existingBlog.title, 
-//         content: existingBlog.content, 
-//         preview: existingBlog.image || null 
+//       setBlog({
+//         title: existingBlog.title || "",
+//         content: existingBlog.content || "",
+//         image: null,
+//         preview: existingBlog.imageUrl || null,
 //       });
+//     } else {
+//       setBlog({ title: "", content: "", image: null, preview: null });
 //     }
 //   }, [existingBlog]);
 
@@ -29,74 +33,96 @@
 //     setBlog({ ...blog, image: file, preview: URL.createObjectURL(file) });
 //   };
 
+
 //   const handleSubmit = async () => {
-//     if (!blog.title || !blog.content) return alert("Title and content are required!");
+//     if (!blog.title.trim() || !blog.content.trim())
+//       return alert("Title and content are required");
+  
+//     setSaving(true);
+  
 //     try {
+//       const token = localStorage.getItem("token");
 //       const formData = new FormData();
+  
 //       formData.append("title", blog.title);
 //       formData.append("content", blog.content);
+  
+//       // IMPORTANT: matched field name
 //       if (blog.image) formData.append("image", blog.image);
-
-//       const token = localStorage.getItem("token");
-
+  
 //       if (existingBlog) {
 //         await API.put(`/blogs/${existingBlog._id}`, formData, {
-//           headers: { Authorization: `Bearer ${token}` },
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//             "Content-Type": "multipart/form-data",
+//           },
 //         });
 //       } else {
 //         await API.post("/blogs", formData, {
-//           headers: { Authorization: `Bearer ${token}` },
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//             "Content-Type": "multipart/form-data",
+//           },
 //         });
 //       }
-
-//       alert("Blog saved successfully!");
+  
+//       if (onSaved) onSaved();
 //       onClose();
-//       window.location.reload();
 //     } catch (err) {
 //       console.error(err);
 //       alert("Failed to save blog");
+//     } finally {
+//       setSaving(false);
 //     }
 //   };
-
+  
 //   return (
-//     <div className="popup-overlay">
-//       <div className="popup-box">
-//         <div className="popup-header">
-//           <h2>{existingBlog ? "Edit Blog" : `Write a Blog for ${counselor?.name || "Counselor"}`}</h2>
-//           <button className="close-btn" onClick={onClose}>✖</button>
+//     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+//       <div className="w-full max-w-2xl bg-white rounded-2xl shadow-xl overflow-hidden">
+//         <div className="flex items-center justify-between px-6 py-4 border-b">
+//           <h3 className="text-lg font-semibold text-indigo-700">{existingBlog ? "Edit Blog" : "Write a Blog"}</h3>
+//           <button onClick={onClose} className="text-gray-500 hover:text-gray-700">✖</button>
 //         </div>
 
-//         <input
-//           name="title"
-//           placeholder="Your Blog Title..."
-//           value={blog.title}
-//           onChange={handleChange}
-//           className="blog-title-input"
-//         />
+//         <div className="p-6 space-y-4">
+//           <input
+//             name="title"
+//             value={blog.title}
+//             onChange={handleChange}
+//             placeholder="Blog title..."
+//             className="w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-indigo-200 outline-none"
+//           />
 
-//         {blog.preview && (
-//           <div className="image-preview">
-//             <img src={blog.preview} alt="preview" />
-//           </div>
-//         )}
+//           {blog.preview && (
+//             <div className="rounded-lg overflow-hidden">
+//               <img src={blog.preview} alt="preview" className="w-full h-56 object-cover" />
+//             </div>
+//           )}
 
-//         <label className="upload-btn">
-//           📸 Add Image
-//           <input type="file" onChange={handleImageChange} hidden />
-//         </label>
+//           <label className="inline-flex items-center gap-2 px-3 py-2 bg-indigo-50 text-indigo-700 rounded-lg cursor-pointer">
+//             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7M16 3l-4 4-4-4" /></svg>
+//             <span className="text-sm">Add Image</span>
+//             <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+//           </label>
 
-//         <textarea
-//           name="content"
-//           placeholder="Write your story..."
-//           value={blog.content}
-//           onChange={handleChange}
-//           className="blog-content-textarea"
-//         />
+//           <textarea
+//             name="content"
+//             value={blog.content}
+//             onChange={handleChange}
+//             placeholder="Write your story..."
+//             rows="8"
+//             className="w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-indigo-200 outline-none"
+//           />
+//         </div>
 
-//         <div className="popup-actions">
-//           <button className="cancel-btn" onClick={onClose}>Cancel</button>
-//           <button className="publish-btn" onClick={handleSubmit}>
-//             {existingBlog ? "Update Blog" : "Publish"}
+//         <div className="flex items-center justify-end gap-3 px-6 py-4 border-t">
+//           <button onClick={onClose} className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200">Cancel</button>
+//           <button
+//             onClick={handleSubmit}
+//             disabled={saving}
+//             className="px-5 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-60"
+//           >
+//             {saving ? "Saving..." : existingBlog ? "Update" : "Publish"}
 //           </button>
 //         </div>
 //       </div>
@@ -106,9 +132,19 @@
 
 // export default BlogPopup;
 
-
 import React, { useState, useEffect } from "react";
 import API from "../api/api";
+import { motion, AnimatePresence } from "framer-motion";
+import { 
+  X, Image as ImageIcon, Loader2, 
+  Trash2, Clock, AlignLeft 
+} from "lucide-react";
+import { toast } from "react-hot-toast";
+
+// --- Visual Utils ---
+const GrainTexture = () => (
+  <div className="fixed inset-0 pointer-events-none z-0 opacity-[0.03] mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')] filter contrast-150 brightness-100" />
+);
 
 const BlogPopup = ({ user, existingBlog = null, onClose, onSaved }) => {
   const [blog, setBlog] = useState({
@@ -118,19 +154,28 @@ const BlogPopup = ({ user, existingBlog = null, onClose, onSaved }) => {
     preview: null,
   });
   const [saving, setSaving] = useState(false);
+  const [stats, setStats] = useState({ words: 0, readTime: 1 });
 
+  // Load Data
   useEffect(() => {
     if (existingBlog) {
       setBlog({
         title: existingBlog.title || "",
         content: existingBlog.content || "",
         image: null,
-        preview: existingBlog.imageUrl || null,
+        preview: existingBlog.imageUrl 
+          ? (existingBlog.imageUrl.startsWith('http') ? existingBlog.imageUrl : `http://localhost:3000${existingBlog.imageUrl}`)
+          : null,
       });
-    } else {
-      setBlog({ title: "", content: "", image: null, preview: null });
     }
   }, [existingBlog]);
+
+  // Update Stats
+  useEffect(() => {
+    const words = blog.content.trim().split(/\s+/).length;
+    const time = Math.ceil(words / 200);
+    setStats({ words: blog.content ? words : 0, readTime: time });
+  }, [blog.content]);
 
   const handleChange = (e) => setBlog({ ...blog, [e.target.name]: e.target.value });
 
@@ -140,10 +185,11 @@ const BlogPopup = ({ user, existingBlog = null, onClose, onSaved }) => {
     setBlog({ ...blog, image: file, preview: URL.createObjectURL(file) });
   };
 
+  const removeImage = () => setBlog({ ...blog, image: null, preview: null });
 
   const handleSubmit = async () => {
     if (!blog.title.trim() || !blog.content.trim())
-      return alert("Title and content are required");
+      return toast.error("Title and content are required.");
   
     setSaving(true);
   
@@ -153,87 +199,138 @@ const BlogPopup = ({ user, existingBlog = null, onClose, onSaved }) => {
   
       formData.append("title", blog.title);
       formData.append("content", blog.content);
-  
-      // IMPORTANT: matched field name
       if (blog.image) formData.append("image", blog.image);
   
+      const config = { headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" }};
+
       if (existingBlog) {
-        await API.put(`/blogs/${existingBlog._id}`, formData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        await API.put(`/blogs/${existingBlog._id}`, formData, config);
+        toast.success("Changes saved.");
       } else {
-        await API.post("/blogs", formData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        await API.post("/blogs", formData, config);
+        toast.success("Published successfully.");
       }
   
       if (onSaved) onSaved();
       onClose();
     } catch (err) {
       console.error(err);
-      alert("Failed to save blog");
+      toast.error("Failed to save.");
     } finally {
       setSaving(false);
     }
   };
   
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-2xl bg-white rounded-2xl shadow-xl overflow-hidden">
-        <div className="flex items-center justify-between px-6 py-4 border-b">
-          <h3 className="text-lg font-semibold text-indigo-700">{existingBlog ? "Edit Blog" : "Write a Blog"}</h3>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">✖</button>
-        </div>
+    <AnimatePresence>
+      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
+        
+        {/* Backdrop */}
+        <motion.div 
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          className="absolute inset-0 bg-[#1c1917]/40 backdrop-blur-sm"
+          onClick={onClose}
+        />
 
-        <div className="p-6 space-y-4">
-          <input
-            name="title"
-            value={blog.title}
-            onChange={handleChange}
-            placeholder="Blog title..."
-            className="w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-indigo-200 outline-none"
-          />
+        {/* Modal Card */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95, y: 20 }} 
+          animate={{ opacity: 1, scale: 1, y: 0 }} 
+          exit={{ opacity: 0, scale: 0.95, y: 20 }}
+          className="relative w-full max-w-4xl h-[85vh] bg-[#f4f2ed] rounded-[2rem] shadow-2xl overflow-hidden flex flex-col border border-stone-100"
+        >
+          <GrainTexture />
 
-          {blog.preview && (
-            <div className="rounded-lg overflow-hidden">
-              <img src={blog.preview} alt="preview" className="w-full h-56 object-cover" />
+          {/* --- 1. HEADER --- */}
+          <div className="relative z-20 px-8 py-5 border-b border-[#1c1917]/5 bg-white/50 backdrop-blur-md flex items-center justify-between">
+            <h3 className="font-serif font-bold text-xl text-[#1c1917]">
+              {existingBlog ? "Edit Story" : "New Story"}
+            </h3>
+            <div className="flex items-center gap-3">
+              <button 
+                onClick={onClose} 
+                className="p-2 text-stone-400 hover:text-[#1c1917] hover:bg-stone-200/50 rounded-full transition-colors"
+              >
+                <X size={20} />
+              </button>
+              <button
+                onClick={handleSubmit}
+                disabled={saving}
+                className="px-6 py-2.5 bg-[#1c1917] text-white rounded-full text-xs font-bold uppercase tracking-widest hover:bg-[#3f6212] transition-all disabled:opacity-50 flex items-center gap-2 shadow-md"
+              >
+                {saving && <Loader2 size={14} className="animate-spin" />}
+                {saving ? "Saving" : "Publish"}
+              </button>
             </div>
-          )}
+          </div>
 
-          <label className="inline-flex items-center gap-2 px-3 py-2 bg-indigo-50 text-indigo-700 rounded-lg cursor-pointer">
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7M16 3l-4 4-4-4" /></svg>
-            <span className="text-sm">Add Image</span>
-            <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
-          </label>
+          {/* --- 2. EDITOR CANVAS (Scrollable) --- */}
+          <div className="flex-1 overflow-y-auto custom-scrollbar relative z-10 bg-white">
+            <div className="max-w-3xl mx-auto px-8 py-10 pb-24">
+              
+              {/* Image Uploader */}
+              <div className="group relative mb-10">
+                {blog.preview ? (
+                  <div className="relative rounded-2xl overflow-hidden shadow-sm aspect-[21/9] group-hover:shadow-md transition-all border border-stone-100">
+                    <img src={blog.preview} alt="preview" className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+                    <button 
+                      onClick={removeImage}
+                      className="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur rounded-full text-red-500 hover:text-red-700 shadow-sm opacity-0 group-hover:opacity-100 transition-all transform hover:scale-110"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                ) : (
+                  <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-stone-200 rounded-2xl cursor-pointer hover:border-[#3f6212] hover:bg-stone-50 transition-all group">
+                    <div className="flex flex-col items-center justify-center text-stone-400 group-hover:text-[#3f6212]">
+                      <div className="p-3 bg-stone-100 rounded-full mb-3 group-hover:bg-[#3f6212]/10 transition-colors">
+                        <ImageIcon size={24} />
+                      </div>
+                      <p className="text-sm font-bold text-stone-600">Add Cover Image</p>
+                    </div>
+                    <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+                  </label>
+                )}
+              </div>
 
-          <textarea
-            name="content"
-            value={blog.content}
-            onChange={handleChange}
-            placeholder="Write your story..."
-            rows="8"
-            className="w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-indigo-200 outline-none"
-          />
-        </div>
+              {/* Title */}
+              <input
+                name="title"
+                value={blog.title}
+                onChange={handleChange}
+                placeholder="Title..."
+                className="w-full text-4xl font-serif font-bold text-[#1c1917] placeholder:text-stone-300 outline-none border-none bg-transparent p-0 mb-6 leading-tight"
+                autoFocus={!existingBlog}
+              />
 
-        <div className="flex items-center justify-end gap-3 px-6 py-4 border-t">
-          <button onClick={onClose} className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200">Cancel</button>
-          <button
-            onClick={handleSubmit}
-            disabled={saving}
-            className="px-5 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-60"
-          >
-            {saving ? "Saving..." : existingBlog ? "Update" : "Publish"}
-          </button>
-        </div>
+              {/* Content */}
+              <textarea
+                name="content"
+                value={blog.content}
+                onChange={handleChange}
+                placeholder="Tell Your Story..."
+                className="w-full min-h-[40vh] text-lg text-stone-600 placeholder:text-stone-300 outline-none border-none bg-transparent resize-none leading-relaxed p-0 font-light font-serif"
+              />
+            </div>
+          </div>
+
+          {/* --- 3. FOOTER STATS --- */}
+          <div className="relative z-20 h-12 border-t border-[#1c1917]/5 bg-[#f4f2ed] flex items-center justify-between px-8 text-stone-400 text-[10px] font-bold uppercase tracking-widest">
+             <div className="flex items-center gap-6">
+               <span className="flex items-center gap-2">
+                 <AlignLeft size={12} /> {stats.words} words
+               </span>
+               <span className="flex items-center gap-2">
+                 <Clock size={12} /> {stats.readTime} min read
+               </span>
+             </div>
+             <div>Draft</div>
+          </div>
+
+        </motion.div>
       </div>
-    </div>
+    </AnimatePresence>
   );
 };
 

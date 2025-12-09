@@ -1,994 +1,119 @@
-
-
-
 // import React, { useEffect, useState } from "react";
 // import API from "../api/api";
 // import { useNavigate } from "react-router-dom";
-// import { Edit2, Trash } from "lucide-react";
+// import { motion, AnimatePresence } from "framer-motion";
 // import { toast } from "react-hot-toast";
+// import { 
+//   Edit2, Trash, User, FileText, Calendar, 
+//   Phone, Mail, Camera, Video, MessageSquare, 
+//   CheckCircle2, Clock, ArrowRight, Sparkles
+// } from "lucide-react";
 
+// // --- Visual Components ---
+// const GrainTexture = () => (
+//   <div className="fixed inset-0 pointer-events-none z-50 opacity-[0.03] mix-blend-overlay"
+//        style={{ 
+//          backgroundImage: `url("https://grainy-gradients.vercel.app/noise.svg")`,
+//          filter: 'contrast(170%) brightness(100%)'
+//        }} />
+// );
 
+// const Card = ({ children, className = "", onClick }) => (
+//   <motion.div 
+//     onClick={onClick}
+//     layout
+//     initial={{ opacity: 0, y: 20 }}
+//     animate={{ opacity: 1, y: 0 }}
+//     transition={{ duration: 0.4 }}
+//     className={`bg-white rounded-[2.5rem] border-stone-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden ${className}`}
+//   >
+//     {children}
+//   </motion.div>
+// );
 
-
-// const ClientProfile = () => {
-//   const navigate = useNavigate();
-//   const [client, setClient] = useState(null);
-//   const [blogs, setBlogs] = useState([]);
-//   const [sessions, setSessions] = useState([]);
-//   const [bookings, setBookings] = useState([]);
-//   const [editingProfile, setEditingProfile] = useState(false);
-//   const [profileData, setProfileData] = useState({});
-//   const [selectedFile, setSelectedFile] = useState(null);
-//   const [activeTab, setActiveTab] = useState("profile");
-
-//   const clientId = localStorage.getItem("userId");
-//   const token = localStorage.getItem("token");
-//   const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
-
-//   // Fetch client profile
-//   useEffect(() => {
-//     if (!clientId) return;
-  
-//     const fetchClient = async () => {
-//       try {
-//         const { data } = await API.get(`/users/${clientId}`, {
-//           headers: authHeaders,
-//         });
-  
-//         setClient(data.data);
-  
-//         setProfileData({
-//           name: data.data?.name || "",
-//           bio: data.data?.bio || "",
-//           contactNumber: data.data?.contactNumber || "",
-//           profileImage: data.data?.profileImage || "",
-//         });
-  
-//       } catch (err) {
-//         console.error("Fetch client error:", err);
-//       }
-//     };
-  
-//     fetchClient();
-//   }, [clientId]);
-  
-
-//   // Fetch user's blogs
-//   // Fetch user's blogs
-// useEffect(() => {
-//   const fetchBlogs = async () => {
-//     if (!token) return;
-//     try {
-//       const { data } = await API.get("/blogs/my-blogs", {
-//         headers: authHeaders,
-//       });
-//       setBlogs(data.data || []);
-//     } catch (err) {
-//       console.error("Fetch blogs error:", err);
-//       toast.error("Failed to load your blogs.");
-//     }
+// const Badge = ({ children, color = "stone" }) => {
+//   const colors = {
+//     stone: "bg-stone-100 text-stone-600",
+//     green: "bg-[#3f6212]/10 text-[#3f6212]",
+//     red: "bg-red-50 text-red-500",
+//     yellow: "bg-yellow-50 text-yellow-600"
 //   };
-//   fetchBlogs();
-// }, [token]);
-
-
-//   // Fetch sessions
-//   useEffect(() => {
-//     const fetchSessions = async () => {
-//       if (!token) return;
-//       try {
-//         const { data } = await API.get(`/sessions/my-sessions`, { headers: authHeaders });
-//         setSessions(data.data || []);
-//       } catch (err) {
-//         console.error("Fetch sessions error:", err);
-//       }
-//     };
-//     fetchSessions();
-//   }, [token]);
-
-//   // Fetch bookings
-//   useEffect(() => {
-//     const fetchBookings = async () => {
-//       if (!clientId || !token) return;
-//       try {
-//         const { data } = await API.get(`/booking/client/${clientId}`, { headers: authHeaders });
-//         setBookings(data.bookings || []);
-//       } catch (err) {
-//         console.error("Fetch bookings error:", err);
-//       }
-//     };
-//     fetchBookings();
-//   }, [clientId, token]);
-
-//   const handleProfileChange = (e) =>
-//     setProfileData({ ...profileData, [e.target.name]: e.target.value });
-
-//   const handleFileChange = (e) => setSelectedFile(e.target.files[0]);
-
-//   const submitProfileUpdate = async (e) => {
-//     e.preventDefault();
-//     if (!token) return toast.error("You are not authenticated");
-
-//     try {
-//       const formData = new FormData();
-//       formData.append("name", profileData.name);
-//       formData.append("bio", profileData.bio);
-//       formData.append("contactNumber", profileData.contactNumber);
-//       if (selectedFile) formData.append("profileImage", selectedFile);
-
-
-//       const { data } = await API.put(`/profile/update`, formData, {
-//         headers: { ...authHeaders, "Content-Type": "multipart/form-data" },
-//       });
-      
-    
-      
-
-//       setClient(data.data);
-//       setEditingProfile(false);
-//       toast.success("Profile updated!");
-//     } catch (err) {
-//       console.error("Update profile error:", err);
-//       toast.error("Failed to update profile.");
-//     }
-//   };
-
-//   const handleDeleteBlog = async (id) => {
-//     if (!window.confirm("Delete this blog?")) return;
-//     try {
-//       await API.delete(`/blogs/${id}`, { headers: authHeaders });
-//       setBlogs(blogs.filter((b) => b._id !== id));
-//       toast.success("Blog deleted!");
-//     } catch (err) {
-//       console.error("Delete blog error:", err);
-//       toast.error("Failed to delete blog.");
-//     }
-//   };
-
-//   if (!client) return <div className="text-center py-20">Loading profile...</div>;
-
-//   const bookedSessions = sessions.filter((s) => s.status === "booked");
-//   const completedSessions = sessions.filter((s) => s.status === "completed");
-
 //   return (
-//     <div className="max-w-6xl mx-auto p-6 space-y-10">
-//       {/* Header */}
-//       <div className="flex flex-col items-center text-center space-y-4">
-//         <img
-//           src={client.profileImage || "https://cdn-icons-png.flaticon.com/512/219/219969.png"}
-//           alt="Avatar"
-//           className="w-32 h-32 rounded-full border-2 border-gray-200 object-cover shadow-md"
-//         />
-//         <h1 className="text-3xl font-bold text-gray-900">{client.name}</h1>
-//         <p className="text-gray-600 max-w-xl">{client.bio || "This user hasn't added a bio yet."}</p>
-//         <div className="flex items-center space-x-4 mt-2 text-gray-500 text-sm">
-//           <span>{client.email}</span>
-//           <span>{client.contactNumber || "No contact number"}</span>
-//           <button
-//             onClick={() => setEditingProfile(true)}
-//             className="flex items-center gap-1 text-indigo-600 hover:text-indigo-800 font-medium"
-//           >
-//             <Edit2 size={16} /> Edit
-//           </button>
-//         </div>
-//       </div>
-
-//       {/* Stats */}
-//       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
-//         <div className="bg-indigo-50 p-6 rounded-xl shadow hover:shadow-md transition">
-//           <h3 className="text-2xl font-bold text-indigo-600">{blogs.length}</h3>
-//           <p className="text-gray-600 mt-1">Blogs</p>
-//         </div>
-//         <div className="bg-green-50 p-6 rounded-xl shadow hover:shadow-md transition">
-//           <h3 className="text-2xl font-bold text-green-600">{bookedSessions.length}</h3>
-//           <p className="text-gray-600 mt-1">Booked Sessions</p>
-//         </div>
-//         <div className="bg-yellow-50 p-6 rounded-xl shadow hover:shadow-md transition">
-//           <h3 className="text-2xl font-bold text-yellow-600">{completedSessions.length}</h3>
-//           <p className="text-gray-600 mt-1">Completed Sessions</p>
-//         </div>
-//         <div className="bg-purple-50 p-6 rounded-xl shadow hover:shadow-md transition">
-//           <h3 className="text-2xl font-bold text-purple-600">{bookings.length}</h3>
-//           <p className="text-gray-600 mt-1">Bookings</p>
-//         </div>
-//       </div>
-
-//       {/* Tabs */}
-//       <div className="flex justify-center gap-4 border-b pb-2">
-//         {["profile", "blogs", "sessions", "bookings"].map((tab) => (
-//           <button
-//             key={tab}
-//             onClick={() => setActiveTab(tab)}
-//             className={`capitalize px-4 py-2 font-medium rounded-t-lg ${
-//               activeTab === tab ? "bg-indigo-600 text-white" : "text-indigo-600 hover:text-indigo-900"
-//             }`}
-//           >
-//             {tab}
-//           </button>
-//         ))}
-//       </div>
-
-//       {/* Tab Content */}
-//       <div className="space-y-6">
-//         {/* Profile Tab */}
-//         {activeTab === "profile" && (
-//           <div>
-//             {!editingProfile ? (
-//               <div className="space-y-2 text-gray-700">
-//                 <p><strong>Name:</strong> {client.name}</p>
-//                 <p><strong>Bio:</strong> {client.bio || "-"}</p>
-//                 <p><strong>Contact:</strong> {client.contactNumber || "-"}</p>
-//                 <p><strong>Email:</strong> {client.email}</p>
-//               </div>
-//             ) : (
-//               <form onSubmit={submitProfileUpdate} className="bg-white p-6 rounded-xl shadow space-y-4 border max-w-xl mx-auto">
-//                 <input type="text" name="name" value={profileData.name} onChange={handleProfileChange} className="w-full p-3 border rounded" placeholder="Name" />
-//                 <textarea name="bio" value={profileData.bio} onChange={handleProfileChange} className="w-full p-3 border rounded" placeholder="Bio" />
-//                 <input type="text" name="contactNumber" value={profileData.contactNumber} onChange={handleProfileChange} className="w-full p-3 border rounded" placeholder="Contact Number" />
-//                 <input type="file" onChange={handleFileChange} />
-//                 <div className="flex space-x-4 mt-2">
-//                   <button type="submit" className="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 flex items-center gap-1">
-//                     <Edit2 size={16} /> Save
-//                   </button>
-//                   <button type="button" onClick={() => setEditingProfile(false)} className="bg-gray-200 px-6 py-2 rounded hover:bg-gray-300">Cancel</button>
-//                 </div>
-//               </form>
-//             )}
-//           </div>
-//         )}
-
-//         {/* Blogs Tab */}
-//         {activeTab === "blogs" && (
-//           <div className="space-y-4">
-//             {blogs.length === 0 ? (
-//               <p className="text-gray-500">You haven't written any blogs yet.</p>
-//             ) : blogs.map((blog) => (
-//               <div key={blog._id} className="p-4 bg-white border rounded-xl shadow hover:shadow-md transition flex flex-col">
-//                 <h3 className="text-xl font-semibold text-gray-800">{blog.title}</h3>
-//                 <p className="text-gray-600 mt-2">{blog.content.slice(0, 150)}...</p>
-//                 <div className="flex justify-between items-center mt-3 text-gray-500 text-sm">
-//                   <span>{new Date(blog.createdAt).toLocaleDateString()}</span>
-//                   <div className="flex space-x-3">
-//                     <button onClick={() => navigate(`/blog/edit/${blog._id}`)} className="flex items-center gap-1 text-indigo-600 hover:underline">
-//                       <Edit2 size={14} /> Edit
-//                     </button>
-//                     <button onClick={() => handleDeleteBlog(blog._id)} className="flex items-center gap-1 text-red-600 hover:underline">
-//                       <Trash size={14} /> Delete
-//                     </button>
-//                   </div>
-//                 </div>
-//               </div>
-//             ))}
-//           </div>
-//         )}
-
-//         {/* Sessions & Bookings Tabs */}
-//         {activeTab === "sessions" && (
-//           <div className="space-y-6">
-//             <h3 className="text-lg font-semibold text-gray-700">Booked Sessions</h3>
-//             {bookedSessions.length === 0 ? <p className="text-gray-500">No booked sessions.</p> :
-//               bookedSessions.map((s) => (
-//                 <div key={s._id} className="p-4 bg-white border rounded-xl shadow flex justify-between items-center">
-//                   <div>
-//                     <p><strong>Counselor:</strong> {s.counselor.name}</p>
-//                     <p><strong>Date:</strong> {new Date(s.date).toLocaleString()}</p>
-//                     <p><strong>Payment:</strong> {s.paymentStatus}</p>
-//                   </div>
-//                   <button onClick={() => navigate(`/counselor/${s.counselor._id}`)} className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">View Counselor</button>
-//                 </div>
-//               ))}
-//           </div>
-//         )}
-
-//         {activeTab === "bookings" && (
-//           <div className="space-y-6">
-//             <h3 className="text-lg font-semibold text-gray-700">All Bookings</h3>
-//             {bookings.length === 0 ? <p className="text-gray-500">No bookings yet.</p> :
-//               bookings.map((b) => (
-//                 <div key={b._id} className="p-5 bg-white border rounded-xl shadow flex flex-col md:flex-row justify-between items-center">
-//                   <div>
-//                     <p className="text-gray-800 font-semibold">Counselor: {b.counselorId?.name}</p>
-//                     <p className="text-gray-600 mt-1">Date: {new Date(b.date).toLocaleDateString()}</p>
-//                     <p className="text-gray-600 mt-1">Time: {b.time}</p>
-//                     <p className="text-gray-600 mt-1">Duration: {b.durationMin} min</p>
-//                     <p className="text-gray-600 mt-1">Amount: {(b.amount / 100).toFixed(2)} USD</p>
-//                     <p className="text-gray-600 mt-1">Payment: {b.paymentStatus || "Pending"}</p>
-//                     <p className="text-gray-600 mt-1">Notes: {b.notes}</p>
-//                   </div>
-//                   <span className={`mt-2 md:mt-0 font-medium ${b.status === "completed" ? "text-green-600" : b.status === "booked" ? "text-yellow-600" : "text-gray-500"}`}>
-//                     {b.status.charAt(0).toUpperCase() + b.status.slice(1)}
-//                   </span>
-//                 </div>
-//               ))
-//             }
-//           </div>
-//         )}
-//       </div>
-//     </div>
+//     <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest ${colors[color]}`}>
+//       {children}
+//     </span>
 //   );
 // };
 
-// export default ClientProfile;
-
-
-// import React, { useEffect, useState } from "react";
-// import API from "../api/api";
-// import { useNavigate } from "react-router-dom";
-// import { Edit2, Trash } from "lucide-react";
-// import { toast } from "react-hot-toast";
-
+// // --- Main Component ---
 // const ClientProfile = () => {
 //   const navigate = useNavigate();
-//   const clientId = localStorage.getItem("userId");
-//   const token = localStorage.getItem("token");
-
-//   const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
-
+  
+//   // --- State ---
 //   const [client, setClient] = useState(null);
 //   const [blogs, setBlogs] = useState([]);
-//   const [sessions, setSessions] = useState([]);
 //   const [bookings, setBookings] = useState([]);
-
-//   const [editingProfile, setEditingProfile] = useState(false);
-//   const [profileData, setProfileData] = useState({
-//     name: "",
-//     bio: "",
-//     contactNumber: "",
-//   });
-//   const [selectedFile, setSelectedFile] = useState(null);
-
-//   const [activeTab, setActiveTab] = useState("profile");
-
-//   // -------------------------------
-//   // Fetch Client Profile
-//   // -------------------------------
-//   useEffect(() => {
-//     if (!clientId) return;
-
-//     const fetchClient = async () => {
-//       try {
-//         const res = await API.get(`/users/${clientId}`, { headers: authHeaders });
-//         setClient(res.data.data);
-
-//         setProfileData({
-//           name: res.data.data.name || "",
-//           bio: res.data.data.bio || "",
-//           contactNumber: res.data.data.contactNumber || "",
-//         });
-//       } catch (err) {
-//         console.error(err);
-//         toast.error("Failed to load profile");
-//       }
-//     };
-
-//     fetchClient();
-//   }, [clientId]);
-
-//   // -------------------------------
-//   // Fetch Blogs
-//   // -------------------------------
-//   useEffect(() => {
-//     const fetchBlogs = async () => {
-//       try {
-//         const res = await API.get("/blogs/my-blogs", { headers: authHeaders });
-//         setBlogs(res.data.data || []);
-//       } catch (err) {
-//         console.error(err);
-//       }
-//     };
-//     fetchBlogs();
-//   }, []);
-
-//   // -------------------------------
-//   // Fetch Sessions
-//   // -------------------------------
-//   useEffect(() => {
-//     const fetchSessions = async () => {
-//       try {
-//         const res = await API.get("/sessions/my-sessions", { headers: authHeaders });
-//         setSessions(res.data.data || []);
-//       } catch (err) {
-//         console.error(err);
-//       }
-//     };
-//     fetchSessions();
-//   }, []);
-
-//   // -------------------------------
-//   // Fetch Bookings
-//   // -------------------------------
-//   useEffect(() => {
-//     const fetchBookings = async () => {
-//       try {
-//         const res = await API.get(`/booking/client/${clientId}`, { headers: authHeaders });
-//         setBookings(res.data.bookings || []);
-//       } catch (err) {
-//         console.error(err);
-//       }
-//     };
-//     fetchBookings();
-//   }, []);
-
-//   // -------------------------------
-//   // Handle Inputs
-//   // -------------------------------
-//   const handleProfileChange = (e) => {
-//     setProfileData({ ...profileData, [e.target.name]: e.target.value });
-//   };
-
-//   const handleFileChange = (e) => {
-//     setSelectedFile(e.target.files[0]);
-//   };
-
-//   // -------------------------------
-//   // Submit Profile Update
-//   // -------------------------------
-//   const submitProfileUpdate = async (e) => {
-//     e.preventDefault();
-
-//     try {
-//       const formData = new FormData();
-//       formData.append("name", profileData.name);
-//       formData.append("bio", profileData.bio);
-//       formData.append("contactNumber", profileData.contactNumber);
-
-//       if (selectedFile) {
-//         formData.append("profileImage", selectedFile);
-//       }
-
-//       const { data } = await API.put("/profile/update", formData, {
-//         headers: {
-//           "Content-Type": "multipart/form-data",
-//           ...authHeaders,
-//         },
-//       });
-      
-//       setClient(res.data.data);
-//       setEditingProfile(false);
-//       toast.success("Profile Updated!");
-
-//     } catch (err) {
-//       console.error(err);
-//       toast.error("Error updating profile");
-//     }
-//   };
-
-//   // -------------------------------
-//   // Delete Blog
-//   // -------------------------------
-//   const handleDeleteBlog = async (id) => {
-//     if (!window.confirm("Delete this blog permanently?")) return;
-
-//     try {
-//       await API.delete(`/blogs/${id}`, { headers: authHeaders });
-//       setBlogs(blogs.filter((b) => b._id !== id));
-//       toast.success("Blog deleted");
-//     } catch (err) {
-//       console.error(err);
-//       toast.error("Failed to delete");
-//     }
-//   };
-
-//   if (!client) return <div className="text-center py-20">Loading...</div>;
-
-//   const bookedSessions = sessions.filter((s) => s.status === "booked");
-//   const completedSessions = sessions.filter((s) => s.status === "completed");
-
-//   return (
-//     <div className="max-w-6xl mx-auto p-6 space-y-10">
-      
-//       {/* ---------------------------------- */}
-//       {/* Header Profile */}
-//       {/* ---------------------------------- */}
-//       <div className="flex flex-col items-center text-center space-y-4">
-        
-//         <img
-//           src={client.profileImage || "https://cdn-icons-png.flaticon.com/512/219/219969.png"}
-//           alt="Avatar"
-//           className="w-32 h-32 rounded-full border object-cover shadow-md"
-//         />
-
-//         <h1 className="text-3xl font-bold">{client.name}</h1>
-//         <p className="text-gray-600 max-w-xl">{client.bio || "No bio added."}</p>
-
-//         <div className="flex items-center space-x-4 text-sm text-gray-500">
-//           <span>{client.email}</span>
-//           <span>{client.contactNumber || "No contact"}</span>
-
-//           <button
-//             onClick={() => setEditingProfile(true)}
-//             className="flex items-center gap-1 text-indigo-600 hover:text-indigo-800 font-medium"
-//           >
-//             <Edit2 size={16} /> Edit
-//           </button>
-//         </div>
-//       </div>
-
-//       {/* ---------------------------------- */}
-//       {/* Stats */}
-//       {/* ---------------------------------- */}
-//       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
-//         <StatBox label="Blogs" value={blogs.length} color="indigo" />
-//         <StatBox label="Booked Sessions" value={bookedSessions.length} color="green" />
-//         <StatBox label="Completed Sessions" value={completedSessions.length} color="yellow" />
-//         <StatBox label="Bookings" value={bookings.length} color="purple" />
-//       </div>
-
-//       {/* ---------------------------------- */}
-//       {/* Tabs */}
-//       {/* ---------------------------------- */}
-//       <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
-
-//       {/* ---------------------------------- */}
-//       {/* Tab Contents */}
-//       {/* ---------------------------------- */}
-//       <div className="space-y-6">
-
-//         {activeTab === "profile" && (
-//           !editingProfile ? (
-//             <ProfileView client={client} />
-//           ) : (
-//             <ProfileForm
-//               profileData={profileData}
-//               handleProfileChange={handleProfileChange}
-//               handleFileChange={handleFileChange}
-//               submitProfileUpdate={submitProfileUpdate}
-//               cancel={() => setEditingProfile(false)}
-//             />
-//           )
-//         )}
-
-//         {activeTab === "blogs" && (
-//           <BlogsTab blogs={blogs} handleDeleteBlog={handleDeleteBlog} navigate={navigate} />
-//         )}
-
-//         {activeTab === "sessions" && (
-//           <SessionsTab sessions={sessions} navigate={navigate} />
-//         )}
-
-//         {activeTab === "bookings" && (
-//           <BookingsTab bookings={bookings} />
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ClientProfile;
-
-// /* ------------------------------
-//    Small Components Used Above
-// ------------------------------ */
-
-// const StatBox = ({ label, value, color }) => (
-//   <div className={`bg-${color}-50 p-6 rounded-xl shadow`}>
-//     <h3 className={`text-2xl font-bold text-${color}-600`}>{value}</h3>
-//     <p className="text-gray-600">{label}</p>
-//   </div>
-// );
-
-// const Tabs = ({ activeTab, setActiveTab }) => (
-//   <div className="flex justify-center gap-4 border-b pb-2">
-//     {["profile", "blogs", "sessions", "bookings"].map((tab) => (
-//       <button
-//         key={tab}
-//         onClick={() => setActiveTab(tab)}
-//         className={`capitalize px-4 py-2 font-medium rounded-t-lg ${
-//           activeTab === tab
-//             ? "bg-indigo-600 text-white"
-//             : "text-indigo-600 hover:text-indigo-900"
-//         }`}
-//       >
-//         {tab}
-//       </button>
-//     ))}
-//   </div>
-// );
-
-// const ProfileView = ({ client }) => (
-//   <div className="space-y-2 text-gray-700">
-//     <p><strong>Name:</strong> {client.name}</p>
-//     <p><strong>Bio:</strong> {client.bio || "-"}</p>
-//     <p><strong>Contact:</strong> {client.contactNumber || "-"}</p>
-//     <p><strong>Email:</strong> {client.email}</p>
-//   </div>
-// );
-
-// const ProfileForm = ({ profileData, handleProfileChange, handleFileChange, submitProfileUpdate, cancel }) => (
-//   <form onSubmit={submitProfileUpdate} className="bg-white p-6 rounded-xl shadow max-w-xl mx-auto space-y-4">
-
-//     <input
-//       type="text"
-//       name="name"
-//       value={profileData.name}
-//       onChange={handleProfileChange}
-//       className="w-full p-3 border rounded"
-//       placeholder="Name"
-//     />
-
-//     <textarea
-//       name="bio"
-//       value={profileData.bio}
-//       onChange={handleProfileChange}
-//       className="w-full p-3 border rounded"
-//       placeholder="Bio"
-//     />
-
-//     <input
-//       type="text"
-//       name="contactNumber"
-//       value={profileData.contactNumber}
-//       onChange={handleProfileChange}
-//       className="w-full p-3 border rounded"
-//       placeholder="Contact Number"
-//     />
-
-//     <div>
-//       <label className="font-semibold">Profile Image</label>
-//       <input type="file" onChange={handleFileChange} className="mt-2" />
-//     </div>
-
-//     <div className="flex gap-4">
-//       <button type="submit" className="bg-indigo-600 text-white px-6 py-2 rounded flex items-center gap-1">
-//         <Edit2 size={16} /> Save
-//       </button>
-//       <button type="button" onClick={cancel} className="bg-gray-200 px-6 py-2 rounded">
-//         Cancel
-//       </button>
-//     </div>
-//   </form>
-// );
-
-// const BlogsTab = ({ blogs, handleDeleteBlog, navigate }) => (
-//   <div className="space-y-4">
-//     {blogs.length === 0 ? (
-//       <p className="text-gray-500">No blogs yet.</p>
-//     ) : (
-//       blogs.map((blog) => (
-//         <div key={blog._id} className="bg-white p-4 border rounded shadow space-y-2">
-//           <h3 className="text-xl font-bold">{blog.title}</h3>
-//           <p className="text-gray-600">{blog.content.slice(0, 150)}...</p>
-
-//           <div className="flex justify-between items-center text-gray-500">
-//             <span>{new Date(blog.createdAt).toLocaleDateString()}</span>
-//             <div className="flex gap-3">
-//               <button onClick={() => navigate(`/blog/edit/${blog._id}`)} className="text-indigo-600">Edit</button>
-//               <button onClick={() => handleDeleteBlog(blog._id)} className="text-red-600">Delete</button>
-//             </div>
-//           </div>
-//         </div>
-//       ))
-//     )}
-//   </div>
-// );
-
-// const SessionsTab = ({ sessions, navigate }) => (
-//   <div className="space-y-4">
-//     {sessions.filter(s => s.status === "booked").map((s) => (
-//       <div key={s._id} className="p-4 bg-white border rounded shadow flex justify-between">
-//         <div>
-//           <p><strong>Counselor:</strong> {s.counselor.name}</p>
-//           <p><strong>Date:</strong> {new Date(s.date).toLocaleString()}</p>
-//           <p><strong>Payment:</strong> {s.paymentStatus}</p>
-//         </div>
-//         <button
-//           onClick={() => navigate(`/counselor/${s.counselor._id}`)}
-//           className="bg-indigo-600 text-white px-4 py-2 rounded"
-//         >
-//           View
-//         </button>
-//       </div>
-//     ))}
-//   </div>
-// );
-
-// const BookingsTab = ({ bookings }) => (
-//   <div className="space-y-4">
-//     {bookings.map((b) => (
-//       <div key={b._id} className="p-4 bg-white border rounded shadow">
-//         <p><strong>Counselor:</strong> {b.counselorId?.name}</p>
-//         <p><strong>Date:</strong> {new Date(b.date).toLocaleDateString()}</p>
-//         <p><strong>Time:</strong> {b.time}</p>
-//         <p><strong>Duration:</strong> {b.durationMin} min</p>
-//         <p><strong>Amount:</strong> {(b.amount / 100).toFixed(2)} USD</p>
-//         <p><strong>Status:</strong> {b.status}</p>
-//       </div>
-//     ))}
-//   </div>
-// );
-
-
-// import React, { useEffect, useState } from "react";
-// import API from "../api/api";
-// import { useNavigate } from "react-router-dom";
-// import { Edit2, Trash } from "lucide-react";
-// import { toast } from "react-hot-toast";
-
-// const BASE_URL = "http://localhost:3000"; // <-- Backend base URL
-
-// const ClientProfile = () => {
-//   const navigate = useNavigate();
-//   const [client, setClient] = useState(null);
-//   const [blogs, setBlogs] = useState([]);
-//   const [sessions, setSessions] = useState([]);
-//   const [bookings, setBookings] = useState([]);
-//   const [editingProfile, setEditingProfile] = useState(false);
-//   const [profileData, setProfileData] = useState({});
-//   const [selectedFile, setSelectedFile] = useState(null);
-//   const [activeTab, setActiveTab] = useState("profile");
-
-//   const clientId = localStorage.getItem("userId");
-//   const token = localStorage.getItem("token");
-//   const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
-
-//   // Fetch client profile
-//   useEffect(() => {
-//     if (!clientId) return;
-//     const fetchClient = async () => {
-//       try {
-//         const { data } = await API.get(`/users/${clientId}`, { headers: authHeaders });
-//         setClient(data.data);
-//         setProfileData({
-//           name: data.data?.name || "",
-//           bio: data.data?.bio || "",
-//           contactNumber: data.data?.contactNumber || "",
-//           profileImage: data.data?.profileImage || "",
-//         });
-//       } catch (err) {
-//         console.error("Fetch client error:", err);
-//       }
-//     };
-//     fetchClient();
-//   }, [clientId]);
-
-//   // File input change
-//   const handleFileChange = (e) => {
-//     const file = e.target.files[0];
-//     setSelectedFile(file);
-
-//     // Preview image immediately
-//     if (file) {
-//       const reader = new FileReader();
-//       reader.onload = (ev) => {
-//         setProfileData((prev) => ({ ...prev, profileImage: ev.target.result }));
-//       };
-//       reader.readAsDataURL(file);
-//     }
-//   };
-
-//   const handleProfileChange = (e) =>
-//     setProfileData({ ...profileData, [e.target.name]: e.target.value });
-
-//   // Submit updated profile
-//   const submitProfileUpdate = async (e) => {
-//     e.preventDefault();
-//     if (!token) return toast.error("You are not authenticated");
-
-//     try {
-//       const formData = new FormData();
-//       formData.append("name", profileData.name);
-//       formData.append("bio", profileData.bio);
-//       formData.append("contactNumber", profileData.contactNumber);
-//       if (selectedFile) formData.append("profileImage", selectedFile);
-
-//       const { data } = await API.put(`/users/update-profile/${clientId}`, formData, {
-//         headers: { ...authHeaders, "Content-Type": "multipart/form-data" },
-//       });
-
-//       setClient(data.data);
-//       setEditingProfile(false);
-//       toast.success("Profile updated!");
-//     } catch (err) {
-//       console.error("Update profile error:", err);
-//       toast.error("Failed to update profile.");
-//     }
-//   };
-
-//   if (!client) return <div className="text-center py-20">Loading profile...</div>;
-
-//   return (
-//     <div className="max-w-6xl mx-auto p-6 space-y-10">
-//       {/* Header */}
-//       <div className="flex flex-col items-center text-center space-y-4">
-//         <img
-//           src={
-//             profileData.profileImage.startsWith("data:") // if preview from file
-//               ? profileData.profileImage
-//               : client.profileImage
-//               ? `${BASE_URL}${client.profileImage}`
-//               : "https://cdn-icons-png.flaticon.com/512/219/219969.png"
-//           }
-//           alt="Avatar"
-//           className="w-32 h-32 rounded-full border-2 border-gray-200 object-cover shadow-md"
-//         />
-//         <h1 className="text-3xl font-bold text-gray-900">{client.name}</h1>
-//         <p className="text-gray-600 max-w-xl">{client.bio || "This user hasn't added a bio yet."}</p>
-//         <div className="flex items-center space-x-4 mt-2 text-gray-500 text-sm">
-//           <span>{client.email}</span>
-//           <span>{client.contactNumber || "No contact number"}</span>
-//           <button
-//             onClick={() => setEditingProfile(true)}
-//             className="flex items-center gap-1 text-indigo-600 hover:text-indigo-800 font-medium"
-//           >
-//             <Edit2 size={16} /> Edit
-//           </button>
-//         </div>
-//       </div>
-
-//       {/* Profile Edit Form */}
-//       {editingProfile && (
-//         <form onSubmit={submitProfileUpdate} className="bg-white p-6 rounded-xl shadow space-y-4 border max-w-xl mx-auto">
-//           <input
-//             type="text"
-//             name="name"
-//             value={profileData.name}
-//             onChange={handleProfileChange}
-//             className="w-full p-3 border rounded"
-//             placeholder="Name"
-//           />
-//           <textarea
-//             name="bio"
-//             value={profileData.bio}
-//             onChange={handleProfileChange}
-//             className="w-full p-3 border rounded"
-//             placeholder="Bio"
-//           />
-//           <input
-//             type="text"
-//             name="contactNumber"
-//             value={profileData.contactNumber}
-//             onChange={handleProfileChange}
-//             className="w-full p-3 border rounded"
-//             placeholder="Contact Number"
-//           />
-
-//           <input type="file" onChange={handleFileChange} />
-//           {selectedFile && (
-//             <img
-//               src={profileData.profileImage}
-//               alt="Preview"
-//               className="w-24 h-24 rounded-full object-cover mt-2"
-//             />
-//           )}
-
-//           <div className="flex space-x-4 mt-2">
-//             <button
-//               type="submit"
-//               className="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 flex items-center gap-1"
-//             >
-//               <Edit2 size={16} /> Save
-//             </button>
-//             <button
-//               type="button"
-//               onClick={() => setEditingProfile(false)}
-//               className="bg-gray-200 px-6 py-2 rounded hover:bg-gray-300"
-//             >
-//               Cancel
-//             </button>
-//           </div>
-//         </form>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default ClientProfile;
-
-
-// import React, { useEffect, useState } from "react";
-// import API from "../api/api";
-// import { useNavigate } from "react-router-dom";
-// import { Edit2, Trash } from "lucide-react";
-// import { toast } from "react-hot-toast";
-
-// const ClientProfile = () => {
-//   const navigate = useNavigate();
-//   const [client, setClient] = useState(null);
-//   const [blogs, setBlogs] = useState([]);
-//   const [sessions, setSessions] = useState([]);
-//   const [bookings, setBookings] = useState([]);
+//   const [activeBookings, setActiveBookings] = useState([]);
 //   const [editingProfile, setEditingProfile] = useState(false);
 //   const [profileData, setProfileData] = useState({});
 //   const [selectedFile, setSelectedFile] = useState(null);
 //   const [previewImage, setPreviewImage] = useState(null);
-//   const [activeTab, setActiveTab] = useState("profile");
+//   const [activeTab, setActiveTab] = useState("bookings");
 
 //   const clientId = localStorage.getItem("userId");
 //   const token = localStorage.getItem("token");
 //   const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
 
-//   // Fetch client profile
+//   // --- Data Fetching ---
 //   useEffect(() => {
 //     if (!clientId) return;
 
 //     const fetchClient = async () => {
 //       try {
-//         const { data } = await API.get(`/users/${clientId}`, {
-//           headers: authHeaders,
-//         });
-
+//         const { data } = await API.get(`/users/${clientId}`, { headers: authHeaders });
 //         setClient(data.data);
-
 //         setProfileData({
 //           name: data.data.name || "",
 //           bio: data.data.bio || "",
 //           contactNumber: data.data.contactNumber || "",
 //           profileImage: data.data.profileImage || "",
 //         });
-
-//         setPreviewImage(
-//           data.data.profileImage
-//             ? `http://localhost:3000${data.data.profileImage}`
-//             : null
-//         );
+//         setPreviewImage(data.data.profileImage ? `http://localhost:3000${data.data.profileImage}` : null);
 //       } catch (err) {
-//         console.error("Fetch client error:", err);
-//         toast.error("Failed to fetch profile.");
+//         console.error("Failed to fetch profile.");
 //       }
 //     };
-
 //     fetchClient();
 //   }, [clientId]);
 
-//   // Fetch blogs
 //   useEffect(() => {
-//     const fetchBlogs = async () => {
+//     const fetchData = async () => {
 //       if (!token) return;
-//       try {
-//         const { data } = await API.get("/blogs/my-blogs", {
-//           headers: authHeaders,
-//         });
-//         setBlogs(data.data || []);
-//       } catch (err) {
-//         console.error("Fetch blogs error:", err);
-//         toast.error("Failed to load your blogs.");
-//       }
-//     };
-//     fetchBlogs();
-//   }, [token]);
 
-//   // Fetch sessions
-//   useEffect(() => {
-//     const fetchSessions = async () => {
-//       if (!token) return;
 //       try {
-//         const { data } = await API.get("/sessions/my-sessions", {
-//           headers: authHeaders,
-//         });
-//         setSessions(data.data || []);
+//         const [blogsRes, bookingsRes] = await Promise.all([
+//           API.get("/blogs/my-blogs", { headers: authHeaders }),
+//           API.get(`/booking/client/${clientId}`, { headers: authHeaders })
+//         ]);
+//         setBlogs(blogsRes.data.data || []);
+//         setBookings(bookingsRes.data.bookings || []);
 //       } catch (err) {
-//         console.error("Fetch sessions error:", err);
+//         console.error("Data fetch error", err);
 //       }
 //     };
-//     fetchSessions();
-//   }, [token]);
-
-//   // Fetch bookings
-//   useEffect(() => {
-//     const fetchBookings = async () => {
-//       if (!clientId || !token) return;
-//       try {
-//         const { data } = await API.get(`/booking/client/${clientId}`, {
-//           headers: authHeaders,
-//         });
-//         setBookings(data.bookings || []);
-//       } catch (err) {
-//         console.error("Fetch bookings error:", err);
-//       }
-//     };
-//     fetchBookings();
+//     fetchData();
 //   }, [clientId, token]);
 
+ 
+
+//   // --- Event Handlers ---
 //   const handleProfileChange = (e) =>
 //     setProfileData({ ...profileData, [e.target.name]: e.target.value });
 
 //   const handleFileChange = (e) => {
 //     const file = e.target.files[0];
 //     setSelectedFile(file);
-//     if (file) {
-//       const preview = URL.createObjectURL(file);
-//       setPreviewImage(preview);
-//     }
+//     if (file) setPreviewImage(URL.createObjectURL(file));
 //   };
 
 //   const submitProfileUpdate = async (e) => {
@@ -1001,1341 +126,484 @@
 //       formData.append("bio", profileData.bio);
 //       formData.append("contactNumber", profileData.contactNumber);
 //       if (selectedFile) formData.append("profileImage", selectedFile);
-
-//       const { data } = await API.put(
-//         `/profile/update`,
-//         formData,
-//         {
-//           headers: { ...authHeaders, "Content-Type": "multipart/form-data" },
-//         }
-//       );
-
-//       setClient(data.data);
-//       setProfileData({
-//         name: data.data.name,
-//         bio: data.data.bio,
-//         contactNumber: data.data.contactNumber,
-//         profileImage: data.data.profileImage,
-//       });
-//       setPreviewImage(
-//         data.data.profileImage
-//           ? `http://localhost:3000${data.data.profileImage}`
-//           : null
-//       );
-//       setEditingProfile(false);
-//       toast.success("Profile updated successfully!");
-//     } catch (err) {
-//       console.error("Update profile error:", err);
-//       toast.error("Failed to update profile.");
-//     }
-//   };
-
-//   const handleDeleteBlog = async (id) => {
-//     if (!window.confirm("Delete this blog?")) return;
-//     try {
-//       await API.delete(`/blogs/${id}`, { headers: authHeaders });
-//       setBlogs(blogs.filter((b) => b._id !== id));
-//       toast.success("Blog deleted!");
-//     } catch (err) {
-//       console.error("Delete blog error:", err);
-//       toast.error("Failed to delete blog.");
-//     }
-//   };
-
-//   if (!client)
-//     return <div className="text-center py-20">Loading profile...</div>;
-
-//   const bookedSessions = sessions.filter((s) => s.status === "booked");
-//   const completedSessions = sessions.filter((s) => s.status === "completed");
-
-//   return (
-//     <div className="max-w-6xl mx-auto p-6 space-y-10">
-//       {/* Header */}
-//       <div className="flex flex-col items-center text-center space-y-4">
-//         <img
-//           src={
-//             previewImage ||
-//             "https://cdn-icons-png.flaticon.com/512/9385/9385289.png"
-//           }
-//           alt="Avatar"
-//           className="w-32 h-32 rounded-full border-2 border-gray-200 object-cover shadow-md"
-//         />
-//         <h1 className="text-3xl font-bold text-gray-900">{client.name}</h1>
-//         <p className="text-gray-600 max-w-xl">
-//           {client.bio || "This user hasn't added a bio yet."}
-//         </p>
-//         <div className="flex items-center space-x-4 mt-2 text-gray-500 text-sm">
-//           <span>{client.email}</span>
-//           <span>{client.contactNumber || "No contact number"}</span>
-//           <button
-//             onClick={() => setEditingProfile(true)}
-//             className="flex items-center gap-1 text-indigo-600 hover:text-indigo-800 font-medium"
-//           >
-//             <Edit2 size={16} /> Edit
-//           </button>
-//         </div>
-//       </div>
-
-//       {/* Stats */}
-//       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
-//         <div className="bg-indigo-50 p-6 rounded-xl shadow hover:shadow-md transition">
-//           <h3 className="text-2xl font-bold text-indigo-600">{blogs.length}</h3>
-//           <p className="text-gray-600 mt-1">Blogs</p>
-//         </div>
-//         <div className="bg-green-50 p-6 rounded-xl shadow hover:shadow-md transition">
-//           <h3 className="text-2xl font-bold text-green-600">
-//             {bookedSessions.length}
-//           </h3>
-//           <p className="text-gray-600 mt-1">Booked Sessions</p>
-//         </div>
-//         <div className="bg-yellow-50 p-6 rounded-xl shadow hover:shadow-md transition">
-//           <h3 className="text-2xl font-bold text-yellow-600">
-//             {completedSessions.length}
-//           </h3>
-//           <p className="text-gray-600 mt-1">Completed Sessions</p>
-//         </div>
-//         <div className="bg-purple-50 p-6 rounded-xl shadow hover:shadow-md transition">
-//           <h3 className="text-2xl font-bold text-purple-600">{bookings.length}</h3>
-//           <p className="text-gray-600 mt-1">Bookings</p>
-//         </div>
-//       </div>
-
-//       {/* Tabs */}
-//       <div className="flex justify-center gap-4 border-b pb-2">
-//         {["profile", "blogs", "sessions", "bookings"].map((tab) => (
-//           <button
-//             key={tab}
-//             onClick={() => setActiveTab(tab)}
-//             className={`capitalize px-4 py-2 font-medium rounded-t-lg ${
-//               activeTab === tab
-//                 ? "bg-indigo-600 text-white"
-//                 : "text-indigo-600 hover:text-indigo-900"
-//             }`}
-//           >
-//             {tab}
-//           </button>
-//         ))}
-//       </div>
-
-//       {/* Tab Content */}
-//       <div className="space-y-6">
-//         {/* Profile Tab */}
-//         {activeTab === "profile" && (
-//           <div>
-//             {!editingProfile ? (
-//               <div className="space-y-2 text-gray-700">
-//                 <p>
-//                   <strong>Name:</strong> {client.name}
-//                 </p>
-//                 <p>
-//                   <strong>Bio:</strong> {client.bio || "-"}
-//                 </p>
-//                 <p>
-//                   <strong>Contact:</strong> {client.contactNumber || "-"}
-//                 </p>
-//                 <p>
-//                   <strong>Email:</strong> {client.email}
-//                 </p>
-//               </div>
-//             ) : (
-//               <form
-//                 onSubmit={submitProfileUpdate}
-//                 className="bg-white p-6 rounded-xl shadow space-y-4 border max-w-xl mx-auto"
-//               >
-//                 <input
-//                   type="text"
-//                   name="name"
-//                   value={profileData.name}
-//                   onChange={handleProfileChange}
-//                   className="w-full p-3 border rounded"
-//                   placeholder="Name"
-//                 />
-//                 <textarea
-//                   name="bio"
-//                   value={profileData.bio}
-//                   onChange={handleProfileChange}
-//                   className="w-full p-3 border rounded"
-//                   placeholder="Bio"
-//                 />
-//                 <input
-//                   type="text"
-//                   name="contactNumber"
-//                   value={profileData.contactNumber}
-//                   onChange={handleProfileChange}
-//                   className="w-full p-3 border rounded"
-//                   placeholder="Contact Number"
-//                 />
-//                 <input type="file" onChange={handleFileChange} />
-//                 {previewImage && (
-//                   <img
-//                     src={previewImage}
-//                     alt="Preview"
-//                     className="w-32 h-32 rounded-full object-cover mt-2 border"
-//                   />
-//                 )}
-//                 <div className="flex space-x-4 mt-2">
-//                   <button
-//                     type="submit"
-//                     className="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 flex items-center gap-1"
-//                   >
-//                     <Edit2 size={16} /> Save
-//                   </button>
-//                   <button
-//                     type="button"
-//                     onClick={() => setEditingProfile(false)}
-//                     className="bg-gray-200 px-6 py-2 rounded hover:bg-gray-300"
-//                   >
-//                     Cancel
-//                   </button>
-//                 </div>
-//               </form>
-//             )}
-//           </div>
-//         )}
-
-//         {/* Blogs Tab */}
-//         {activeTab === "blogs" && (
-//           <div className="space-y-4">
-//             {blogs.length === 0 ? (
-//               <p className="text-gray-500">You haven't written any blogs yet.</p>
-//             ) : (
-//               blogs.map((blog) => (
-//                 <div
-//                   key={blog._id}
-//                   className="p-4 bg-white border rounded-xl shadow hover:shadow-md transition flex flex-col"
-//                 >
-//                   <h3 className="text-xl font-semibold text-gray-800">
-//                     {blog.title}
-//                   </h3>
-//                   <p className="text-gray-600 mt-2">
-//                     {blog.content.slice(0, 150)}...
-//                   </p>
-//                   <div className="flex justify-between items-center mt-3 text-gray-500 text-sm">
-//                     <span>{new Date(blog.createdAt).toLocaleDateString()}</span>
-//                     <div className="flex space-x-3">
-//                       <button
-//                         onClick={() => navigate(`/blog/edit/${blog._id}`)}
-//                         className="flex items-center gap-1 text-indigo-600 hover:underline"
-//                       >
-//                         <Edit2 size={14} /> Edit
-//                       </button>
-//                       <button
-//                         onClick={() => handleDeleteBlog(blog._id)}
-//                         className="flex items-center gap-1 text-red-600 hover:underline"
-//                       >
-//                         <Trash size={14} /> Delete
-//                       </button>
-//                     </div>
-//                   </div>
-//                 </div>
-//               ))
-//             )}
-//           </div>
-//         )}
-
-//         {/* Sessions & Bookings Tabs */}
-//         {activeTab === "sessions" && (
-//           <div className="space-y-6">
-//             <h3 className="text-lg font-semibold text-gray-700">
-//               Booked Sessions
-//             </h3>
-//             {bookedSessions.length === 0 ? (
-//               <p className="text-gray-500">No booked sessions.</p>
-//             ) : (
-//               bookedSessions.map((s) => (
-//                 <div
-//                   key={s._id}
-//                   className="p-4 bg-white border rounded-xl shadow flex justify-between items-center"
-//                 >
-//                   <div>
-//                     <p>
-//                       <strong>Counselor:</strong> {s.counselor.name}
-//                     </p>
-//                     <p>
-//                       <strong>Date:</strong>{" "}
-//                       {new Date(s.date).toLocaleString()}
-//                     </p>
-//                     <p>
-//                       <strong>Payment:</strong> {s.paymentStatus}
-//                     </p>
-//                   </div>
-//                   <button
-//                     onClick={() => navigate(`/counselor/${s.counselor._id}`)}
-//                     className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
-//                   >
-//                     View Counselor
-//                   </button>
-//                 </div>
-//               ))
-//             )}
-//           </div>
-//         )}
-
-//         {activeTab === "bookings" && (
-//           <div className="space-y-6">
-//             <h3 className="text-lg font-semibold text-gray-700">All Bookings</h3>
-//             {bookings.length === 0 ? (
-//               <p className="text-gray-500">No bookings yet.</p>
-//             ) : (
-//               bookings.map((b) => (
-//                 <div
-//                   key={b._id}
-//                   className="p-5 bg-white border rounded-xl shadow flex flex-col md:flex-row justify-between items-center"
-//                 >
-//                   <div>
-//                     <p className="text-gray-800 font-semibold">
-//                       Counselor: {b.counselorId?.name}
-//                     </p>
-//                     <p className="text-gray-600 mt-1">
-//                       Date: {new Date(b.date).toLocaleDateString()}
-//                     </p>
-//                     <p className="text-gray-600 mt-1">Time: {b.time}</p>
-//                     <p className="text-gray-600 mt-1">
-//                       Duration: {b.durationMin} min
-//                     </p>
-//                     <p className="text-gray-600 mt-1">
-//                       Amount: {(b.amount / 100).toFixed(2)} USD
-//                     </p>
-//                     <p className="text-gray-600 mt-1">
-//                       Payment: {b.paymentStatus || "Pending"}
-//                     </p>
-//                     <p className="text-gray-600 mt-1">Notes: {b.notes}</p>
-//                   </div>
-//                   <span
-//                     className={`mt-2 md:mt-0 font-medium ${
-//                       b.status === "completed"
-//                         ? "text-green-600"
-//                         : b.status === "booked"
-//                         ? "text-yellow-600"
-//                         : "text-gray-500"
-//                     }`}
-//                   >
-//                     {b.status.charAt(0).toUpperCase() + b.status.slice(1)}
-//                   </span>
-//                 </div>
-//               ))
-//             )}
-//           </div>
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ClientProfile;
-
-
-
-
-
-// import React, { useEffect, useState } from "react";
-// import API from "../api/api";
-// import { useNavigate } from "react-router-dom";
-// import { Edit2, Trash } from "lucide-react";
-// import { toast } from "react-hot-toast";
-
-
-
-
-// const ClientProfile = () => {
-//   const navigate = useNavigate();
-//   const [client, setClient] = useState(null);
-//   const [blogs, setBlogs] = useState([]);
-//   const [sessions, setSessions] = useState([]);
-//   const [bookings, setBookings] = useState([]);
-//   const [editingProfile, setEditingProfile] = useState(false);
-//   const [profileData, setProfileData] = useState({});
-//   const [selectedFile, setSelectedFile] = useState(null);
-//   const [activeTab, setActiveTab] = useState("profile");
-
-//   const clientId = localStorage.getItem("userId");
-//   const token = localStorage.getItem("token");
-//   const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
-
-//   // Fetch client profile
-//   useEffect(() => {
-//     if (!clientId) return;
-  
-//     const fetchClient = async () => {
-//       try {
-//         const { data } = await API.get(`/users/${clientId}`, {
-//           headers: authHeaders,
-//         });
-  
-//         setClient(data.data);
-  
-//         setProfileData({
-//           name: data.data?.name || "",
-//           bio: data.data?.bio || "",
-//           contactNumber: data.data?.contactNumber || "",
-//           profileImage: data.data?.profileImage || "",
-//         });
-  
-//       } catch (err) {
-//         console.error("Fetch client error:", err);
-//       }
-//     };
-  
-//     fetchClient();
-//   }, [clientId]);
-  
-
-//   // Fetch user's blogs
-//   // Fetch user's blogs
-// useEffect(() => {
-//   const fetchBlogs = async () => {
-//     if (!token) return;
-//     try {
-//       const { data } = await API.get("/blogs/my-blogs", {
-//         headers: authHeaders,
-//       });
-//       setBlogs(data.data || []);
-//     } catch (err) {
-//       console.error("Fetch blogs error:", err);
-//       toast.error("Failed to load your blogs.");
-//     }
-//   };
-//   fetchBlogs();
-// }, [token]);
-
-
-//   // Fetch sessions
-//   useEffect(() => {
-//     const fetchSessions = async () => {
-//       if (!token) return;
-//       try {
-//         const { data } = await API.get(`/sessions/my-sessions`, { headers: authHeaders });
-//         setSessions(data.data || []);
-//       } catch (err) {
-//         console.error("Fetch sessions error:", err);
-//       }
-//     };
-//     fetchSessions();
-//   }, [token]);
-
-//   // Fetch bookings
-//   useEffect(() => {
-//     const fetchBookings = async () => {
-//       if (!clientId || !token) return;
-//       try {
-//         const { data } = await API.get(`/booking/client/${clientId}`, { headers: authHeaders });
-//         setBookings(data.bookings || []);
-//       } catch (err) {
-//         console.error("Fetch bookings error:", err);
-//       }
-//     };
-//     fetchBookings();
-//   }, [clientId, token]);
-
-//   const handleProfileChange = (e) =>
-//     setProfileData({ ...profileData, [e.target.name]: e.target.value });
-
-//   const handleFileChange = (e) => setSelectedFile(e.target.files[0]);
-
-//   const submitProfileUpdate = async (e) => {
-//     e.preventDefault();
-//     if (!token) return toast.error("You are not authenticated");
-
-//     try {
-//       const formData = new FormData();
-//       formData.append("name", profileData.name);
-//       formData.append("bio", profileData.bio);
-//       formData.append("contactNumber", profileData.contactNumber);
-//       if (selectedFile) formData.append("profileImage", selectedFile);
-
-
 //       const { data } = await API.put(`/profile/update`, formData, {
 //         headers: { ...authHeaders, "Content-Type": "multipart/form-data" },
 //       });
-      
-    
-      
 
 //       setClient(data.data);
+//       setProfileData({ ...profileData, ...data.data });
+//       setPreviewImage(data.data.profileImage ? `http://localhost:3000${data.data.profileImage}` : null);
 //       setEditingProfile(false);
-//       toast.success("Profile updated!");
+//       toast.success("Profile updated successfully!");
 //     } catch (err) {
-//       console.error("Update profile error:", err);
-//       toast.error("Failed to update profile.");
+//       console.error("Update failed:", err);
+//       toast.error("Update failed.");
 //     }
 //   };
 
 //   const handleDeleteBlog = async (id) => {
-//     if (!window.confirm("Delete this blog?")) return;
+//     if (!window.confirm("Delete this journal entry?")) return;
 //     try {
 //       await API.delete(`/blogs/${id}`, { headers: authHeaders });
 //       setBlogs(blogs.filter((b) => b._id !== id));
-//       toast.success("Blog deleted!");
+//       toast.success("Entry deleted");
 //     } catch (err) {
-//       console.error("Delete blog error:", err);
-//       toast.error("Failed to delete blog.");
+//       toast.error("Deletion failed.");
 //     }
 //   };
 
-//   if (!client) return <div className="text-center py-20">Loading profile...</div>;
+//   const handleStartSession = (booking) => {
+//     if (booking.sessionType === 'chat') {
+//       navigate(`/chat/${booking.chatRoom}`);
+//     } else if (booking.sessionType === 'video') {
+//       window.open(booking.meetLink, '_blank');
+//     }
+//   };
 
-//   const bookedSessions = sessions.filter((s) => s.status === "booked");
-//   const completedSessions = sessions.filter((s) => s.status === "completed");
-
-//   return (
-//     <div className="max-w-6xl mx-auto p-6 space-y-10">
-//       {/* Header */}
-//       <div className="flex flex-col items-center text-center space-y-4">
-//         <img
-//           src={client.profileImage || "https://cdn-icons-png.flaticon.com/512/219/219969.png"}
-//           alt="Avatar"
-//           className="w-32 h-32 rounded-full border-2 border-gray-200 object-cover shadow-md"
-//         />
-//         <h1 className="text-3xl font-bold text-gray-900">{client.name}</h1>
-//         <p className="text-gray-600 max-w-xl">{client.bio || "This user hasn't added a bio yet."}</p>
-//         <div className="flex items-center space-x-4 mt-2 text-gray-500 text-sm">
-//           <span>{client.email}</span>
-//           <span>{client.contactNumber || "No contact number"}</span>
-//           <button
-//             onClick={() => setEditingProfile(true)}
-//             className="flex items-center gap-1 text-indigo-600 hover:text-indigo-800 font-medium"
-//           >
-//             <Edit2 size={16} /> Edit
-//           </button>
-//         </div>
-//       </div>
-
-//       {/* Stats */}
-//       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
-//         <div className="bg-indigo-50 p-6 rounded-xl shadow hover:shadow-md transition">
-//           <h3 className="text-2xl font-bold text-indigo-600">{blogs.length}</h3>
-//           <p className="text-gray-600 mt-1">Blogs</p>
-//         </div>
-//         <div className="bg-green-50 p-6 rounded-xl shadow hover:shadow-md transition">
-//           <h3 className="text-2xl font-bold text-green-600">{bookedSessions.length}</h3>
-//           <p className="text-gray-600 mt-1">Booked Sessions</p>
-//         </div>
-//         <div className="bg-yellow-50 p-6 rounded-xl shadow hover:shadow-md transition">
-//           <h3 className="text-2xl font-bold text-yellow-600">{completedSessions.length}</h3>
-//           <p className="text-gray-600 mt-1">Completed Sessions</p>
-//         </div>
-//         <div className="bg-purple-50 p-6 rounded-xl shadow hover:shadow-md transition">
-//           <h3 className="text-2xl font-bold text-purple-600">{bookings.length}</h3>
-//           <p className="text-gray-600 mt-1">Bookings</p>
-//         </div>
-//       </div>
-
-//       {/* Tabs */}
-//       <div className="flex justify-center gap-4 border-b pb-2">
-//         {["profile", "blogs", "sessions", "bookings"].map((tab) => (
-//           <button
-//             key={tab}
-//             onClick={() => setActiveTab(tab)}
-//             className={`capitalize px-4 py-2 font-medium rounded-t-lg ${
-//               activeTab === tab ? "bg-indigo-600 text-white" : "text-indigo-600 hover:text-indigo-900"
-//             }`}
-//           >
-//             {tab}
-//           </button>
-//         ))}
-//       </div>
-
-//       {/* Tab Content */}
-//       <div className="space-y-6">
-//         {/* Profile Tab */}
-//         {activeTab === "profile" && (
-//           <div>
-//             {!editingProfile ? (
-//               <div className="space-y-2 text-gray-700">
-//                 <p><strong>Name:</strong> {client.name}</p>
-//                 <p><strong>Bio:</strong> {client.bio || "-"}</p>
-//                 <p><strong>Contact:</strong> {client.contactNumber || "-"}</p>
-//                 <p><strong>Email:</strong> {client.email}</p>
-//               </div>
-//             ) : (
-//               <form onSubmit={submitProfileUpdate} className="bg-white p-6 rounded-xl shadow space-y-4 border max-w-xl mx-auto">
-//                 <input type="text" name="name" value={profileData.name} onChange={handleProfileChange} className="w-full p-3 border rounded" placeholder="Name" />
-//                 <textarea name="bio" value={profileData.bio} onChange={handleProfileChange} className="w-full p-3 border rounded" placeholder="Bio" />
-//                 <input type="text" name="contactNumber" value={profileData.contactNumber} onChange={handleProfileChange} className="w-full p-3 border rounded" placeholder="Contact Number" />
-//                 <input type="file" onChange={handleFileChange} />
-//                 <div className="flex space-x-4 mt-2">
-//                   <button type="submit" className="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 flex items-center gap-1">
-//                     <Edit2 size={16} /> Save
-//                   </button>
-//                   <button type="button" onClick={() => setEditingProfile(false)} className="bg-gray-200 px-6 py-2 rounded hover:bg-gray-300">Cancel</button>
-//                 </div>
-//               </form>
-//             )}
-//           </div>
-//         )}
-
-//         {/* Blogs Tab */}
-//         {activeTab === "blogs" && (
-//           <div className="space-y-4">
-//             {blogs.length === 0 ? (
-//               <p className="text-gray-500">You haven't written any blogs yet.</p>
-//             ) : blogs.map((blog) => (
-//               <div key={blog._id} className="p-4 bg-white border rounded-xl shadow hover:shadow-md transition flex flex-col">
-//                 <h3 className="text-xl font-semibold text-gray-800">{blog.title}</h3>
-//                 <p className="text-gray-600 mt-2">{blog.content.slice(0, 150)}...</p>
-//                 <div className="flex justify-between items-center mt-3 text-gray-500 text-sm">
-//                   <span>{new Date(blog.createdAt).toLocaleDateString()}</span>
-//                   <div className="flex space-x-3">
-//                     <button onClick={() => navigate(`/blog/edit/${blog._id}`)} className="flex items-center gap-1 text-indigo-600 hover:underline">
-//                       <Edit2 size={14} /> Edit
-//                     </button>
-//                     <button onClick={() => handleDeleteBlog(blog._id)} className="flex items-center gap-1 text-red-600 hover:underline">
-//                       <Trash size={14} /> Delete
-//                     </button>
-//                   </div>
-//                 </div>
-//               </div>
-//             ))}
-//           </div>
-//         )}
-
-//         {/* Sessions & Bookings Tabs */}
-//         {activeTab === "sessions" && (
-//           <div className="space-y-6">
-//             <h3 className="text-lg font-semibold text-gray-700">Booked Sessions</h3>
-//             {bookedSessions.length === 0 ? <p className="text-gray-500">No booked sessions.</p> :
-//               bookedSessions.map((s) => (
-//                 <div key={s._id} className="p-4 bg-white border rounded-xl shadow flex justify-between items-center">
-//                   <div>
-//                     <p><strong>Counselor:</strong> {s.counselor.name}</p>
-//                     <p><strong>Date:</strong> {new Date(s.date).toLocaleString()}</p>
-//                     <p><strong>Payment:</strong> {s.paymentStatus}</p>
-//                   </div>
-//                   <button onClick={() => navigate(`/counselor/${s.counselor._id}`)} className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">View Counselor</button>
-//                 </div>
-//               ))}
-//           </div>
-//         )}
-
-//         {activeTab === "bookings" && (
-//           <div className="space-y-6">
-//             <h3 className="text-lg font-semibold text-gray-700">All Bookings</h3>
-//             {bookings.length === 0 ? <p className="text-gray-500">No bookings yet.</p> :
-//               bookings.map((b) => (
-//                 <div key={b._id} className="p-5 bg-white border rounded-xl shadow flex flex-col md:flex-row justify-between items-center">
-//                   <div>
-//                     <p className="text-gray-800 font-semibold">Counselor: {b.counselorId?.name}</p>
-//                     <p className="text-gray-600 mt-1">Date: {new Date(b.date).toLocaleDateString()}</p>
-//                     <p className="text-gray-600 mt-1">Time: {b.time}</p>
-//                     <p className="text-gray-600 mt-1">Duration: {b.durationMin} min</p>
-//                     <p className="text-gray-600 mt-1">Amount: {(b.amount / 100).toFixed(2)} USD</p>
-//                     <p className="text-gray-600 mt-1">Payment: {b.paymentStatus || "Pending"}</p>
-//                     <p className="text-gray-600 mt-1">Notes: {b.notes}</p>
-//                   </div>
-//                   <span className={`mt-2 md:mt-0 font-medium ${b.status === "completed" ? "text-green-600" : b.status === "booked" ? "text-yellow-600" : "text-gray-500"}`}>
-//                     {b.status.charAt(0).toUpperCase() + b.status.slice(1)}
-//                   </span>
-//                 </div>
-//               ))
-//             }
-//           </div>
-//         )}
-//       </div>
-//     </div>
+//   if (!client) return (
+//     <div className="min-h-screen bg-[#f4f2ed] text-[#1c1977] font-sans-serif animate-pulse">Preparing your space...</div>
 //   );
-// };
-
-// export default ClientProfile;
-
-
-// import React, { useEffect, useState } from "react";
-// import API from "../api/api";
-// import { useNavigate } from "react-router-dom";
-// import { Edit2, Trash } from "lucide-react";
-// import { toast } from "react-hot-toast";
-
-// const ClientProfile = () => {
-//   const navigate = useNavigate();
-//   const clientId = localStorage.getItem("userId");
-//   const token = localStorage.getItem("token");
-
-//   const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
-
-//   const [client, setClient] = useState(null);
-//   const [blogs, setBlogs] = useState([]);
-//   const [sessions, setSessions] = useState([]);
-//   const [bookings, setBookings] = useState([]);
-
-//   const [editingProfile, setEditingProfile] = useState(false);
-//   const [profileData, setProfileData] = useState({
-//     name: "",
-//     bio: "",
-//     contactNumber: "",
-//   });
-//   const [selectedFile, setSelectedFile] = useState(null);
-
-//   const [activeTab, setActiveTab] = useState("profile");
-
-//   // -------------------------------
-//   // Fetch Client Profile
-//   // -------------------------------
-//   useEffect(() => {
-//     if (!clientId) return;
-
-//     const fetchClient = async () => {
-//       try {
-//         const res = await API.get(`/users/${clientId}`, { headers: authHeaders });
-//         setClient(res.data.data);
-
-//         setProfileData({
-//           name: res.data.data.name || "",
-//           bio: res.data.data.bio || "",
-//           contactNumber: res.data.data.contactNumber || "",
-//         });
-//       } catch (err) {
-//         console.error(err);
-//         toast.error("Failed to load profile");
-//       }
-//     };
-
-//     fetchClient();
-//   }, [clientId]);
-
-//   // -------------------------------
-//   // Fetch Blogs
-//   // -------------------------------
-//   useEffect(() => {
-//     const fetchBlogs = async () => {
-//       try {
-//         const res = await API.get("/blogs/my-blogs", { headers: authHeaders });
-//         setBlogs(res.data.data || []);
-//       } catch (err) {
-//         console.error(err);
-//       }
-//     };
-//     fetchBlogs();
-//   }, []);
-
-//   // -------------------------------
-//   // Fetch Sessions
-//   // -------------------------------
-//   useEffect(() => {
-//     const fetchSessions = async () => {
-//       try {
-//         const res = await API.get("/sessions/my-sessions", { headers: authHeaders });
-//         setSessions(res.data.data || []);
-//       } catch (err) {
-//         console.error(err);
-//       }
-//     };
-//     fetchSessions();
-//   }, []);
-
-//   // -------------------------------
-//   // Fetch Bookings
-//   // -------------------------------
-//   useEffect(() => {
-//     const fetchBookings = async () => {
-//       try {
-//         const res = await API.get(`/booking/client/${clientId}`, { headers: authHeaders });
-//         setBookings(res.data.bookings || []);
-//       } catch (err) {
-//         console.error(err);
-//       }
-//     };
-//     fetchBookings();
-//   }, []);
-
-//   // -------------------------------
-//   // Handle Inputs
-//   // -------------------------------
-//   const handleProfileChange = (e) => {
-//     setProfileData({ ...profileData, [e.target.name]: e.target.value });
-//   };
-
-//   const handleFileChange = (e) => {
-//     setSelectedFile(e.target.files[0]);
-//   };
-
-//   // -------------------------------
-//   // Submit Profile Update
-//   // -------------------------------
-//   const submitProfileUpdate = async (e) => {
-//     e.preventDefault();
-
-//     try {
-//       const formData = new FormData();
-//       formData.append("name", profileData.name);
-//       formData.append("bio", profileData.bio);
-//       formData.append("contactNumber", profileData.contactNumber);
-
-//       if (selectedFile) {
-//         formData.append("profileImage", selectedFile);
-//       }
-
-//       const { data } = await API.put("/profile/update", formData, {
-//         headers: {
-//           "Content-Type": "multipart/form-data",
-//           ...authHeaders,
-//         },
-//       });
-      
-//       setClient(res.data.data);
-//       setEditingProfile(false);
-//       toast.success("Profile Updated!");
-
-//     } catch (err) {
-//       console.error(err);
-//       toast.error("Error updating profile");
-//     }
-//   };
-
-//   // -------------------------------
-//   // Delete Blog
-//   // -------------------------------
-//   const handleDeleteBlog = async (id) => {
-//     if (!window.confirm("Delete this blog permanently?")) return;
-
-//     try {
-//       await API.delete(`/blogs/${id}`, { headers: authHeaders });
-//       setBlogs(blogs.filter((b) => b._id !== id));
-//       toast.success("Blog deleted");
-//     } catch (err) {
-//       console.error(err);
-//       toast.error("Failed to delete");
-//     }
-//   };
-
-//   if (!client) return <div className="text-center py-20">Loading...</div>;
-
-//   const bookedSessions = sessions.filter((s) => s.status === "booked");
-//   const completedSessions = sessions.filter((s) => s.status === "completed");
 
 //   return (
-//     <div className="max-w-6xl mx-auto p-6 space-y-10">
-      
-//       {/* ---------------------------------- */}
-//       {/* Header Profile */}
-//       {/* ---------------------------------- */}
-//       <div className="flex flex-col items-center text-center space-y-4">
+//     <div className="min-h-screen bg-[#f4f2ed] text-[#1c1977] font-sans relative selection:bg-[#3f6212] selection:text-white">
+//       <GrainTexture />
+//       <main className="max-w-7xl mx-auto px-6 py-24 lg:py-32 relative z-10">
         
-//         <img
-//           src={client.profileImage || "https://cdn-icons-png.flaticon.com/512/219/219969.png"}
-//           alt="Avatar"
-//           className="w-32 h-32 rounded-full border object-cover shadow-md"
-//         />
+//         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+          
+//           {/* --- LEFT SIDEBAR (STICKY) --- */}
+//           <aside className="lg:col-span-4 lg:sticky lg:top-10 space-y-6">
+//             <Card className="p-8 text-center relative">
+//               {/* Edit Toggle */}
+//               <button 
+//                 onClick={() => setEditingProfile(!editingProfile)}
+//                 className="absolute top-6 right-6 p-2 rounded-full hover:bg-stone-100 text-stone-400 hover:text-[#1c1977] transition-colors"
+//               >
+//                 <Edit2 size={16} />
+//               </button>
 
-//         <h1 className="text-3xl font-bold">{client.name}</h1>
-//         <p className="text-gray-600 max-w-xl">{client.bio || "No bio added."}</p>
+//               {/* Avatar */}
+//               <div className="relative w-32 h-32 mx-auto mb-6 group">
+//                 <div className="absolute inset-0 rounded-full bg-[#3f6212] opacity-0 group-hover:opacity-10 blur-xl transition-opacity duration-500"></div>
+//                 <img
+//                   src={previewImage || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
+//                   alt="Profile"
+//                   className="w-full h-full rounded-full object-cover border-4 border-white shadow-lg"
+//                 />
+//                 {editingProfile && (
+//                   <label className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full cursor-pointer opacity-0 hover:opacity-100 transition-opacity">
+//                     <Camera className="text-white" size={20} />
+//                     <input
+//                       type="file"
+//                       accept="image/*"
+//                       onChange={handleFileChange}
+//                       className="hidden"
+//                     />
+//                   </label>
+//                 )}
+//               </div>
 
-//         <div className="flex items-center space-x-4 text-sm text-gray-500">
-//           <span>{client.email}</span>
-//           <span>{client.contactNumber || "No contact"}</span>
+//               {/* Profile Info */}
+//               <AnimatePresence mode="wait">
+//                 {editingProfile ? (
+//                   <motion.form
+//                     initial={{ opacity: 0 }}
+//                     animate={{ opacity: 1 }}
+//                     exit={{ opacity: 0 }}
+//                     onSubmit={submitProfileUpdate}
+//                     className="space-y-4"
+//                   >
+//                     <input
+//                       type="text"
+//                       name="name"
+//                       value={profileData.name}
+//                       onChange={handleProfileChange}
+//                       className="w-full px-4 py-2 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3f6212]"
+//                       placeholder="Name"
+//                     />
+//                     <textarea
+//                       name="bio"
+//                       value={profileData.bio}
+//                       onChange={handleProfileChange}
+//                       className="w-full px-4 py-2 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3f6212] resize-none"
+//                       rows={3}
+//                       placeholder="Bio"
+//                     />
+//                     <input
+//                       type="tel"
+//                       name="contactNumber"
+//                       value={profileData.contactNumber}
+//                       onChange={handleProfileChange}
+//                       className="w-full px-4 py-2 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3f6212]"
+//                       placeholder="Contact Number"
+//                     />
+//                     <div className="flex gap-2">
+//                       <button
+//                         type="submit"
+//                         className="flex-1 bg-[#3f6212] text-white py-2 rounded-lg hover:bg-[#2f4a0e] transition-colors"
+//                       >
+//                         Save
+//                       </button>
+//                       <button
+//                         type="button"
+//                         onClick={() => setEditingProfile(false)}
+//                         className="flex-1 bg-stone-200 text-stone-700 py-2 rounded-lg hover:bg-stone-300 transition-colors"
+//                       >
+//                         Cancel
+//                       </button>
+//                     </div>
+//                   </motion.form>
+//                 ) : (
+//                   <motion.div
+//                     initial={{ opacity: 0 }}
+//                     animate={{ opacity: 1 }}
+//                     exit={{ opacity: 0 }}
+//                     className="space-y-4"
+//                   >
+//                     <h2 className="text-2xl font-bold text-[#1c1977]">{client.name}</h2>
+//                     {client.bio && (
+//                       <p className="text-stone-600 text-sm leading-relaxed">{client.bio}</p>
+//                     )}
+//                     <div className="flex flex-col gap-2 text-sm text-stone-500">
+//                       {client.email && (
+//                         <div className="flex items-center justify-center gap-2">
+//                           <Mail size={14} />
+//                           <span>{client.email}</span>
+//                         </div>
+//                       )}
+//                       {client.contactNumber && (
+//                         <div className="flex items-center justify-center gap-2">
+//                           <Phone size={14} />
+//                           <span>{client.contactNumber}</span>
+//                         </div>
+//                       )}
+//                     </div>
+//                   </motion.div>
+//                 )}
+//               </AnimatePresence>
+//             </Card>
 
-//           <button
-//             onClick={() => setEditingProfile(true)}
-//             className="flex items-center gap-1 text-indigo-600 hover:text-indigo-800 font-medium"
-//           >
-//             <Edit2 size={16} /> Edit
-//           </button>
-//         </div>
-//       </div>
+//             {/* Quick Stats */}
+//             <Card className="p-6">
+//               <h3 className="font-semibold text-[#1c1977] mb-4">Your Journey</h3>
+//               <div className="grid grid-cols-2 gap-4">
+//                 <div className="text-center p-3 bg-stone-50 rounded-lg">
+//                   <div className="text-2xl font-bold text-[#3f6212]">{bookings.length}</div>
+//                   <div className="text-xs text-stone-500">Total Sessions</div>
+//                 </div>
+//                 <div className="text-center p-3 bg-stone-50 rounded-lg">
+//                   <div className="text-2xl font-bold text-[#3f6212]">{blogs.length}</div>
+//                   <div className="text-xs text-stone-500">Journal Entries</div>
+//                 </div>
+//               </div>
+//             </Card>
+//           </aside>
 
-//       {/* ---------------------------------- */}
-//       {/* Stats */}
-//       {/* ---------------------------------- */}
-//       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
-//         <StatBox label="Blogs" value={blogs.length} color="indigo" />
-//         <StatBox label="Booked Sessions" value={bookedSessions.length} color="green" />
-//         <StatBox label="Completed Sessions" value={completedSessions.length} color="yellow" />
-//         <StatBox label="Bookings" value={bookings.length} color="purple" />
-//       </div>
+//           {/* --- MAIN CONTENT --- */}
+//           <div className="lg:col-span-8 space-y-6">
+//             {/* Active Sessions */}
+//             {activeBookings.length > 0 && (
+//               <Card className="p-6">
+//                 <h3 className="font-semibold text-[#1c1977] mb-4 flex items-center gap-2">
+//                   <Sparkles className="text-[#3f6212]" size={20} />
+//                   Active Sessions
+//                 </h3>
+//                 <div className="space-y-3">
+//                   {activeBookings.map((booking) => (
+//                     <div key={booking._id} className="flex items-center justify-between p-4 bg-stone-50 rounded-lg">
+//                       <div>
+//                         <div className="font-medium text-[#1c1977]">{booking.counselorId?.name}</div>
+//                         <div className="text-sm text-stone-500">
+//                           {booking.sessionType === 'chat' ? 'Chat Session' : 'Video Session'}
+//                         </div>
+//                       </div>
+//                       <button
+//                         onClick={() => handleStartSession(booking)}
+//                         className="bg-[#3f6212] text-white px-4 py-2 rounded-lg hover:bg-[#2f4a0e] transition-colors flex items-center gap-2"
+//                       >
+//                         {booking.sessionType === 'chat' ? (
+//                           <MessageSquare size={16} />
+//                         ) : (
+//                           <Video size={16} />
+//                         )}
+//                         Join
+//                       </button>
+//                     </div>
+//                   ))}
+//                 </div>
+//               </Card>
+//             )}
 
-//       {/* ---------------------------------- */}
-//       {/* Tabs */}
-//       {/* ---------------------------------- */}
-//       <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
-
-//       {/* ---------------------------------- */}
-//       {/* Tab Contents */}
-//       {/* ---------------------------------- */}
-//       <div className="space-y-6">
-
-//         {activeTab === "profile" && (
-//           !editingProfile ? (
-//             <ProfileView client={client} />
-//           ) : (
-//             <ProfileForm
-//               profileData={profileData}
-//               handleProfileChange={handleProfileChange}
-//               handleFileChange={handleFileChange}
-//               submitProfileUpdate={submitProfileUpdate}
-//               cancel={() => setEditingProfile(false)}
-//             />
-//           )
-//         )}
-
-//         {activeTab === "blogs" && (
-//           <BlogsTab blogs={blogs} handleDeleteBlog={handleDeleteBlog} navigate={navigate} />
-//         )}
-
-//         {activeTab === "sessions" && (
-//           <SessionsTab sessions={sessions} navigate={navigate} />
-//         )}
-
-//         {activeTab === "bookings" && (
-//           <BookingsTab bookings={bookings} />
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ClientProfile;
-
-// /* ------------------------------
-//    Small Components Used Above
-// ------------------------------ */
-
-// const StatBox = ({ label, value, color }) => (
-//   <div className={`bg-${color}-50 p-6 rounded-xl shadow`}>
-//     <h3 className={`text-2xl font-bold text-${color}-600`}>{value}</h3>
-//     <p className="text-gray-600">{label}</p>
-//   </div>
-// );
-
-// const Tabs = ({ activeTab, setActiveTab }) => (
-//   <div className="flex justify-center gap-4 border-b pb-2">
-//     {["profile", "blogs", "sessions", "bookings"].map((tab) => (
-//       <button
-//         key={tab}
-//         onClick={() => setActiveTab(tab)}
-//         className={`capitalize px-4 py-2 font-medium rounded-t-lg ${
-//           activeTab === tab
-//             ? "bg-indigo-600 text-white"
-//             : "text-indigo-600 hover:text-indigo-900"
-//         }`}
-//       >
-//         {tab}
-//       </button>
-//     ))}
-//   </div>
-// );
-
-// const ProfileView = ({ client }) => (
-//   <div className="space-y-2 text-gray-700">
-//     <p><strong>Name:</strong> {client.name}</p>
-//     <p><strong>Bio:</strong> {client.bio || "-"}</p>
-//     <p><strong>Contact:</strong> {client.contactNumber || "-"}</p>
-//     <p><strong>Email:</strong> {client.email}</p>
-//   </div>
-// );
-
-// const ProfileForm = ({ profileData, handleProfileChange, handleFileChange, submitProfileUpdate, cancel }) => (
-//   <form onSubmit={submitProfileUpdate} className="bg-white p-6 rounded-xl shadow max-w-xl mx-auto space-y-4">
-
-//     <input
-//       type="text"
-//       name="name"
-//       value={profileData.name}
-//       onChange={handleProfileChange}
-//       className="w-full p-3 border rounded"
-//       placeholder="Name"
-//     />
-
-//     <textarea
-//       name="bio"
-//       value={profileData.bio}
-//       onChange={handleProfileChange}
-//       className="w-full p-3 border rounded"
-//       placeholder="Bio"
-//     />
-
-//     <input
-//       type="text"
-//       name="contactNumber"
-//       value={profileData.contactNumber}
-//       onChange={handleProfileChange}
-//       className="w-full p-3 border rounded"
-//       placeholder="Contact Number"
-//     />
-
-//     <div>
-//       <label className="font-semibold">Profile Image</label>
-//       <input type="file" onChange={handleFileChange} className="mt-2" />
-//     </div>
-
-//     <div className="flex gap-4">
-//       <button type="submit" className="bg-indigo-600 text-white px-6 py-2 rounded flex items-center gap-1">
-//         <Edit2 size={16} /> Save
-//       </button>
-//       <button type="button" onClick={cancel} className="bg-gray-200 px-6 py-2 rounded">
-//         Cancel
-//       </button>
-//     </div>
-//   </form>
-// );
-
-// const BlogsTab = ({ blogs, handleDeleteBlog, navigate }) => (
-//   <div className="space-y-4">
-//     {blogs.length === 0 ? (
-//       <p className="text-gray-500">No blogs yet.</p>
-//     ) : (
-//       blogs.map((blog) => (
-//         <div key={blog._id} className="bg-white p-4 border rounded shadow space-y-2">
-//           <h3 className="text-xl font-bold">{blog.title}</h3>
-//           <p className="text-gray-600">{blog.content.slice(0, 150)}...</p>
-
-//           <div className="flex justify-between items-center text-gray-500">
-//             <span>{new Date(blog.createdAt).toLocaleDateString()}</span>
-//             <div className="flex gap-3">
-//               <button onClick={() => navigate(`/blog/edit/${blog._id}`)} className="text-indigo-600">Edit</button>
-//               <button onClick={() => handleDeleteBlog(blog._id)} className="text-red-600">Delete</button>
+//             {/* Tabs */}
+//             <div className="flex gap-2 border-b border-stone-200">
+//               {["bookings", "blogs"].map((tab) => (
+//                 <button
+//                   key={tab}
+//                   onClick={() => setActiveTab(tab)}
+//                   className={`px-4 py-2 font-medium transition-colors ${
+//                     activeTab === tab
+//                       ? "text-[#3f6212] border-b-2 border-[#3f6212]"
+//                       : "text-stone-500 hover:text-stone-700"
+//                   }`}
+//                 >
+//                   {tab === "bookings" ? "Session History" : "Journal Entries"}
+//                 </button>
+//               ))}
 //             </div>
+
+//             {/* Tab Content */}
+//             <AnimatePresence mode="wait">
+//               {activeTab === "bookings" ? (
+//                 <motion.div
+//                   key="bookings"
+//                   initial={{ opacity: 0, y: 10 }}
+//                   animate={{ opacity: 1, y: 0 }}
+//                   exit={{ opacity: 0, y: -10 }}
+//                   className="space-y-4"
+//                 >
+//                   {bookings.length === 0 ? (
+//                     <Card className="p-8 text-center">
+//                       <Calendar className="mx-auto text-stone-300 mb-4" size={48} />
+//                       <p className="text-stone-500">No sessions booked yet</p>
+//                     </Card>
+//                   ) : (
+//                     bookings.map((booking) => (
+//                       <Card key={booking._id} className="p-6">
+//                         <div className="flex items-start justify-between">
+//                           <div className="flex-1">
+//                             <div className="flex items-center gap-3 mb-2">
+//                               <div className="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center">
+//                                 <User className="text-stone-600" size={20} />
+//                               </div>
+//                               <div>
+//                                 <h4 className="font-semibold text-[#1c1977]">
+//                                   {booking.counselorId?.name || "Counselor"}
+//                                 </h4>
+//                                 <div className="flex items-center gap-2 text-sm text-stone-500">
+//                                   <Calendar size={14} />
+//                                   {new Date(booking.date).toLocaleDateString()}
+//                                   <Clock size={14} />
+//                                   {booking.time}
+//                                 </div>
+//                               </div>
+//                             </div>
+//                             <div className="flex gap-2 mt-3">
+//                               <Badge color={booking.status === 'completed' ? 'green' : 'yellow'}>
+//                                 {booking.status}
+//                               </Badge>
+//                               <Badge color="stone">
+//                                 {booking.sessionType}
+//                               </Badge>
+//                             </div>
+//                           </div>
+//                           {booking.status === 'confirmed' && (
+//                             <button
+//                               onClick={() => handleStartSession(booking)}
+//                               className="bg-[#3f6212] text-white px-4 py-2 rounded-lg hover:bg-[#2f4a0e] transition-colors flex items-center gap-2"
+//                             >
+//                               {booking.sessionType === 'chat' ? (
+//                                 <MessageSquare size={16} />
+//                               ) : (
+//                                 <Video size={16} />
+//                               )}
+//                               Join
+//                             </button>
+//                           )}
+//                         </div>
+//                       </Card>
+//                     ))
+//                   )}
+//                 </motion.div>
+//               ) : (
+//                 <motion.div
+//                   key="blogs"
+//                   initial={{ opacity: 0, y: 10 }}
+//                   animate={{ opacity: 1, y: 0 }}
+//                   exit={{ opacity: 0, y: -10 }}
+//                   className="space-y-4"
+//                 >
+//                   {blogs.length === 0 ? (
+//                     <Card className="p-8 text-center">
+//                       <FileText className="mx-auto text-stone-300 mb-4" size={48} />
+//                       <p className="text-stone-500">No journal entries yet</p>
+//                     </Card>
+//                   ) : (
+//                     blogs.map((blog) => (
+//                       <Card key={blog._id} className="p-6">
+//                         <div className="flex items-start justify-between">
+//                           <div className="flex-1">
+//                             <h4 className="font-semibold text-[#1c1977] mb-2">{blog.title}</h4>
+//                             <p className="text-stone-600 text-sm mb-3 line-clamp-3">{blog.content}</p>
+//                             <div className="text-xs text-stone-400">
+//                               {new Date(blog.createdAt).toLocaleDateString()}
+//                             </div>
+//                           </div>
+//                           <button
+//                             onClick={() => handleDeleteBlog(blog._id)}
+//                             className="ml-4 p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+//                           >
+//                             <Trash size={16} />
+//                           </button>
+//                         </div>
+//                       </Card>
+//                     ))
+//                   )}
+//                 </motion.div>
+//               )}
+//             </AnimatePresence>
 //           </div>
 //         </div>
-//       ))
-//     )}
-//   </div>
-// );
-
-// const SessionsTab = ({ sessions, navigate }) => (
-//   <div className="space-y-4">
-//     {sessions.filter(s => s.status === "booked").map((s) => (
-//       <div key={s._id} className="p-4 bg-white border rounded shadow flex justify-between">
-//         <div>
-//           <p><strong>Counselor:</strong> {s.counselor.name}</p>
-//           <p><strong>Date:</strong> {new Date(s.date).toLocaleString()}</p>
-//           <p><strong>Payment:</strong> {s.paymentStatus}</p>
-//         </div>
-//         <button
-//           onClick={() => navigate(`/counselor/${s.counselor._id}`)}
-//           className="bg-indigo-600 text-white px-4 py-2 rounded"
-//         >
-//           View
-//         </button>
-//       </div>
-//     ))}
-//   </div>
-// );
-
-// const BookingsTab = ({ bookings }) => (
-//   <div className="space-y-4">
-//     {bookings.map((b) => (
-//       <div key={b._id} className="p-4 bg-white border rounded shadow">
-//         <p><strong>Counselor:</strong> {b.counselorId?.name}</p>
-//         <p><strong>Date:</strong> {new Date(b.date).toLocaleDateString()}</p>
-//         <p><strong>Time:</strong> {b.time}</p>
-//         <p><strong>Duration:</strong> {b.durationMin} min</p>
-//         <p><strong>Amount:</strong> {(b.amount / 100).toFixed(2)} USD</p>
-//         <p><strong>Status:</strong> {b.status}</p>
-//       </div>
-//     ))}
-//   </div>
-// );
-
-
-// import React, { useEffect, useState } from "react";
-// import API from "../api/api";
-// import { useNavigate } from "react-router-dom";
-// import { Edit2, Trash } from "lucide-react";
-// import { toast } from "react-hot-toast";
-
-// const BASE_URL = "http://localhost:3000"; // <-- Backend base URL
-
-// const ClientProfile = () => {
-//   const navigate = useNavigate();
-//   const [client, setClient] = useState(null);
-//   const [blogs, setBlogs] = useState([]);
-//   const [sessions, setSessions] = useState([]);
-//   const [bookings, setBookings] = useState([]);
-//   const [editingProfile, setEditingProfile] = useState(false);
-//   const [profileData, setProfileData] = useState({});
-//   const [selectedFile, setSelectedFile] = useState(null);
-//   const [activeTab, setActiveTab] = useState("profile");
-
-//   const clientId = localStorage.getItem("userId");
-//   const token = localStorage.getItem("token");
-//   const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
-
-//   // Fetch client profile
-//   useEffect(() => {
-//     if (!clientId) return;
-//     const fetchClient = async () => {
-//       try {
-//         const { data } = await API.get(`/users/${clientId}`, { headers: authHeaders });
-//         setClient(data.data);
-//         setProfileData({
-//           name: data.data?.name || "",
-//           bio: data.data?.bio || "",
-//           contactNumber: data.data?.contactNumber || "",
-//           profileImage: data.data?.profileImage || "",
-//         });
-//       } catch (err) {
-//         console.error("Fetch client error:", err);
-//       }
-//     };
-//     fetchClient();
-//   }, [clientId]);
-
-//   // File input change
-//   const handleFileChange = (e) => {
-//     const file = e.target.files[0];
-//     setSelectedFile(file);
-
-//     // Preview image immediately
-//     if (file) {
-//       const reader = new FileReader();
-//       reader.onload = (ev) => {
-//         setProfileData((prev) => ({ ...prev, profileImage: ev.target.result }));
-//       };
-//       reader.readAsDataURL(file);
-//     }
-//   };
-
-//   const handleProfileChange = (e) =>
-//     setProfileData({ ...profileData, [e.target.name]: e.target.value });
-
-//   // Submit updated profile
-//   const submitProfileUpdate = async (e) => {
-//     e.preventDefault();
-//     if (!token) return toast.error("You are not authenticated");
-
-//     try {
-//       const formData = new FormData();
-//       formData.append("name", profileData.name);
-//       formData.append("bio", profileData.bio);
-//       formData.append("contactNumber", profileData.contactNumber);
-//       if (selectedFile) formData.append("profileImage", selectedFile);
-
-//       const { data } = await API.put(`/users/update-profile/${clientId}`, formData, {
-//         headers: { ...authHeaders, "Content-Type": "multipart/form-data" },
-//       });
-
-//       setClient(data.data);
-//       setEditingProfile(false);
-//       toast.success("Profile updated!");
-//     } catch (err) {
-//       console.error("Update profile error:", err);
-//       toast.error("Failed to update profile.");
-//     }
-//   };
-
-//   if (!client) return <div className="text-center py-20">Loading profile...</div>;
-
-//   return (
-//     <div className="max-w-6xl mx-auto p-6 space-y-10">
-//       {/* Header */}
-//       <div className="flex flex-col items-center text-center space-y-4">
-//         <img
-//           src={
-//             profileData.profileImage.startsWith("data:") // if preview from file
-//               ? profileData.profileImage
-//               : client.profileImage
-//               ? `${BASE_URL}${client.profileImage}`
-//               : "https://cdn-icons-png.flaticon.com/512/219/219969.png"
-//           }
-//           alt="Avatar"
-//           className="w-32 h-32 rounded-full border-2 border-gray-200 object-cover shadow-md"
-//         />
-//         <h1 className="text-3xl font-bold text-gray-900">{client.name}</h1>
-//         <p className="text-gray-600 max-w-xl">{client.bio || "This user hasn't added a bio yet."}</p>
-//         <div className="flex items-center space-x-4 mt-2 text-gray-500 text-sm">
-//           <span>{client.email}</span>
-//           <span>{client.contactNumber || "No contact number"}</span>
-//           <button
-//             onClick={() => setEditingProfile(true)}
-//             className="flex items-center gap-1 text-indigo-600 hover:text-indigo-800 font-medium"
-//           >
-//             <Edit2 size={16} /> Edit
-//           </button>
-//         </div>
-//       </div>
-
-//       {/* Profile Edit Form */}
-//       {editingProfile && (
-//         <form onSubmit={submitProfileUpdate} className="bg-white p-6 rounded-xl shadow space-y-4 border max-w-xl mx-auto">
-//           <input
-//             type="text"
-//             name="name"
-//             value={profileData.name}
-//             onChange={handleProfileChange}
-//             className="w-full p-3 border rounded"
-//             placeholder="Name"
-//           />
-//           <textarea
-//             name="bio"
-//             value={profileData.bio}
-//             onChange={handleProfileChange}
-//             className="w-full p-3 border rounded"
-//             placeholder="Bio"
-//           />
-//           <input
-//             type="text"
-//             name="contactNumber"
-//             value={profileData.contactNumber}
-//             onChange={handleProfileChange}
-//             className="w-full p-3 border rounded"
-//             placeholder="Contact Number"
-//           />
-
-//           <input type="file" onChange={handleFileChange} />
-//           {selectedFile && (
-//             <img
-//               src={profileData.profileImage}
-//               alt="Preview"
-//               className="w-24 h-24 rounded-full object-cover mt-2"
-//             />
-//           )}
-
-//           <div className="flex space-x-4 mt-2">
-//             <button
-//               type="submit"
-//               className="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 flex items-center gap-1"
-//             >
-//               <Edit2 size={16} /> Save
-//             </button>
-//             <button
-//               type="button"
-//               onClick={() => setEditingProfile(false)}
-//               className="bg-gray-200 px-6 py-2 rounded hover:bg-gray-300"
-//             >
-//               Cancel
-//             </button>
-//           </div>
-//         </form>
-//       )}
+//       </main>
 //     </div>
 //   );
 // };
 
 // export default ClientProfile;
-
 
 import React, { useEffect, useState } from "react";
 import API from "../api/api";
 import { useNavigate } from "react-router-dom";
-import { Edit2, Trash } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-hot-toast";
+import {
+  Edit2, Trash, User, FileText, Calendar,
+  Phone, Mail, Camera, Video, MessageSquare,
+  Clock, Sparkles
+} from "lucide-react";
 
+// --- Visual Components ---
+const GrainTexture = () => (
+  <div
+    className="fixed inset-0 pointer-events-none z-50 opacity-[0.03] mix-blend-overlay"
+    style={{
+      backgroundImage: `url("https://grainy-gradients.vercel.app/noise.svg")`,
+      filter: "contrast(170%) brightness(100%)",
+    }}
+  />
+);
+
+const Card = ({ children, className = "", onClick }) => (
+  <motion.div
+    onClick={onClick}
+    layout
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.35 }}
+    className={`bg-white rounded-[1.25rem] border-stone-100 shadow-[0_8px_30px_rgba(0,0,0,0.04)] overflow-hidden ${className}`}
+  >
+    {children}
+  </motion.div>
+);
+
+const Badge = ({ children, color = "stone" }) => {
+  const colors = {
+    stone: "bg-stone-100 text-stone-600",
+    green: "bg-[#ECF6E1] text-[#3f6212]",
+    red: "bg-red-50 text-red-500",
+    yellow: "bg-yellow-50 text-yellow-600",
+  };
+  return (
+    <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest ${colors[color]}`}>
+      {children}
+    </span>
+  );
+};
+
+// --- Main Component ---
 const ClientProfile = () => {
   const navigate = useNavigate();
-  const [client, setClient] = useState(null);
+
+  // --- State ---
+  const [client, setClient] = useState(null); // logged-in user (client OR counselor)
   const [blogs, setBlogs] = useState([]);
-  const [sessions, setSessions] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [activeBookings, setActiveBookings] = useState([]);
   const [editingProfile, setEditingProfile] = useState(false);
   const [profileData, setProfileData] = useState({});
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
-  const [activeTab, setActiveTab] = useState("profile");
+  const [activeTab, setActiveTab] = useState("bookings");
 
   const clientId = localStorage.getItem("userId");
   const token = localStorage.getItem("token");
   const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
 
-  // Fetch client profile
+  // --- Fetch logged-in user profile (to get role) ---
   useEffect(() => {
     if (!clientId) return;
-
     const fetchClient = async () => {
       try {
-        const { data } = await API.get(`/users/${clientId}`, {
-          headers: authHeaders,
-        });
-
+        const { data } = await API.get(`/users/${clientId}`, { headers: authHeaders });
         setClient(data.data);
-
         setProfileData({
           name: data.data.name || "",
           bio: data.data.bio || "",
           contactNumber: data.data.contactNumber || "",
           profileImage: data.data.profileImage || "",
         });
-
-        setPreviewImage(
-          data.data.profileImage
-            ? `http://localhost:3000${data.data.profileImage}`
-            : null
-        );
+        setPreviewImage(data.data.profileImage ? `http://localhost:3000${data.data.profileImage}` : null);
       } catch (err) {
-        console.error("Fetch client error:", err);
-        toast.error("Failed to fetch profile.");
+        console.error("Failed to fetch profile:", err);
       }
     };
-
     fetchClient();
-  }, [clientId]);
-
-  // Fetch blogs
-  useEffect(() => {
-    const fetchBlogs = async () => {
-      if (!token) return;
-      try {
-        const { data } = await API.get("/blogs/my-blogs", {
-          headers: authHeaders,
-        });
-        setBlogs(data.data || []);
-      } catch (err) {
-        console.error("Fetch blogs error:", err);
-        toast.error("Failed to load your blogs.");
-      }
-    };
-    fetchBlogs();
-  }, [token]);
-
-  // Fetch sessions
-  useEffect(() => {
-    const fetchSessions = async () => {
-      if (!token) return;
-      try {
-        const { data } = await API.get("/sessions/my-sessions", {
-          headers: authHeaders,
-        });
-        setSessions(data.data || []);
-      } catch (err) {
-        console.error("Fetch sessions error:", err);
-      }
-    };
-    fetchSessions();
-  }, [token]);
-
-  // Fetch bookings
-  useEffect(() => {
-    const fetchBookings = async () => {
-      if (!clientId || !token) return;
-      try {
-        const { data } = await API.get(`/booking/client/${clientId}`, {
-          headers: authHeaders,
-        });
-        setBookings(data.bookings || []);
-      } catch (err) {
-        console.error("Fetch bookings error:", err);
-      }
-    };
-    fetchBookings();
   }, [clientId, token]);
 
-  // Fetch active bookings for chat
+  // --- Fetch blogs + bookings based on role (client or counselor) ---
   useEffect(() => {
-    const fetchActiveBookings = async () => {
-      if (!clientId || !token) return;
+    const fetchData = async () => {
+      if (!token || !client) return;
+
       try {
-        const { data } = await API.get(`/booking/active/${clientId}`, {
-          headers: authHeaders,
-        });
-        setActiveBookings(data.bookings || []);
+        // blogs (same for both)
+        const blogsPromise = API.get("/blogs/my-blogs", { headers: authHeaders });
+
+        // bookings endpoint depends on role
+        const bookingsEndpoint =
+          client.role === "counselor"
+            ? `/booking/counselor/${clientId}`
+            : `/booking/client/${clientId}`;
+
+        const bookingsPromise = API.get(bookingsEndpoint, { headers: authHeaders });
+
+        const [blogsRes, bookingsRes] = await Promise.all([blogsPromise, bookingsPromise]);
+
+        setBlogs(blogsRes?.data?.data || []);
+        // support both response shapes: { bookings } or { data: { bookings } }
+        setBookings(bookingsRes?.data?.bookings || bookingsRes?.data?.data || []);
       } catch (err) {
-        console.error("Fetch active bookings error:", err);
+        console.error("Data fetch error:", err);
       }
     };
-    fetchActiveBookings();
-    // Refresh every 5 minutes to check for new active sessions
-    const interval = setInterval(fetchActiveBookings, 5 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, [clientId, token]);
+    fetchData();
+  }, [client, clientId, token]);
 
-  const handleProfileChange = (e) =>
-    setProfileData({ ...profileData, [e.target.name]: e.target.value });
+  // --- Active bookings (polling) ---
+  // useEffect(() => {
+  //   if (!token || !client) return;
+
+  //   const fetchActive = async () => {
+  //     try {
+  //       // backend may expect same active endpoint for any user id
+  //       const { data } = await API.get(`/booking/active/${clientId}`, { headers: authHeaders });
+  //       setActiveBookings(data?.bookings || []);
+  //     } catch (err) {
+  //       console.error("Fetch active bookings error:", err);
+  //     }
+  //   };
+
+  //   fetchActive();
+  //   const interval = setInterval(fetchActive, 5 * 60 * 1000);
+  //   return () => clearInterval(interval);
+  // }, [client, clientId, token]);
+
+  // --- Handlers ---
+  const handleProfileChange = (e) => setProfileData({ ...profileData, [e.target.name]: e.target.value });
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
     setSelectedFile(file);
-    if (file) {
-      const preview = URL.createObjectURL(file);
-      setPreviewImage(preview);
-    }
+    if (file) setPreviewImage(URL.createObjectURL(file));
   };
 
   const submitProfileUpdate = async (e) => {
@@ -2349,357 +617,235 @@ const ClientProfile = () => {
       formData.append("contactNumber", profileData.contactNumber);
       if (selectedFile) formData.append("profileImage", selectedFile);
 
-      const { data } = await API.put(
-        `/profile/update`,
-        formData,
-        {
-          headers: { ...authHeaders, "Content-Type": "multipart/form-data" },
-        }
-      );
+      const { data } = await API.put(`/profile/update`, formData, {
+        headers: { ...authHeaders, "Content-Type": "multipart/form-data" },
+      });
 
       setClient(data.data);
-      setProfileData({
-        name: data.data.name,
-        bio: data.data.bio,
-        contactNumber: data.data.contactNumber,
-        profileImage: data.data.profileImage,
-      });
-      setPreviewImage(
-        data.data.profileImage
-          ? `http://localhost:3000${data.data.profileImage}`
-          : null
-      );
+      setProfileData({ ...profileData, ...data.data });
+      setPreviewImage(data.data.profileImage ? `http://localhost:3000${data.data.profileImage}` : null);
       setEditingProfile(false);
       toast.success("Profile updated successfully!");
     } catch (err) {
-      console.error("Update profile error:", err);
-      toast.error("Failed to update profile.");
+      console.error("Update failed:", err);
+      toast.error("Update failed.");
     }
   };
 
   const handleDeleteBlog = async (id) => {
-    if (!window.confirm("Delete this blog?")) return;
+    if (!window.confirm("Delete this journal entry?")) return;
     try {
       await API.delete(`/blogs/${id}`, { headers: authHeaders });
-      setBlogs(blogs.filter((b) => b._id !== id));
-      toast.success("Blog deleted!");
+      setBlogs((prev) => prev.filter((b) => b._id !== id));
+      toast.success("Entry deleted");
     } catch (err) {
-      console.error("Delete blog error:", err);
-      toast.error("Failed to delete blog.");
+      console.error("Deletion failed:", err);
+      toast.error("Deletion failed.");
     }
   };
 
-  const handleStartChat = (booking) => {
-    if (booking.sessionType === 'chat') {
+  const handleStartSession = (booking) => {
+    if (booking.sessionType === "chat" && booking.chatRoom) {
       navigate(`/chat/${booking.chatRoom}`);
-    } else if (booking.sessionType === 'video') {
-      window.open(booking.meetLink, '_blank');
+    } else if (booking.sessionType === "video" && booking.meetLink) {
+      window.open(booking.meetLink, "_blank");
+    } else {
+      toast.error("Session information incomplete.");
     }
   };
 
-  if (!client)
-    return <div className="text-center py-20">Loading profile...</div>;
+  if (!client) {
+    return (
+      <div className="min-h-screen bg-[#f4f2ed] text-[#1c1977] flex items-center justify-center">
+        <div className="animate-pulse">Preparing your space...</div>
+      </div>
+    );
+  }
 
-  const bookedSessions = sessions.filter((s) => s.status === "booked");
-  const completedSessions = sessions.filter((s) => s.status === "completed");
+  // helper for showing opposite party's name/email based on logged-in role
+  const otherName = (b) => (client.role === "counselor" ? b?.clientId?.name : b?.counselorId?.name);
+  const otherEmail = (b) => (client.role === "counselor" ? b?.clientId?.email : b?.counselorId?.email);
 
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-10">
-      {/* Header */}
-      <div className="flex flex-col items-center text-center space-y-4">
-        <img
-          src={
-            previewImage ||
-            "https://cdn-icons-png.flaticon.com/512/9385/9385289.png"
-          }
-          alt="Avatar"
-          className="w-32 h-32 rounded-full border-2 border-gray-200 object-cover shadow-md"
-        />
-        <h1 className="text-3xl font-bold text-gray-900">{client.name}</h1>
-        <p className="text-gray-600 max-w-xl">
-          {client.bio || "This user hasn't added a bio yet."}
-        </p>
-        <div className="flex items-center space-x-4 mt-2 text-gray-500 text-sm">
-          <span>{client.email}</span>
-          <span>{client.contactNumber || "No contact number"}</span>
-          <button
-            onClick={() => setEditingProfile(true)}
-            className="flex items-center gap-1 text-indigo-600 hover:text-indigo-800 font-medium"
-          >
-            <Edit2 size={16} /> Edit
-          </button>
-        </div>
-      </div>
-
-      {/* Active Sessions */}
-      {activeBookings.length > 0 && (
-        <div className="bg-green-50 border border-green-200 rounded-xl p-6">
-          <h3 className="text-lg font-semibold text-green-800 mb-4">🟢 Active Sessions</h3>
-          <div className="space-y-3">
-            {activeBookings.map((booking) => (
-              <div key={booking._id} className="flex items-center justify-between bg-white p-4 rounded-lg shadow">
-                <div>
-                  <p className="font-medium text-gray-800">
-                    {booking.sessionType === 'chat' ? '💬 Chat Session' : '📹 Video Session'} with {booking.counselorId?.name}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    {new Date(`${booking.date}T${booking.time}`).toLocaleString()}
-                  </p>
-                </div>
-                <button
-                  onClick={() => handleStartChat(booking)}
-                  className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
-                >
-                  {booking.sessionType === 'chat' ? 'Join Chat' : 'Join Video Call'}
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
-        <div className="bg-indigo-50 p-6 rounded-xl shadow hover:shadow-md transition">
-          <h3 className="text-2xl font-bold text-indigo-600">{blogs.length}</h3>
-          <p className="text-gray-600 mt-1">Blogs</p>
-        </div>
-        {/* <div className="bg-green-50 p-6 rounded-xl shadow hover:shadow-md transition">
-          <h3 className="text-2xl font-bold text-green-600">
-            {bookedSessions.length}
-          </h3>
-          <p className="text-gray-600 mt-1">Booked Sessions</p>
-        </div>
-        <div className="bg-yellow-50 p-6 rounded-xl shadow hover:shadow-md transition">
-          <h3 className="text-2xl font-bold text-yellow-600">
-            {completedSessions.length}
-          </h3>
-          <p className="text-gray-600 mt-1">Completed Sessions</p>
-        </div> */}
-        <div className="bg-purple-50 p-6 rounded-xl shadow hover:shadow-md transition">
-          <h3 className="text-2xl font-bold text-purple-600">{bookings.length}</h3>
-          <p className="text-gray-600 mt-1">Bookings</p>
-        </div>
-      </div>
-
-      {/* Tabs */}
-      <div className="flex justify-center gap-4 border-b pb-2">
-        {["profile", "blogs", "bookings"].map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`capitalize px-4 py-2 font-medium rounded-t-lg ${
-              activeTab === tab
-                ? "bg-indigo-600 text-white"
-                : "text-indigo-600 hover:text-indigo-900"
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
-
-      {/* Tab Content */}
-      <div className="space-y-6">
-        {/* Profile Tab */}
-        {activeTab === "profile" && (
-          <div>
-            {!editingProfile ? (
-              <div className="space-y-2 text-gray-700">
-                <p>
-                  <strong>Name:</strong> {client.name}
-                </p>
-                <p>
-                  <strong>Bio:</strong> {client.bio || "-"}
-                </p>
-                <p>
-                  <strong>Contact:</strong> {client.contactNumber || "-"}
-                </p>
-                <p>
-                  <strong>Email:</strong> {client.email}
-                </p>
-              </div>
-            ) : (
-              <form
-                onSubmit={submitProfileUpdate}
-                className="bg-white p-6 rounded-xl shadow space-y-4 border max-w-xl mx-auto"
+    <div className="min-h-screen bg-[#f4f2ed] text-[#1c1977] font-sans relative selection:bg-[#3f6212] selection:text-white">
+      <GrainTexture />
+      <main className="max-w-7xl mx-auto px-6 py-20 lg:py-28 relative z-10">
+        <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+          {/* LEFT */}
+          <aside className="lg:col-span-4 lg:sticky lg:top-10 space-y-6">
+            <Card className="p-8 text-center relative">
+              <button
+                onClick={() => setEditingProfile((s) => !s)}
+                className="absolute top-6 right-6 p-2 rounded-full hover:bg-stone-100 text-stone-400 hover:text-[#1c1977] transition-colors"
               >
-                <input
-                  type="text"
-                  name="name"
-                  value={profileData.name}
-                  onChange={handleProfileChange}
-                  className="w-full p-3 border rounded"
-                  placeholder="Name"
-                />
-                <textarea
-                  name="bio"
-                  value={profileData.bio}
-                  onChange={handleProfileChange}
-                  className="w-full p-3 border rounded"
-                  placeholder="Bio"
-                />
-                <input
-                  type="text"
-                  name="contactNumber"
-                  value={profileData.contactNumber}
-                  onChange={handleProfileChange}
-                  className="w-full p-3 border rounded"
-                  placeholder="Contact Number"
-                />
-                <input type="file" onChange={handleFileChange} />
-                {previewImage && (
-                  <img
-                    src={previewImage}
-                    alt="Preview"
-                    className="w-32 h-32 rounded-full object-cover mt-2 border"
-                  />
-                )}
-                <div className="flex space-x-4 mt-2">
-                  <button
-                    type="submit"
-                    className="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 flex items-center gap-1"
-                  >
-                    <Edit2 size={16} /> Save
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setEditingProfile(false)}
-                    className="bg-gray-200 px-6 py-2 rounded hover:bg-gray-300"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
-        )}
+                <Edit2 size={16} />
+              </button>
 
-        {/* Blogs Tab */}
-        {activeTab === "blogs" && (
-          <div className="space-y-4">
-            {blogs.length === 0 ? (
-              <p className="text-gray-500">You haven't written any blogs yet.</p>
-            ) : (
-              blogs.map((blog) => (
-                <div
-                  key={blog._id}
-                  className="p-4 bg-white border rounded-xl shadow hover:shadow-md transition flex flex-col"
-                >
-                  <h3 className="text-xl font-semibold text-gray-800">
-                    {blog.title}
-                  </h3>
-                  <p className="text-gray-600 mt-2">
-                    {blog.content.slice(0, 150)}...
-                  </p>
-                  <div className="flex justify-between items-center mt-3 text-gray-500 text-sm">
-                    <span>{new Date(blog.createdAt).toLocaleDateString()}</span>
-                    <div className="flex space-x-3">
-                      <button
-                        onClick={() => navigate(`/blog/edit/${blog._id}`)}
-                        className="flex items-center gap-1 text-indigo-600 hover:underline"
-                      >
-                        <Edit2 size={14} /> Edit
-                      </button>
-                      <button
-                        onClick={() => handleDeleteBlog(blog._id)}
-                        className="flex items-center gap-1 text-red-600 hover:underline"
-                      >
-                        <Trash size={14} /> Delete
+              <div className="relative w-32 h-32 mx-auto mb-6 group">
+                <div className="absolute inset-0 rounded-full bg-[#3f6212] opacity-0 group-hover:opacity-10 blur-xl transition-opacity duration-500"></div>
+                <img
+                  src={previewImage || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
+                  alt="Profile"
+                  className="w-full h-full rounded-full object-cover border-4 border-white shadow-lg"
+                />
+                {editingProfile && (
+                  <label className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full cursor-pointer opacity-0 hover:opacity-100 transition-opacity">
+                    <Camera className="text-white" size={20} />
+                    <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+                  </label>
+                )}
+              </div>
+
+              <AnimatePresence mode="wait">
+                {editingProfile ? (
+                  <motion.form initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onSubmit={submitProfileUpdate} className="space-y-4">
+                    <input name="name" value={profileData.name} onChange={handleProfileChange} className="w-full px-4 py-2 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3f6212]" placeholder="Name" />
+                    <textarea name="bio" value={profileData.bio} onChange={handleProfileChange} className="w-full px-4 py-2 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3f6212] resize-none" rows={3} placeholder="Bio" />
+                    <input name="contactNumber" value={profileData.contactNumber} onChange={handleProfileChange} className="w-full px-4 py-2 border border-stone-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3f6212]" placeholder="Contact Number" />
+                    <div className="flex gap-2">
+                      <button type="submit" className="flex-1 bg-[#3f6212] text-white py-2 rounded-lg hover:bg-[#2f4a0e]">Save</button>
+                      <button type="button" onClick={() => setEditingProfile(false)} className="flex-1 bg-stone-200 text-stone-700 py-2 rounded-lg hover:bg-stone-300">Cancel</button>
+                    </div>
+                  </motion.form>
+                ) : (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-4">
+                    <h2 className="text-2xl font-bold text-[#1c1977]">{client.name}</h2>
+                    {client.bio && <p className="text-stone-600 text-sm leading-relaxed">{client.bio}</p>}
+                    <div className="flex flex-col gap-2 text-sm text-stone-500">
+                      {client.email && <div className="flex items-center justify-center gap-2"><Mail size={14} /><span>{client.email}</span></div>}
+                      {client.contactNumber && <div className="flex items-center justify-center gap-2"><Phone size={14} /><span>{client.contactNumber}</span></div>}
+                      <div className="text-xs text-stone-400 mt-2">Role: <span className="font-semibold">{client.role}</span></div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </Card>
+
+            <Card className="p-6">
+              <h3 className="font-semibold text-[#1c1977] mb-4">Your Journey</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center p-3 bg-stone-50 rounded-lg">
+                  <div className="text-2xl font-bold text-[#3f6212]">{bookings.length}</div>
+                  <div className="text-xs text-stone-500">Total Sessions</div>
+                </div>
+                <div className="text-center p-3 bg-stone-50 rounded-lg">
+                  <div className="text-2xl font-bold text-[#3f6212]">{blogs.length}</div>
+                  <div className="text-xs text-stone-500">Journal Entries</div>
+                </div>
+              </div>
+            </Card>
+          </aside>
+
+          {/* MAIN */}
+          <div className="lg:col-span-8 space-y-6">
+            {activeBookings.length > 0 && (
+              <Card className="p-6">
+                <h3 className="font-semibold text-[#1c1977] mb-4 flex items-center gap-2">
+                  <Sparkles className="text-[#3f6212]" size={20} /> Active Sessions
+                </h3>
+                <div className="space-y-3">
+                  {activeBookings.map((b) => (
+                    <div key={b._id} className="flex items-center justify-between p-4 bg-stone-50 rounded-lg">
+                      <div>
+                        <div className="font-medium text-[#1c1977]">{otherName(b) || "—"}</div>
+                        <div className="text-sm text-stone-500">{b.sessionType === "chat" ? "Chat Session" : "Video Session"}</div>
+                      </div>
+                      <button onClick={() => handleStartSession(b)} className="bg-[#3f6212] text-white px-4 py-2 rounded-lg hover:bg-[#2f4a0e] transition-colors flex items-center gap-2">
+                        {b.sessionType === "chat" ? <MessageSquare size={16} /> : <Video size={16} />} Join
                       </button>
                     </div>
-                  </div>
+                  ))}
                 </div>
-              ))
+              </Card>
             )}
-          </div>
-        )}
 
-        {/* Sessions & Bookings Tabs */}
-        {/* {activeTab === "sessions" && (
-          <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-gray-700">
-              Booked Sessions
-            </h3>
-            {bookedSessions.length === 0 ? (
-              <p className="text-gray-500">No booked sessions.</p>
-            ) : (
-              bookedSessions.map((s) => (
-                <div
-                  key={s._id}
-                  className="p-4 bg-white border rounded-xl shadow flex justify-between items-center"
+            {/* Tabs */}
+            <div className="flex gap-2 border-b border-stone-200">
+              {["bookings", "blogs"].map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-4 py-2 font-medium transition-colors ${activeTab === tab ? "text-[#3f6212] border-b-2 border-[#3f6212]" : "text-stone-500 hover:text-stone-700"}`}
                 >
-                  <div>
-                    <p>
-                      <strong>Counselor:</strong> {s.counselor.name}
-                    </p>
-                    <p>
-                      <strong>Date:</strong>{" "}
-                      {new Date(s.date).toLocaleString()}
-                    </p>
-                    <p>
-                      <strong>Payment:</strong> {s.paymentStatus}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => navigate(`/counselor/${s.counselor._id}`)}
-                    className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
-                  >
-                    View Counselor
-                  </button>
-                </div>
-              ))
-            )}
-          </div>
-        )} */}
+                  {tab === "bookings" ? "Session History" : "Journal Entries"}
+                </button>
+              ))}
+            </div>
 
-        {activeTab === "bookings" && (
-          <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-gray-700">All Bookings</h3>
-            {bookings.length === 0 ? (
-              <p className="text-gray-500">No bookings yet.</p>
-            ) : (
-              bookings.map((b) => (
-                <div
-                  key={b._id}
-                  className="p-5 bg-white border rounded-xl shadow flex flex-col md:flex-row justify-between items-center"
-                >
-                  <div>
-                    <p className="text-gray-800 font-semibold">
-                      Counselor: {b.counselorId?.name}
-                    </p>
-                    <p className="text-gray-600 mt-1">
-                      Date: {new Date(b.date).toLocaleDateString()}
-                    </p>
-                    <p className="text-gray-600 mt-1">Time: {b.time}</p>
-                    <p className="text-gray-600 mt-1">
-                      Duration: {b.durationMin} min
-                    </p>
-                    <p className="text-gray-600 mt-1">
-                      Amount: {(b.amount / 100).toFixed(2)} USD
-                    </p>
-                    {/* <p className="text-gray-600 mt-1">
-                      Payment: {b.paymentStatus || "Pending"}
-                    </p> */}
-                    <p className="text-gray-600 mt-1">Notes: {b.notes}</p>
-                  </div>
-                  {/* <span
-                    className={`mt-2 md:mt-0 font-medium ${
-                      b.status === "completed"
-                        ? "text-green-600"
-                        : b.status === "booked" 
-                        ? "text-yellow-600"
-                        : "text-gray-500"
-                    }`}
-                  >
-                    {b.status.charAt(0).toUpperCase() + b.status.slice(1)}
-                  </span> */}
-                </div>
-              ))
-            )}
+            {/* Tab Content */}
+            <AnimatePresence mode="wait">
+              {activeTab === "bookings" ? (
+                <motion.div key="bookings" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-4">
+                  {bookings.length === 0 ? (
+                    <Card className="p-8 text-center">
+                      <Calendar className="mx-auto text-stone-300 mb-4" size={48} />
+                      <p className="text-stone-500">No sessions booked yet</p>
+                    </Card>
+                  ) : (
+                    bookings.map((b) => (
+                      <Card key={b._id} className="p-6">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-3 mb-2">
+                              <div className="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center">
+                                <User className="text-stone-600" size={20} />
+                              </div>
+                              <div>
+                                <h4 className="font-semibold text-[#1c1977]">{otherName(b) || (client.role === "counselor" ? "Client" : "Counselor")}</h4>
+                                <div className="flex items-center gap-2 text-sm text-stone-500">
+                                  <Calendar size={14} />
+                                  <span>{new Date(b.date).toLocaleDateString()}</span>
+                                  <Clock size={14} />
+                                  <span>{b.time}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="flex gap-2 mt-3">
+                              <Badge color={b.status === "completed" ? "green" : "yellow"}>{b.status}</Badge>
+                              <Badge color="stone">{b.sessionType}</Badge>
+                            </div>
+                          </div>
+
+                          {b.status === "confirmed" && (
+                            <button onClick={() => handleStartSession(b)} className="bg-[#3f6212] text-white px-4 py-2 rounded-lg hover:bg-[#2f4a0e] transition-colors flex items-center gap-2">
+                              {b.sessionType === "chat" ? <MessageSquare size={16} /> : <Video size={16} />} Join
+                            </button>
+                          )}
+                        </div>
+                      </Card>
+                    ))
+                  )}
+                </motion.div>
+              ) : (
+                <motion.div key="blogs" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-4">
+                  {blogs.length === 0 ? (
+                    <Card className="p-8 text-center">
+                      <FileText className="mx-auto text-stone-300 mb-4" size={48} />
+                      <p className="text-stone-500">No journal entries yet</p>
+                    </Card>
+                  ) : (
+                    blogs.map((blog) => (
+                      <Card key={blog._id} className="p-6">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <h4 className="font-semibold text-[#1c1977] mb-2">{blog.title}</h4>
+                            <p className="text-stone-600 text-sm mb-3 line-clamp-3">{blog.content}</p>
+                            <div className="text-xs text-stone-400">{new Date(blog.createdAt).toLocaleDateString()}</div>
+                          </div>
+                          <button onClick={() => handleDeleteBlog(blog._id)} className="ml-4 p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                            <Trash size={16} />
+                          </button>
+                        </div>
+                      </Card>
+                    ))
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
-        )}
-      </div>
+        </div>
+      </main>
     </div>
   );
 };
