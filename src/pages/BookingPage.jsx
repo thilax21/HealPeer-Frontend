@@ -246,7 +246,7 @@
 //                           <div className="grid grid-cols-3 gap-3">
 //                             {availableSlots.map((slot, index) => (
 //                               <button
-//                                 key={index}
+//                                 key={}
 //                                 type="button"
 //                                 onClick={() => setBookingData(prev => ({ ...prev, time: slot }))}
 //                                 className={`py-3 px-4 rounded-xl border-2 transition-all text-sm font-medium ${
