@@ -11,16 +11,6 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
-// Fetch all bookings for a client
-export const getClientBookings = (clientId) => API.get(`/bookings/client/${clientId}`);
 
-// Create a new booking
-export const createBooking = (bookingData) => API.post("/bookings", bookingData);
-
-// Get booking by session ID
-export const getBookingBySession = (sessionId) => API.get(`/bookings/session/${sessionId}`);
-
-// Create Stripe checkout session
-export const createCheckoutSession = (bookingId) => API.post("/api/payment/session", { bookingId });
 
 export default API;

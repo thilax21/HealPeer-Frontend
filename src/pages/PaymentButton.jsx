@@ -159,33 +159,89 @@
 //   );
 // }
 
-import React from "react";
+// import React from "react";
+// import API from "../api/api";
+
+// const PaymentButton = ({ bookingId, amount }) => {
+
+//   const handlePayment = async () => {
+//     try {
+//       const { data } = await API.post("/payment/create-checkout-session", {
+//         bookingId,
+//         amount
+//       });
+
+//       if (data.url) {
+//         window.location.href = data.url;   // 🔥 Stripe checkout redirect
+//       }
+//     } catch (error) {
+//       alert("Payment Failed. Try again.");
+//     }
+//   };
+
+//   return (
+//     <button
+//       onClick={handlePayment}
+//       className="w-full bg-[#1c1917] text-white py-4 rounded-xl font-bold"
+//     >
+//       Proceed to Payment
+//     </button>
+//   );
+// };
+
+// export default PaymentButton;
+
+import React, { useState } from "react";
 import API from "../api/api";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
 const PaymentButton = ({ bookingId, amount }) => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handlePayment = async () => {
+    setLoading(true);
+    setError("");
+
     try {
+      // 1. Create Stripe checkout session on server
       const { data } = await API.post("/payment/create-checkout-session", {
         bookingId,
-        amount
+        amount,
       });
 
-      if (data.url) {
-        window.location.href = data.url;   // 🔥 Stripe checkout redirect
-      }
-    } catch (error) {
-      alert("Payment Failed. Try again.");
+      const stripe = await stripePromise;
+      if (!stripe) throw new Error("Stripe not loaded");
+
+      // 2. Redirect to Stripe Checkout
+      const { error } = await stripe.redirectToCheckout({
+        sessionId: data.sessionId,
+      });
+
+      if (error) throw error;
+    } catch (err) {
+      console.error(err);
+      setError(err.message || "Payment failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <button
-      onClick={handlePayment}
-      className="w-full bg-[#1c1917] text-white py-4 rounded-xl font-bold"
-    >
-      Proceed to Payment
-    </button>
+    <div>
+      <button
+        onClick={handlePayment}
+        disabled={loading}
+        className="w-full bg-[#3f6212] hover:bg-[#1c1917] text-white py-4 rounded-2xl font-bold transition-colors"
+      >
+        {loading ? "Processing..." : `Pay $${amount}`}
+      </button>
+      {error && (
+        <p className="text-red-500 text-sm mt-2 text-center">{error}</p>
+      )}
+    </div>
   );
 };
 
