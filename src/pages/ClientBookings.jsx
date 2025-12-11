@@ -7,7 +7,7 @@ const ClientBookings = () => {
   useEffect(() => {
     const loadBookings = async () => {
       const { data } = await axios.get(
-        "http://localhost:3000/api/booking/client",
+        "https://healpeer-backend.onrender.com/api/booking/client",
         { withCredentials: true }
       );
       setBookings(data.data);

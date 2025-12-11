@@ -564,7 +564,7 @@ const Navbar = ({ user, setUser }) => {
               <img 
                 src={logo} 
                 alt="HealPeer" 
-                className="h-full w-full object-contain drop-shadow-sm group-hover:scale-110 transition-transform duration-300 " 
+                className="h-90 w-90 object-contain drop-shadow-sm group-hover:scale-110 transition-transform duration-300 " 
               />
             </div>
             {/* <span className={`font-serif font-bold text-xl tracking-tight text-[#1c1917] hidden ${scrolled ? 'lg:block' : 'sm:block'}`}>

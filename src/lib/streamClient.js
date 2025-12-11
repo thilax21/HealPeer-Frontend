@@ -15,7 +15,7 @@
 // }
 
 
-const BACKEND = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
+const BACKEND = import.meta.env.VITE_BACKEND_URL || "https://healpeer-backend.onrender.com/";
 
 export async function fetchStreamTokens(user, bookingId) {
   if (!user || !user._id) throw new Error("User object missing _id");

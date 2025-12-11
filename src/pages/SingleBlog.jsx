@@ -370,7 +370,7 @@ const SingleBlog = ({ user }) => {
   if (!blog) return <div className="h-screen flex items-center justify-center">Story not found.</div>;
 
   const readTime = Math.ceil((blog.content?.length || 0) / 1000);
-  const imageUrl = blog.imageUrl ? (blog.imageUrl.startsWith('http') ? blog.imageUrl : `http://localhost:3000${blog.imageUrl}`) : null;
+  const imageUrl = blog.imageUrl ? (blog.imageUrl.startsWith('http') ? blog.imageUrl : `https://healpeer-backend.onrender.com/${blog.imageUrl}`) : null;
 
   return (
     <div className="min-h-screen font-sans text-[#1c1917] selection:bg-[#3f6212] selection:text-white overflow-x-hidden relative ">

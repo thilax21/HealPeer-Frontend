@@ -71,7 +71,7 @@
 // export default BookingConfirmation;
 
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import API from "../api/api";
 
 const BookingPage = ({ clientId }) => {
   const [counselors, setCounselors] = useState([]);
@@ -83,7 +83,7 @@ const BookingPage = ({ clientId }) => {
   // Fetch all counselors
   useEffect(() => {
     const fetchCounselors = async () => {
-      const { data } = await axios.get("http://localhost:3000/api/counselors");
+      const { data } = await API.get("/counselors");
       setCounselors(data);
     };
     fetchCounselors();
@@ -97,7 +97,7 @@ const BookingPage = ({ clientId }) => {
 
     try {
       // 1️⃣ Create Stripe session
-      const { data } = await axios.post("http://localhost:3000/api/booking/create-session", {
+      const { data } = await API.post("/booking/create-session", {
         clientId,
         counselorId: selectedCounselor._id,
         sessionDate,

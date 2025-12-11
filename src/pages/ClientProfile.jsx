@@ -541,7 +541,7 @@ const ClientProfile = () => {
           contactNumber: data.data.contactNumber || "",
           profileImage: data.data.profileImage || "",
         });
-        setPreviewImage(data.data.profileImage ? `http://localhost:3000${data.data.profileImage}` : null);
+        setPreviewImage(data.data.profileImage ? `https://healpeer-backend.onrender.com${data.data.profileImage}` : null);
       } catch (err) {
         console.error("Failed to fetch profile:", err);
       }
@@ -623,7 +623,7 @@ const ClientProfile = () => {
 
       setClient(data.data);
       setProfileData({ ...profileData, ...data.data });
-      setPreviewImage(data.data.profileImage ? `http://localhost:3000${data.data.profileImage}` : null);
+      setPreviewImage(data.data.profileImage ? `https://healpeer-backend.onrender.com${data.data.profileImage}` : null);
       setEditingProfile(false);
       toast.success("Profile updated successfully!");
     } catch (err) {
