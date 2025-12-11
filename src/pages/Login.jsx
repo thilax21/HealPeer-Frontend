@@ -134,7 +134,7 @@ function Login({ setUser }) {
     setError(null);
 
     try {
-      const { data } = await API.post("api/auth/login", { 
+      const { data } = await API.post("/auth/login", { 
         email: formData.email, 
         password: formData.password 
       });
@@ -148,7 +148,7 @@ function Login({ setUser }) {
       setUser(data.user);
       
       // Smooth redirect
-      setTimeout(() => navigate("api/profile"), 500);
+      setTimeout(() => navigate("/profile"), 500);
 
     } catch (err) {
       setError(err.response?.data?.message || "Invalid email or password.");
