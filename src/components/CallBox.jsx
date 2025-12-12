@@ -1,32 +1,65 @@
-import React, { useEffect, useState } from "react";
-import { StreamVideoClient, StreamVideo, StreamCall, StreamTheme } from "@stream-io/video-react-sdk";
+// import React, { useEffect, useState } from "react";
+// import { StreamVideoClient, StreamVideo, StreamCall, StreamTheme } from "@stream-io/video-react-sdk";
 
-export default function CallBox({ callInfo, videoToken, user }) {
+// export default function CallBox({ callInfo, videoToken, user }) {
+//   const [client, setClient] = useState(null);
+//   const [call, setCall] = useState(null);
+
+//   useEffect(() => {
+//     if (!callInfo || !videoToken) return;
+//     const videoClient = new StreamVideoClient({
+//       apiKey: import.meta.env.VITE_STREAM_API_KEY,
+//       token: videoToken,
+//       user: { id: user._id, name: user.name },
+//     });
+//     setClient(videoClient);
+//     const c = videoClient.call("default", callInfo.roomId);
+//     setCall(c);
+//     return () => {
+//       if (videoClient) videoClient.disconnect();
+//     };
+//   }, [callInfo, videoToken, user._id, user.name]);
+
+//   if (!callInfo) return <div>Start a call to see call UI</div>;
+//   if (!client) return <div>Connecting to call...</div>;
+//   return (
+//     <StreamVideo client={client}>
+//       <StreamTheme>
+//         <StreamCall call={call} />
+//       </StreamTheme>
+//     </StreamVideo>
+//   );
+// }
+
+import { StreamVideo, StreamCall, StreamTheme } from "@stream-io/video-react-sdk";
+import { useEffect, useState } from "react";
+import API from "../api/api";
+
+export default function MeetingPage() {
   const [client, setClient] = useState(null);
-  const [call, setCall] = useState(null);
+  const meetingId = window.location.pathname.split("/").pop();
 
   useEffect(() => {
-    if (!callInfo || !videoToken) return;
-    const videoClient = new StreamVideoClient({
-      apiKey: import.meta.env.VITE_STREAM_API_KEY,
-      token: videoToken,
-      user: { id: user._id, name: user.name },
-    });
-    setClient(videoClient);
-    const c = videoClient.call("default", callInfo.roomId);
-    setCall(c);
-    return () => {
-      if (videoClient) videoClient.disconnect();
-    };
-  }, [callInfo, videoToken, user._id, user.name]);
+    async function init() {
+      const tokenRes = await API.get("/video/token");
+      const { token } = tokenRes.data;
 
-  if (!callInfo) return <div>Start a call to see call UI</div>;
-  if (!client) return <div>Connecting to call...</div>;
+      const client = StreamVideo.getInstance({
+        apiKey: import.meta.env.VITE_STREAM_API_KEY,
+        user: { id: user._id },
+        token,
+      });
+
+      setClient(client);
+    }
+    init();
+  }, []);
+
+  if (!client) return "Loading video...";
+
   return (
-    <StreamVideo client={client}>
-      <StreamTheme>
-        <StreamCall call={call} />
-      </StreamTheme>
-    </StreamVideo>
+    <StreamTheme>
+      <StreamCall client={client} callType="default" callId={meetingId} />
+    </StreamTheme>
   );
 }

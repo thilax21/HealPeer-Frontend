@@ -28,7 +28,7 @@ import ClientBookings from "./pages/ClientBookings";
 import BokingSuccess from "./pages/BookingSuccess";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import Chat from "./components/Chat";
-import ChatPage from "./pages/ChatPage";
+import ChatPage from "./pages/callpage";
 import ChatRooms from "./pages/ChatRooms";
 import AboutPage from "./components/About";
 
