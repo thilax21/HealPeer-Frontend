@@ -541,7 +541,7 @@ const ClientProfile = () => {
           contactNumber: data.data.contactNumber || "",
           profileImage: data.data.profileImage || "",
         });
-        setPreviewImage(data.data.profileImage ? `https://healpeer-backend.onrender.com${data.data.profileImage}` : null);
+        setPreviewImage(data.data.profileImage ? `https://healpeer-backend.onrender.com/${data.data.profileImage}` : null);
       } catch (err) {
         console.error("Failed to fetch profile:", err);
       }
